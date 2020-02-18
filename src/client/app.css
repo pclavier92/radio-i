@@ -1,0 +1,21 @@
+h1 {
+  color: green;
+}
+
+body {
+  text-align: center;
+  margin: auto;
+}
+
+.song-list {
+  display: flex;
+  justify-content: center;
+}
+
+.heading {
+  height: 54px;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 30px 40px rgba(0, 0, 0, 0.1);
+}
