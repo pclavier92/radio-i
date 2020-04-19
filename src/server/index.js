@@ -13,6 +13,9 @@ const stateKey = 'spotify_auth_state';
 
 const app = express();
 
+// PROVISIONAL
+const LOCAL_CLIENT_URL = 'http://localhost:3000';
+
 app
   .use(express.static('dist'))
   .use(cors())
@@ -95,12 +98,12 @@ app.get('/callback', (req, res) => {
         // });
 
         // we can also pass the token to the browser to make requests from there
+
         res.redirect(
-          '/#'
-            + querystring.stringify({
-              access_token,
-              refresh_token
-            })
+          `${LOCAL_CLIENT_URL}/#${querystring.stringify({
+            access_token,
+            refresh_token
+          })}`
         );
       } else {
         res.redirect(

@@ -19,3 +19,9 @@ body {
   margin-bottom: 10px;
   box-shadow: 0 30px 40px rgba(0, 0, 0, 0.1);
 }
+
+.btn-primary {
+  color: #fff;
+  background-color: rgb(51, 81, 117);
+  border-color: rgb(51, 81, 117);
+}

@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import MediaControlCard from './components/MediaControlCard';
+import NowPlaying from './components/NowPlaying';
 
 import { getHashParams } from './utils';
 import './app.css';
 
+// PROVISIONAL
+const LOCAL_SERVER_URL = 'http://localhost:8888';
+
 export default class App extends Component {
+  timer = null;
+
   state = {
     access_token: null,
     refresh_token: null,
-    error: null,
-    song: null
+    error: null
   };
 
   componentDidMount() {
@@ -20,7 +24,6 @@ export default class App extends Component {
       if (access_token) {
         window.location.hash = '';
         this.getUserInfo();
-        this.getCurrentlyPlaying();
       }
     });
   }
@@ -36,22 +39,11 @@ export default class App extends Component {
       .catch(e => console.log(e));
   };
 
-  getCurrentlyPlaying = () => {
-    const { access_token } = this.state;
-    axios
-      .get('https://api.spotify.com/v1/me/player/currently-playing', {
-        headers: { Authorization: `Bearer ${access_token}` },
-        responseType: 'json'
-      })
-      .then(({ data: { item } }) => this.setState({ song: item }))
-      .catch(e => console.log(e));
-  };
-
   refreshToken = () => {
     const { refresh_token } = this.state;
     if (refresh_token) {
       axios
-        .get('/refresh_token', {
+        .get(`${LOCAL_SERVER_URL}/refresh_token`, {
           params: { refresh_token }
         })
         .then(({ data: { access_token } }) => this.setState({ access_token }));
@@ -59,7 +51,8 @@ export default class App extends Component {
   };
 
   render() {
-    const { access_token, song, error } = this.state;
+    const { access_token, error } = this.state;
+
     return (
       <div>
         <div className="heading">
@@ -68,17 +61,15 @@ export default class App extends Component {
               Refresh access token
             </button>
           ) : (
-            <a href="/login" className="btn btn-primary">
+            <a href={`${LOCAL_SERVER_URL}/login`} className="btn btn-primary">
               Log in with Spotify
             </a>
           )}
           {error ? <p>Error</p> : null}
         </div>
-        {song && (
-          <div className="song-list">
-            <MediaControlCard song={song} />
-          </div>
-        )}
+        <div className="song-list">
+          {access_token && <NowPlaying token={access_token} />}
+        </div>
       </div>
     );
   }

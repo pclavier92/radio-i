@@ -39,6 +39,7 @@ module.exports = {
       '/api': 'http://localhost:8080'
     }
   },
+  devtool: 'source-map',
   plugins: [
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
