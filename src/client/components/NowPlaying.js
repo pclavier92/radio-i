@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+ useCallback, useEffect, useRef, useState 
+} from 'react';
 import axios from 'axios';
 
 import useInterval from '../hooks/useInterval';
 
-import MediaControlCard from './MediaControlCard';
+import SongCard from './song-card/SongCard';
 
 const PROGRESS_INTERVAL = 1000; // ms
 
@@ -25,16 +27,22 @@ const NowPlaying = ({ token }) => {
   );
   const { item, progress_ms } = currentlyPlaying;
   const { duration_ms } = item;
+  const isFetching = useRef(false);
 
   const fetchCurrentlyPlaying = useCallback(async () => {
+    console.log('fetching song!!');
     const { data } = await getCurrentlyPlaying(token);
+    isFetching.current = false;
     if (data) {
       setCurrentlyPlaying(data);
+    } else {
+      setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
     }
   }, [token]);
 
   const getCurrentProgress = useCallback(() => {
     if (progress_ms > duration_ms) {
+      isFetching.current = true;
       fetchCurrentlyPlaying();
     } else {
       setCurrentlyPlaying({
@@ -45,16 +53,15 @@ const NowPlaying = ({ token }) => {
   }, [progress_ms, duration_ms, fetchCurrentlyPlaying]);
 
   useEffect(() => {
+    isFetching.current = true;
     fetchCurrentlyPlaying();
   }, []);
 
   useInterval(getCurrentProgress, PROGRESS_INTERVAL);
 
-  const completed = item ? (progress_ms * 100) / duration_ms : 0;
-
   return (
     <div className="now-playing">
-      <MediaControlCard song={item} completed={completed} />
+      <SongCard song={item} duration={duration_ms} progress={progress_ms} />
     </div>
   );
 };

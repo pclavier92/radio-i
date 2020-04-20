@@ -1,0 +1,43 @@
+.card {
+  background-color: #fff;
+  width: 90%;
+  box-shadow: 0 2px 2px #999999;
+  border-radius: 10px;
+  max-height: 150px;
+}
+
+.cover {
+  float: left;
+}
+
+.cover img {
+  height: 150px;
+  width: 150px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.content {
+  float: left;
+  padding-top: 10px;
+  width: calc(100% - 150px);
+}
+
+.song-details {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.song-details h4,
+.song-details h5,
+.song-details h6 {
+  text-align: center;
+}
+
+.song-details span {
+  float: right;
+}
+
+.no-song {
+  text-align: center;
+}

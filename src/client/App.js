@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 
 import NowPlaying from './components/NowPlaying';
 
 import { getHashParams } from './utils';
+
+import './css/normalize.css';
+import './css/grid.css';
 import './app.css';
 
 // PROVISIONAL
@@ -54,23 +57,43 @@ export default class App extends Component {
     const { access_token, error } = this.state;
 
     return (
-      <div>
-        <div className="heading">
-          {access_token ? (
-            <button onClick={this.refreshToken} className="btn btn-secondary">
-              Refresh access token
-            </button>
-          ) : (
-            <a href={`${LOCAL_SERVER_URL}/login`} className="btn btn-primary">
-              Log in with Spotify
-            </a>
-          )}
-          {error ? <p>Error</p> : null}
-        </div>
-        <div className="song-list">
-          {access_token && <NowPlaying token={access_token} />}
-        </div>
-      </div>
+      <Fragment>
+        <header>
+          <div className="row">
+            <div className="col span-1-of-2">
+              <h1>RadioI</h1>
+            </div>
+            <div className="col span-1-of-2">
+              {access_token ? (
+                <button
+                  onClick={this.refreshToken}
+                  className="btn btn-secondary"
+                >
+                  Refresh access token
+                </button>
+              ) : (
+                <a
+                  href={`${LOCAL_SERVER_URL}/login`}
+                  className="btn btn-primary"
+                >
+                  Log in with Spotify
+                </a>
+              )}
+              {error ? <p>Error</p> : null}
+            </div>
+          </div>
+        </header>
+        <section>
+          <div className="row">
+            <div className="col span-1-of-3">
+              <div className="now-playing">
+                {access_token && <NowPlaying token={access_token} />}
+              </div>
+            </div>
+            <div className="col span-2-of-3" />
+          </div>
+        </section>
+      </Fragment>
     );
   }
 }
