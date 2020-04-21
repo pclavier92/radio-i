@@ -4,7 +4,7 @@ import React, {
 import axios from 'axios';
 
 import useInterval from '../hooks/useInterval';
-
+import { useAuthentication } from '../Authentication';
 import SongCard from './song-card/SongCard';
 
 const PROGRESS_INTERVAL = 1000; // ms
@@ -14,14 +14,16 @@ const INITIAL_CURRENTLY_PLAYING = Object.freeze({
   progress_ms: 0
 });
 
-const getCurrentlyPlaying = token => axios
+const getCurrentlyPlaying = accessToken => axios
     .get('https://api.spotify.com/v1/me/player/currently-playing', {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     })
     .catch(e => console.log(e));
 
-const NowPlaying = ({ token }) => {
+const NowPlaying = () => {
+  const { accessToken } = useAuthentication();
+
   const [currentlyPlaying, setCurrentlyPlaying] = useState(
     INITIAL_CURRENTLY_PLAYING
   );
@@ -30,15 +32,16 @@ const NowPlaying = ({ token }) => {
   const isFetching = useRef(false);
 
   const fetchCurrentlyPlaying = useCallback(async () => {
-    console.log('fetching song!!');
-    const { data } = await getCurrentlyPlaying(token);
-    isFetching.current = false;
-    if (data) {
-      setCurrentlyPlaying(data);
-    } else {
-      setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
+    if (accessToken) {
+      const { data } = await getCurrentlyPlaying(accessToken);
+      isFetching.current = false;
+      if (data) {
+        setCurrentlyPlaying(data);
+      } else {
+        setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
+      }
     }
-  }, [token]);
+  }, [accessToken]);
 
   const getCurrentProgress = useCallback(() => {
     if (progress_ms > duration_ms) {
@@ -61,7 +64,9 @@ const NowPlaying = ({ token }) => {
 
   return (
     <div className="now-playing">
-      <SongCard song={item} duration={duration_ms} progress={progress_ms} />
+      {accessToken && (
+        <SongCard song={item} duration={duration_ms} progress={progress_ms} />
+      )}
     </div>
   );
 };

@@ -13,6 +13,7 @@ html {
   color: #555;
   font-family: "Lato", "Arial", sans-serif;
   font-weight: 300;
+  font-size: 20px;
   text-rendering: optimizeLegibility;
 }
 
@@ -52,9 +53,10 @@ h3 {
 }
 
 h1 {
-  color: rgb(51, 81, 117);
+  color: #1ed760;
   margin: 0;
   font-size: 240%;
+  font-weight: 100;
   word-spacing: 4px;
   letter-spacing: 1px;
 }
@@ -97,10 +99,24 @@ header button {
   margin-right: 20px;
 }
 
-.btn-primary {
+.btn {
+}
+
+.btn-primary:link,
+.btn-primary:visited {
   color: rgb(255, 255, 255);
-  background-color: rgb(51, 81, 117);
-  border-color: rgb(51, 81, 117);
+  background-color: #1db954;
+  border-color: #1db954;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-weight: 400;
+  transition: background-color 300ms, border-color 300ms;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: #1ed760;
+  border-color: #1ed760;
 }
 
 /* ------------------------------------------------------ */

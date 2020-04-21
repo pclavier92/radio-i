@@ -3,6 +3,8 @@ import React, { Fragment, useMemo } from 'react';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 
+import ProgessBar from '../progress-bar/progress-bar';
+
 import './styles.css';
 
 const msToMinSeconds = (ms) => {
@@ -23,7 +25,7 @@ const ColorLinearProgress = withStyles({
     backgroundColor: '#dfdfdd'
   },
   barColorPrimary: {
-    backgroundColor: 'rgb(51, 81, 117)'
+    backgroundColor: '#1db954'
   }
 })(LinearProgress);
 
@@ -55,7 +57,7 @@ const SongCard = ({ song, duration, progress }) => {
                 {formatedProgress}
                 <span>{formatedDuration}</span>
               </p>
-              <ColorLinearProgress variant="determinate" value={completed} />
+              <ProgessBar completed={completed} />
             </div>
           </div>
         </Fragment>

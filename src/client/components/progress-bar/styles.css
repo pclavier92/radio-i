@@ -1,0 +1,18 @@
+.progress-bar {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 4px;
+}
+
+.empty-bar {
+  float: left;
+  height: 4px;
+  background-color: #dfdfdd;
+}
+
+.completed-bar {
+  float: left;
+  height: 4px;
+  background-color: #1db954;
+}
