@@ -1,25 +1,18 @@
 import React from 'react';
 
-import { AuthenticationProvider } from './Authentication';
 import Header from './Header';
-import NowPlaying from './components/NowPlaying';
+import MainSection from './MainSection';
+import { AuthenticationProvider as Authentication } from './Authentication';
 
 import './css/normalize.css';
 import './css/grid.css';
 import './app.css';
 
 const App = () => (
-  <AuthenticationProvider>
+  <Authentication>
     <Header />
-    <section>
-      <div className="row">
-        <div className="col span-1-of-3">
-          <NowPlaying />
-        </div>
-        <div className="col span-2-of-3" />
-      </div>
-    </section>
-  </AuthenticationProvider>
+    <MainSection />
+  </Authentication>
 );
 
 export default App;

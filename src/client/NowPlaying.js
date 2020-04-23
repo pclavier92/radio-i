@@ -3,9 +3,9 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
-import useInterval from '../hooks/useInterval';
-import { useAuthentication } from '../Authentication';
-import SongCard from './song-card/SongCard';
+import useInterval from './hooks/use-interval';
+import { useAuthentication } from './Authentication';
+import SongCard from './components/song-card';
 
 const PROGRESS_INTERVAL = 1000; // ms
 
@@ -32,14 +32,12 @@ const NowPlaying = () => {
   const isFetching = useRef(false);
 
   const fetchCurrentlyPlaying = useCallback(async () => {
-    if (accessToken) {
-      const { data } = await getCurrentlyPlaying(accessToken);
-      isFetching.current = false;
-      if (data) {
-        setCurrentlyPlaying(data);
-      } else {
-        setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
-      }
+    const { data } = await getCurrentlyPlaying(accessToken);
+    isFetching.current = false;
+    if (data) {
+      setCurrentlyPlaying(data);
+    } else {
+      setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
     }
   }, [accessToken]);
 
@@ -55,18 +53,11 @@ const NowPlaying = () => {
     }
   }, [progress_ms, duration_ms, fetchCurrentlyPlaying]);
 
-  useEffect(() => {
-    isFetching.current = true;
-    fetchCurrentlyPlaying();
-  }, []);
-
   useInterval(getCurrentProgress, PROGRESS_INTERVAL);
 
   return (
     <div className="now-playing">
-      {accessToken && (
-        <SongCard song={item} duration={duration_ms} progress={progress_ms} />
-      )}
+      <SongCard song={item} duration={duration_ms} progress={progress_ms} />
     </div>
   );
 };

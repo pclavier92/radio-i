@@ -1,38 +1,65 @@
-import React, {
- useContext, useEffect, useState, useCallback 
-} from 'react';
-import axios from 'axios';
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import axios from "axios";
 
-import { getHashParams } from './utils';
+import useRefreshAccessToken from "./hooks/use-refresh-access-token";
+
+import localStorage from "./local-storage";
+import { getHashParams } from "./utils";
 
 const authentication = React.createContext({});
 
 const AuthenticationProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
-  const [error, setError] = useState(null);
+  const [accessToken, setAccessToken] = useState();
+  const [refreshToken, setRefreshToken] = useState();
+  const [expiration, setExpiration] = useState(3600);
+  const [error, setError] = useState();
 
   const getUserInfo = useCallback(() => {
     axios
-      .get('https://api.spotify.com/v1/me', {
+      .get("https://api.spotify.com/v1/me", {
         headers: { Authorization: `Bearer ${accessToken}` },
-        responseType: 'json'
+        responseType: "json"
       })
-      .then(({ data }) => console.log('/me', data))
+      .then(({ data }) => console.log("/me", data))
       .catch(e => console.log(e));
   }, [accessToken]);
 
   useEffect(() => {
-    const { access_token, refresh_token, error } = getHashParams();
-    setAccessToken(access_token);
-    setRefreshToken(refresh_token);
-    setError(error);
+    const apiTokens = localStorage.getApiTokens();
+    if (apiTokens.accessToken && apiTokens.refreshToken) {
+      const {
+        accessToken: access_token,
+        refreshToken: refresh_token
+      } = apiTokens;
+      setAccessToken(access_token);
+      setRefreshToken(refresh_token);
+      localStorage.setApiTokens(access_token, refresh_token);
+    } else {
+      const {
+        access_token,
+        refresh_token,
+        expires_in,
+        error
+      } = getHashParams();
+      setExpiration(expires_in);
+      setError(error);
+      setAccessToken(access_token);
+      setRefreshToken(refresh_token);
+      localStorage.setApiTokens(access_token, refresh_token);
+    }
   }, []);
+
+  useRefreshAccessToken(
+    refreshToken,
+    expiration,
+    setAccessToken,
+    setRefreshToken
+  );
 
   useEffect(() => {
     // Why dough? User provider??
     if (accessToken) {
-      window.location.hash = '';
+      window.location.hash = "";
       getUserInfo();
     }
   }, [accessToken]);
@@ -40,7 +67,8 @@ const AuthenticationProvider = ({ children }) => {
   const authenticationValue = {
     accessToken,
     refreshToken,
-    setAccessToken
+    setAccessToken,
+    setRefreshToken
   };
 
   return (

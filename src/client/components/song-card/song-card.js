@@ -1,33 +1,18 @@
 import React, { Fragment, useMemo } from 'react';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { withStyles } from '@material-ui/core/styles';
-
 import ProgessBar from '../progress-bar/progress-bar';
 
 import './styles.css';
 
-const msToMinSeconds = (ms) => {
-  if (ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const min = Math.floor(totalSeconds / 60);
-    let sec = Math.floor(totalSeconds % 60);
-    if (sec < 10) {
-      sec = `0${sec}`;
-    }
-    return `${min}:${sec}`;
-  }
-  return '0:00';
-};
+import { msToMinutesSeconds } from '../../utils';
 
-const ColorLinearProgress = withStyles({
-  colorPrimary: {
-    backgroundColor: '#dfdfdd'
-  },
-  barColorPrimary: {
-    backgroundColor: '#1db954'
-  }
-})(LinearProgress);
+/* h4
+Most Really Pretty Girls Have -
+Stop Selling Her Drugs (feat. -
+*/
+/* h3
+If This Is House I Want My Money Back -
+*/
 
 const SongCard = ({ song, duration, progress }) => {
   const name = song.name && song.name;
@@ -37,8 +22,12 @@ const SongCard = ({ song, duration, progress }) => {
     () => song.artists && song.artists.map(artist => artist.name).join(' - '),
     [song]
   );
-  const formatedDuration = useMemo(() => msToMinSeconds(duration), [duration]);
-  const formatedProgress = useMemo(() => msToMinSeconds(progress), [progress]);
+  const formatedDuration = useMemo(() => msToMinutesSeconds(duration), [
+    duration
+  ]);
+  const formatedProgress = useMemo(() => msToMinutesSeconds(progress), [
+    progress
+  ]);
   const completed = progress ? (progress * 100) / duration : 0;
 
   return (
@@ -51,13 +40,15 @@ const SongCard = ({ song, duration, progress }) => {
           <div className="content">
             <div className="song-details">
               <h4>{name}</h4>
-              <h5>{album}</h5>
-              <h6>{artits}</h6>
-              <p>
-                {formatedProgress}
-                <span>{formatedDuration}</span>
-              </p>
-              <ProgessBar completed={completed} />
+              <h5>{artits}</h5>
+              <h6>{album}</h6>
+              <div className="progress">
+                <p>
+                  {formatedProgress}
+                  <span>{formatedDuration}</span>
+                </p>
+                <ProgessBar completed={completed} />
+              </div>
             </div>
           </div>
         </Fragment>

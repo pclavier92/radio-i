@@ -13,4 +13,33 @@ const getHashParams = () => window.location.hash
       return initial;
     }, {});
 
-export { getHashParams };
+const msToMinutesSeconds = (ms) => {
+  if (ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    let sec = Math.floor(totalSeconds % 60);
+    if (sec < 10) {
+      sec = `0${sec}`;
+    }
+    return `${min}:${sec}`;
+  }
+  return '0:00';
+};
+
+const debounce = (func, wait, immediate) => {
+  let timeout;
+  return function executedFunction() {
+    const context = this;
+    const args = arguments;
+    const later = () => {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+};
+
+export { getHashParams, msToMinutesSeconds, debounce };

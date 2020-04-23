@@ -1,6 +1,7 @@
 .card {
   background-color: #fff;
   width: 90%;
+  margin: 0 auto;
   box-shadow: 0 2px 2px #999999;
   border-radius: 10px;
   max-height: 150px;
@@ -21,17 +22,20 @@
   float: left;
   padding-top: 10px;
   width: calc(100% - 150px);
+  height: 100%;
 }
 
 .song-details {
-  padding-left: 20px;
-  padding-right: 20px;
+  position: relative;
+  height: 100%;
+  padding: 5px 20px 0 20px;
 }
 
 .song-details h4,
 .song-details h5,
 .song-details h6 {
   text-align: center;
+  padding: 5px 0;
 }
 
 .song-details span {
@@ -40,4 +44,11 @@
 
 .no-song {
   text-align: center;
+  padding: 30px;
+}
+
+.progress {
+  position: absolute;
+  bottom: 15px;
+  width: calc(100% - 40px);
 }

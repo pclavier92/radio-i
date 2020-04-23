@@ -84,7 +84,7 @@ app.get('/callback', (req, res) => {
 
     request.post(authOptions, (error, response, body) => {
       if (!error && response.statusCode === 200) {
-        const { access_token, refresh_token } = body;
+        const { access_token, refresh_token, expires_in } = body;
 
         // const options = {
         //   url: 'https://api.spotify.com/v1/me',
@@ -102,7 +102,8 @@ app.get('/callback', (req, res) => {
         res.redirect(
           `${LOCAL_CLIENT_URL}/#${querystring.stringify({
             access_token,
-            refresh_token
+            refresh_token,
+            expires_in
           })}`
         );
       } else {

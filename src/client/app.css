@@ -8,13 +8,17 @@
   box-sizing: border-box;
 }
 
-html {
-  background-color: #fff;
-  color: #555;
-  font-family: "Lato", "Arial", sans-serif;
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
   font-weight: 300;
-  font-size: 20px;
   text-rendering: optimizeLegibility;
+  color: #555;
+}
+
+.col {
+  margin: 0 auto;
 }
 
 .clearfix {
@@ -33,7 +37,7 @@ html {
 /* ------------------------------------------------------ */
 
 .row {
-  margin: 0 auto;
+  margin: 0;
 }
 
 section {
@@ -71,7 +75,6 @@ h2 {
 
 h3 {
   font-size: 110%;
-  margin-bottom: 15px;
 }
 
 /* ------------------------------------------------------ */
@@ -79,8 +82,8 @@ h3 {
 /* ------------------------------------------------------ */
 
 header {
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 5px;
+  margin-bottom: 20px;
   box-shadow: 0 30px 40px rgba(0, 1, 22, 0.1);
 }
 
@@ -100,21 +103,26 @@ header button {
 }
 
 .btn {
+  padding: 5px 20px;
+  font-weight: 500;
+  border-radius: 20px;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  margin: 10px 20px 10px 0;
 }
 
-.btn-primary:link,
-.btn-primary:visited {
+.btn-login:link,
+.btn-login:visited {
   color: rgb(255, 255, 255);
   background-color: #1db954;
   border-color: #1db954;
-  border-radius: 20px;
-  text-transform: uppercase;
-  font-weight: 400;
   transition: background-color 300ms, border-color 300ms;
+  margin: 10px 20px 10px 0;
+  text-transform: uppercase;
 }
 
-.btn-primary:hover,
-.btn-primary:active {
+.btn-login:hover,
+.btn-login:active {
   background-color: #1ed760;
   border-color: #1ed760;
 }

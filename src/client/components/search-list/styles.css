@@ -1,0 +1,31 @@
+.serach-results {
+  padding: 30px 0 0 20px;
+  width: 90%;
+  margin: 0 auto;
+  color: #6e6e6e;
+}
+
+.serach-results-list {
+  list-style: none;
+}
+
+.serach-results-list li div {
+  padding: 5px 5px;
+}
+
+.serach-results-list li:first-child {
+  font-weight: 400;
+  color: #6e6e6e;
+  border-bottom: 1px solid #b5b5b5;
+}
+
+.serach-results-list li {
+  border-bottom: 1px solid #cccccc;
+}
+
+.serach-results-list li div ion-icon {
+  width: 100%;
+  vertical-align: middle;
+  color: #1db954;
+  font-size: 120%;
+}

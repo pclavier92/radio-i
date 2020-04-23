@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 300px;
+  margin: 0 10px;
+}
+
+.banner {
+  white-space: nowrap;
+  animation-name: scrolling;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.banner:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
