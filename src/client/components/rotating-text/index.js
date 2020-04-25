@@ -1,3 +1,3 @@
-import RotatingText from './rotating-text';
+import ConditionalRotation from './conditional-rotation';
 
-export default RotatingText;
+export default ConditionalRotation;

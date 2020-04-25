@@ -1,24 +1,23 @@
-import React, {
- useCallback, useEffect, useRef, useState 
-} from 'react';
-import axios from 'axios';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
 
-import useInterval from './hooks/use-interval';
-import { useAuthentication } from './Authentication';
-import SongCard from './components/song-card';
+import useInterval from "./hooks/use-interval";
+import { useAuthentication } from "./Authentication";
+import SongCard from "./components/song-card";
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
-const UPDATE_INTERVAL = 15 * 1000; // 15 seg
+const UPDATE_INTERVAL = 10 * 1000; // 10 seg
 
 const INITIAL_CURRENTLY_PLAYING = Object.freeze({
   item: { duration_ms: 0 },
   progress_ms: 0
 });
 
-const getCurrentlyPlaying = accessToken => axios
-    .get('https://api.spotify.com/v1/me/player/currently-playing', {
+const getCurrentlyPlaying = accessToken =>
+  axios
+    .get("https://api.spotify.com/v1/me/player/currently-playing", {
       headers: { Authorization: `Bearer ${accessToken}` },
-      responseType: 'json'
+      responseType: "json"
     })
     .catch(e => console.log(e));
 
@@ -40,6 +39,12 @@ const NowPlaying = () => {
       setCurrentlyPlaying(data);
     } else {
       setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (accessToken) {
+      fetchCurrentlyPlaying();
     }
   }, [accessToken]);
 

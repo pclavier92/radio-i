@@ -1,19 +1,16 @@
 import React, { Fragment, useMemo } from 'react';
 
-import ProgessBar from '../progress-bar/progress-bar';
+import ProgessBar from '../progress-bar';
 
 import './styles.css';
 
 import { msToMinutesSeconds } from '../../utils';
 
-/* h4
-Most Really Pretty Girls Have -
-Stop Selling Her Drugs (feat. -
-*/
-/* h3
-If This Is House I Want My Money Back -
-*/
+import RotatingText from '../rotating-text';
 
+const MAX_H4_HEIGHT = 31;
+const MAX_H5_HEIGHT = 28;
+const MAX_H6_HEIGHT = 25;
 const IMG_RESOLUTION = 300;
 
 const SongCard = ({ song, duration, progress }) => {
@@ -41,9 +38,16 @@ const SongCard = ({ song, duration, progress }) => {
           </div>
           <div className="content">
             <div className="song-details">
-              <h4>{name}</h4>
-              <h5>{artits}</h5>
-              <h6>{album}</h6>
+              <RotatingText maxHeight={MAX_H4_HEIGHT}>
+                <h4>{name}</h4>
+              </RotatingText>
+              <RotatingText maxHeight={MAX_H5_HEIGHT}>
+                <h5>{artits}</h5>
+              </RotatingText>
+              <RotatingText maxHeight={MAX_H6_HEIGHT}>
+                <h6>{album}</h6>
+              </RotatingText>
+
               <div className="progress">
                 <p>
                   {formatedProgress}
