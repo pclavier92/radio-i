@@ -6,15 +6,13 @@ const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 
+const config = require('./config').server;
 const { generateRandomString } = require('./utils');
 const { client_id, client_secret, redirect_uri } = require('../../app-keys');
 
 const stateKey = 'spotify_auth_state';
 
 const app = express();
-
-// PROVISIONAL
-const LOCAL_CLIENT_URL = 'http://localhost:3000';
 
 app
   .use(express.static('dist'))
@@ -34,7 +32,9 @@ app.get('/login', (req, res) => {
     'user-read-private',
     'user-read-email',
     'user-read-currently-playing',
-    'user-read-playback-state'
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-top-read'
   ];
   const scope = scopes.join(' ');
 
@@ -100,7 +100,7 @@ app.get('/callback', (req, res) => {
         // we can also pass the token to the browser to make requests from there
 
         res.redirect(
-          `${LOCAL_CLIENT_URL}/#${querystring.stringify({
+          `${config.clientUrl}/#${querystring.stringify({
             access_token,
             refresh_token,
             expires_in
@@ -145,4 +145,4 @@ app.get('/refresh_token', (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 8888, () => console.log(`Listening on port ${process.env.PORT || 8888}!`));
+app.listen(process.env.PORT || config.port, () => console.log(`Listening on port ${process.env.PORT || config.port}!`));

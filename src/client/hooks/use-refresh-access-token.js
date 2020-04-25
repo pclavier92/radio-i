@@ -1,16 +1,14 @@
 import { useCallback } from 'react';
 import axios from 'axios';
 
+import { serverUrl } from '../config';
 import localStorage from '../local-storage';
 
 import useInterval from './use-interval';
 
-// PROVISIONAL
-const LOCAL_SERVER_URL = 'http://localhost:8888';
-
 const getRefreshAccessToken = (refreshToken, callback) => {
   axios
-    .get(`${LOCAL_SERVER_URL}/refresh_token`, {
+    .get(`${serverUrl}/refresh_token`, {
       params: { refresh_token: refreshToken }
     })
     .then(callback)

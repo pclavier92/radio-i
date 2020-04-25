@@ -54,13 +54,20 @@ h2,
 h3 {
   font-weight: 300;
   text-transform: uppercase;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 h1 {
   color: #1ed760;
   margin: 0;
   font-size: 240%;
-  font-weight: 100;
+  font-weight: 200;
   word-spacing: 4px;
   letter-spacing: 1px;
 }

@@ -1,10 +1,8 @@
 import React from 'react';
 
+import { serverUrl } from './config';
 import localStorage from './local-storage';
 import { useAuthentication } from './Authentication';
-
-// PROVISIONAL
-const LOCAL_SERVER_URL = 'http://localhost:8888';
 
 const Header = () => {
   const { accessToken, setAccessToken, setRefreshToken } = useAuthentication();
@@ -27,7 +25,7 @@ const Header = () => {
               Logout
             </button>
           ) : (
-            <a href={`${LOCAL_SERVER_URL}/login`} className="btn btn-login">
+            <a href={`${serverUrl}/login`} className="btn btn-login">
               Login with Spotify
             </a>
           )}

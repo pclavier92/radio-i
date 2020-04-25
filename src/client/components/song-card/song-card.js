@@ -14,10 +14,12 @@ Stop Selling Her Drugs (feat. -
 If This Is House I Want My Money Back -
 */
 
+const IMG_RESOLUTION = 300;
+
 const SongCard = ({ song, duration, progress }) => {
   const name = song.name && song.name;
   const album = song.album && song.album.name;
-  const cover = song.album && song.album.images[0].url;
+  const cover =    song.album && song.album.images.find(i => i.height === IMG_RESOLUTION).url;
   const artits = useMemo(
     () => song.artists && song.artists.map(artist => artist.name).join(' - '),
     [song]

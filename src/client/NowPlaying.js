@@ -7,7 +7,8 @@ import useInterval from './hooks/use-interval';
 import { useAuthentication } from './Authentication';
 import SongCard from './components/song-card';
 
-const PROGRESS_INTERVAL = 1000; // ms
+const PROGRESS_INTERVAL = 1000; // 1 seg
+const UPDATE_INTERVAL = 15 * 1000; // 15 seg
 
 const INITIAL_CURRENTLY_PLAYING = Object.freeze({
   item: { duration_ms: 0 },
@@ -32,9 +33,10 @@ const NowPlaying = () => {
   const isFetching = useRef(false);
 
   const fetchCurrentlyPlaying = useCallback(async () => {
+    isFetching.current = true;
     const { data } = await getCurrentlyPlaying(accessToken);
     isFetching.current = false;
-    if (data) {
+    if (data && data.is_playing) {
       setCurrentlyPlaying(data);
     } else {
       setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
@@ -42,18 +44,20 @@ const NowPlaying = () => {
   }, [accessToken]);
 
   const getCurrentProgress = useCallback(() => {
-    if (progress_ms > duration_ms) {
-      isFetching.current = true;
-      fetchCurrentlyPlaying();
-    } else {
-      setCurrentlyPlaying({
-        ...currentlyPlaying,
-        progress_ms: progress_ms + PROGRESS_INTERVAL
-      });
+    if (duration_ms > 0) {
+      if (progress_ms > duration_ms) {
+        fetchCurrentlyPlaying();
+      } else {
+        setCurrentlyPlaying({
+          ...currentlyPlaying,
+          progress_ms: progress_ms + PROGRESS_INTERVAL
+        });
+      }
     }
   }, [progress_ms, duration_ms, fetchCurrentlyPlaying]);
 
   useInterval(getCurrentProgress, PROGRESS_INTERVAL);
+  useInterval(fetchCurrentlyPlaying, UPDATE_INTERVAL);
 
   return (
     <div className="now-playing">

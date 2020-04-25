@@ -3,6 +3,13 @@
   width: 90%;
   margin: 0 auto;
   color: #6e6e6e;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .serach-results-list {
@@ -19,13 +26,27 @@
   border-bottom: 1px solid #b5b5b5;
 }
 
+.serach-results-list li:first-child:hover {
+  box-shadow: none;
+}
+
 .serach-results-list li {
   border-bottom: 1px solid #cccccc;
 }
 
-.serach-results-list li div ion-icon {
-  width: 100%;
+.serach-results-list li:hover {
+  box-shadow: 0 1px 2px #6e6e6e, 0 -1px 2px #6e6e6e;
+  cursor: pointer;
+}
+
+.serach-results-list li:active {
+  box-shadow: 0 1px 2px #1ed760, 0 -1px 2px #1ed760;
+  color: #1ed760;
+}
+
+.serach-results-list li div i {
+  float: right;
   vertical-align: middle;
-  color: #1db954;
-  font-size: 120%;
+  color: #1ed760;
+  font-size: 150%;
 }
