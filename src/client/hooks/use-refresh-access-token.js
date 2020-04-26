@@ -1,45 +1,40 @@
-import { useCallback } from 'react';
-import axios from 'axios';
+import { useCallback, useState } from 'react';
 
-import { serverUrl } from '../config';
-import localStorage from '../local-storage';
+import authService from '../services/authentication';
 
+import radioiApi from '../apis/radioi-api';
 import useInterval from './use-interval';
 
-const getRefreshAccessToken = (refreshToken, callback) => {
-  axios
-    .get(`${serverUrl}/refresh_token`, {
-      params: { refresh_token: refreshToken }
-    })
-    .then(callback)
-    .catch(e => console.log(e));
-};
+const FIVE_MINUTES = 5 * 60 * 1000; // ms
+const HOUR = 3600 * 1000;
 
-const useRefreshAccessToken = (
-  refreshToken,
-  expiration,
-  setAccessToken,
-  setRefreshToken
-) => {
+const useRefreshAccessToken = () => {
+  const expiration = authService.getExpirationTime();
+  const [refreshInterval, setRefreshInterval] = useState(FIVE_MINUTES);
+
   // Update access token before it expires
-  const requestCallback = useCallback(
-    ({ data: { access_token, refresh_token } }) => {
-      setAccessToken(access_token);
-      localStorage.setApiAccessToken(access_token);
-      if (refresh_token) {
-        setRefreshToken(refresh_token);
-        localStorage.setApiRefreshToken(refresh_token);
+  const refreshAccessToken = useCallback(async () => {
+    const timeInMs = new Date().getTime();
+    if (expiration - timeInMs < FIVE_MINUTES) {
+      try {
+        const {
+          data: { access_token, refresh_token }
+        } = await radioiApi.refreshAccessToken();
+        authService.setAccessToken(access_token);
+        const expirationTimestamp = timeInMs + HOUR;
+        authService.setExpiration(expirationTimestamp);
+        if (refresh_token) {
+          authService.setAccessToken(refresh_token);
+        }
+      } catch (e) {
+        console.log('It was not possible to refresh access token', e);
+        // prevents refreshAccessToken to be called again
+        setRefreshInterval(null);
       }
-    },
-    [setAccessToken, setRefreshToken]
-  );
-  const refreshAccessToken = useCallback(() => {
-    if (refreshToken) {
-      getRefreshAccessToken(refreshToken, requestCallback);
     }
-  }, [refreshToken, requestCallback]);
+  }, [expiration]);
 
-  useInterval(refreshAccessToken, (expiration - 1) * 1000);
+  useInterval(refreshAccessToken, refreshInterval);
 };
 
 export default useRefreshAccessToken;

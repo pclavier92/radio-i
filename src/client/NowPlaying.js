@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import useInterval from "./hooks/use-interval";
-import { useAuthentication } from "./Authentication";
-import SongCard from "./components/song-card";
+import spotifyWebApi from './apis/spotify-web-api';
+import useInterval from './hooks/use-interval';
+import { useAuthentication } from './Authentication';
+import SongCard from './components/song-card';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
 const UPDATE_INTERVAL = 10 * 1000; // 10 seg
@@ -13,16 +13,8 @@ const INITIAL_CURRENTLY_PLAYING = Object.freeze({
   progress_ms: 0
 });
 
-const getCurrentlyPlaying = accessToken =>
-  axios
-    .get("https://api.spotify.com/v1/me/player/currently-playing", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      responseType: "json"
-    })
-    .catch(e => console.log(e));
-
 const NowPlaying = () => {
-  const { accessToken } = useAuthentication();
+  const { authenticated } = useAuthentication();
 
   const [currentlyPlaying, setCurrentlyPlaying] = useState(
     INITIAL_CURRENTLY_PLAYING
@@ -31,27 +23,25 @@ const NowPlaying = () => {
   const { duration_ms } = item;
   const isFetching = useRef(false);
 
-  const fetchCurrentlyPlaying = useCallback(async () => {
+  const getCurrentlyPlaying = useCallback(async () => {
     isFetching.current = true;
-    const { data } = await getCurrentlyPlaying(accessToken);
+    const { data } = await spotifyWebApi.getCurrentlyPlaying();
     isFetching.current = false;
     if (data && data.is_playing) {
       setCurrentlyPlaying(data);
     } else {
       setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
     }
-  }, [accessToken]);
+  }, []);
 
   useEffect(() => {
-    if (accessToken) {
-      fetchCurrentlyPlaying();
-    }
-  }, [accessToken]);
+    getCurrentlyPlaying();
+  }, []);
 
   const getCurrentProgress = useCallback(() => {
     if (duration_ms > 0) {
       if (progress_ms > duration_ms) {
-        fetchCurrentlyPlaying();
+        getCurrentlyPlaying();
       } else {
         setCurrentlyPlaying({
           ...currentlyPlaying,
@@ -59,10 +49,10 @@ const NowPlaying = () => {
         });
       }
     }
-  }, [progress_ms, duration_ms, fetchCurrentlyPlaying]);
+  }, [progress_ms, duration_ms, getCurrentlyPlaying]);
 
   useInterval(getCurrentProgress, PROGRESS_INTERVAL);
-  useInterval(fetchCurrentlyPlaying, UPDATE_INTERVAL);
+  useInterval(getCurrentlyPlaying, UPDATE_INTERVAL);
 
   return (
     <div className="now-playing">

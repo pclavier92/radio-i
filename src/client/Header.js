@@ -1,17 +1,12 @@
 import React from 'react';
 
+import UserDropdown from './components/user-dropdown';
+
 import { serverUrl } from './config';
-import localStorage from './local-storage';
 import { useAuthentication } from './Authentication';
 
 const Header = () => {
-  const { accessToken, setAccessToken, setRefreshToken } = useAuthentication();
-
-  const logOut = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
-    localStorage.clearApiTokens();
-  };
+  const { authenticated } = useAuthentication();
 
   return (
     <header>
@@ -20,10 +15,8 @@ const Header = () => {
           <h1>RadioI</h1>
         </div>
         <div className="col span-1-of-2">
-          {accessToken ? (
-            <button onClick={logOut} className="btn btn-logout">
-              Logout
-            </button>
+          {authenticated ? (
+            <UserDropdown />
           ) : (
             <a href={`${serverUrl}/login`} className="btn btn-login">
               Login with Spotify

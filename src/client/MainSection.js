@@ -5,10 +5,10 @@ import Search from './Search';
 import { useAuthentication } from './Authentication';
 
 const MainSection = () => {
-  const { accessToken } = useAuthentication();
+  const { authenticated } = useAuthentication();
   return (
     <Fragment>
-      {accessToken && (
+      {authenticated && (
         <section>
           <div className="row">
             <div className="col span-1-of-3">

@@ -1,31 +1,15 @@
-import React, { useState, useCallback, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useCallback, useEffect } from 'react';
 
-import { msToMinutesSeconds } from "../../utils";
-
-import { useAuthentication } from "../../Authentication";
-
-const startPlayingSong = (accessToken, uri) =>
-  axios
-    .put(
-      "https://api.spotify.com/v1/me/player/play",
-      {
-        uris: [uri],
-        position_ms: 0
-      },
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        responseType: "json"
-      }
-    )
-    .catch(e => console.log(e));
+import spotifyWebApi from '../../apis/spotify-web-api';
+import { msToMinutesSeconds } from '../../utils';
 
 const ListItem = ({
-  item: { name: songName, duration_ms: duration, album, artists, uri }
+  item: {
+ name: songName, duration_ms: duration, album, artists, uri 
+}
 }) => {
   const [mainArtist] = artists;
   const [songAdded, setSongAdded] = useState(false);
-  const { accessToken } = useAuthentication();
 
   useEffect(() => {
     setSongAdded(false);
@@ -34,7 +18,8 @@ const ListItem = ({
   const addSong = useCallback(() => {
     if (!songAdded) {
       setSongAdded(true);
-      startPlayingSong(accessToken, uri);
+      const startPosition = 0;
+      spotifyWebApi.playSongFrom(uri, startPosition);
     }
   }, [songAdded, uri]);
 

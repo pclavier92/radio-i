@@ -8,9 +8,9 @@ import { msToMinutesSeconds } from '../../utils';
 
 import RotatingText from '../rotating-text';
 
-const MAX_H4_HEIGHT = 31;
-const MAX_H5_HEIGHT = 28;
-const MAX_H6_HEIGHT = 25;
+const MAX_H4_HEIGHT = 35;
+const MAX_H5_HEIGHT = 30;
+const MAX_H6_HEIGHT = 28;
 const IMG_RESOLUTION = 300;
 
 const SongCard = ({ song, duration, progress }) => {

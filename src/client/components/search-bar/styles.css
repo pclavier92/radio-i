@@ -19,3 +19,7 @@ input {
   height: 20px;
   width: 20px;
 }
+
+.search-bar i:hover {
+  color: #1ed760;
+}

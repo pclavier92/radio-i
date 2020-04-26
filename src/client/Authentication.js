@@ -1,81 +1,44 @@
-import React, {
- useContext, useEffect, useState, useCallback 
-} from 'react';
-import axios from 'axios';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import useRefreshAccessToken from './hooks/use-refresh-access-token';
 
-import localStorage from './local-storage';
-import { getHashParams } from './utils';
+import authService from './services/authentication';
+
+import spotifyWebApi from './apis/spotify-web-api';
 
 const authentication = React.createContext({});
 
 const AuthenticationProvider = ({ children }) => {
-  const [accessToken, setAccessToken] = useState();
-  const [refreshToken, setRefreshToken] = useState();
-  const [expiration, setExpiration] = useState(3600);
-  const [error, setError] = useState();
-
-  const getUserInfo = useCallback(() => {
-    console.log(accessToken);
-    axios
-      .get('https://api.spotify.com/v1/me', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        responseType: 'json'
-      })
-      .then(({ data }) => console.log('/me', data))
-      .catch(e => console.log(e));
-  }, [accessToken]);
+  const [user, setUser] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const apiTokens = localStorage.getApiTokens();
-    if (apiTokens.accessToken && apiTokens.refreshToken) {
-      const {
-        accessToken: access_token,
-        refreshToken: refresh_token
-      } = apiTokens;
-      setAccessToken(access_token);
-      setRefreshToken(refresh_token);
-      localStorage.setApiTokens(access_token, refresh_token);
-    } else {
-      const {
-        access_token,
-        refresh_token,
-        expires_in,
-        error
-      } = getHashParams();
-      setExpiration(expires_in);
-      setError(error);
-      setAccessToken(access_token);
-      setRefreshToken(refresh_token);
-      localStorage.setApiTokens(access_token, refresh_token);
+    try {
+      authService.getAuthentication();
+      setAuthenticated(true);
+      window.location.hash = '';
+      (async () => {
+        const { data } = await spotifyWebApi.getUserInfo();
+        setUser(data);
+      })();
+    } catch (e) {
+      console.log(e);
     }
   }, []);
 
-  useRefreshAccessToken(
-    refreshToken,
-    expiration,
-    setAccessToken,
-    setRefreshToken
+  const authValue = useMemo(
+    () => ({
+      user,
+      authenticated,
+      setAuthenticated
+    }),
+    [user, authenticated, setAuthenticated]
   );
 
-  useEffect(() => {
-    // Why dough? User provider??
-    if (accessToken) {
-      window.location.hash = '';
-      getUserInfo();
-    }
-  }, [accessToken]);
-
-  const authenticationValue = {
-    accessToken,
-    refreshToken,
-    setAccessToken,
-    setRefreshToken
-  };
+  useRefreshAccessToken();
 
   return (
-    <authentication.Provider value={authenticationValue}>
+    <authentication.Provider value={authValue}>
       {children}
     </authentication.Provider>
   );

@@ -106,7 +106,6 @@ header h1 {
 header a,
 header button {
   float: right;
-  margin-right: 20px;
 }
 
 .btn {
@@ -115,7 +114,7 @@ header button {
   border-radius: 20px;
   text-decoration: none;
   border: 1px solid #ccc;
-  margin: 10px 20px 10px 0;
+  margin: 10px 0 10px 0;
 }
 
 .btn-login:link,
@@ -124,7 +123,7 @@ header button {
   background-color: #1db954;
   border-color: #1db954;
   transition: background-color 300ms, border-color 300ms;
-  margin: 10px 20px 10px 0;
+  margin: 10px 0 10px 0;
   text-transform: uppercase;
 }
 
@@ -132,6 +131,18 @@ header button {
 .btn-login:active {
   background-color: #1ed760;
   border-color: #1ed760;
+}
+
+.btn-user {
+  width: 175px;
+  padding: 0;
+  border: none;
+  background-color: #f6f5f4;
+}
+
+.btn-user:hover {
+  cursor: pointer;
+  color: #1ed760;
 }
 
 /* ------------------------------------------------------ */
