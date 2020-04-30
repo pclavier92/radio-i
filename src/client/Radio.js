@@ -4,12 +4,12 @@ import NowPlaying from './NowPlaying';
 import Search from './Search';
 import { useAuthentication } from './Authentication';
 
-const MainSection = () => {
+const Radio = () => {
   const { authenticated } = useAuthentication();
   return (
     <Fragment>
       {authenticated && (
-        <section>
+        <section className="section-main">
           <div className="row">
             <div className="col span-1-of-3">
               <NowPlaying />
@@ -24,4 +24,4 @@ const MainSection = () => {
   );
 };
 
-export default MainSection;
+export default Radio;

@@ -1,19 +1,20 @@
 import React, { useCallback, useState, Fragment } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import authService from '../../services/authentication';
-
-import localStorage from '../../local-storage';
 import { useAuthentication } from '../../Authentication';
 
 import './styles.css';
 
 const UserDropdown = () => {
+  const history = useHistory();
   const { user, setAuthenticated } = useAuthentication();
   const [open, setOpen] = useState(false);
 
   const logOut = useCallback(() => {
     setAuthenticated(false);
     authService.logOut();
+    history.push('/');
   }, []);
 
   const toggleDropdown = useCallback(() => {

@@ -2,6 +2,7 @@ const request = require('request');
 const querystring = require('querystring');
 const config = require('./config').server;
 
+const radioiService = require('./services/radioi');
 const spotifyService = require('./services/spotify');
 
 const { generateRandomString } = require('./utils');
@@ -17,9 +18,7 @@ const spotifyLogin = (req, res) => {
 };
 
 const spotifyCallback = (req, res) => {
-  // your application requests refresh and access tokens
-  // after checking the state parameter
-
+  // requests refresh and access tokens after checking the state parameter
   const code = req.query.code || null;
   const state = req.query.state || null;
   const storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -35,8 +34,17 @@ const spotifyCallback = (req, res) => {
         const { access_token, refresh_token, expires_in } = body;
 
         const meOptions = spotifyService.getMeOptions(access_token);
-        request.get(meOptions, (error, response, body) => {
-          console.log(body);
+        request.get(meOptions, async (error, response, user) => {
+          if (!error && response.statusCode === 200) {
+            try {
+              const userExists = await radioiService.userExists(user.id);
+              if (!userExists) {
+                radioiService.insertUser(user);
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }
         });
 
         // pass the token to the browser

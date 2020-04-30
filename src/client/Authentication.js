@@ -1,24 +1,33 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import sha256 from 'crypto-js/sha256';
 
+import storage from './services/storage';
 import useRefreshAccessToken from './hooks/use-refresh-access-token';
-
 import authService from './services/authentication';
-
 import spotifyWebApi from './apis/spotify-web-api';
 
 const authentication = React.createContext({});
 
+const nonce = 'user-hash-key';
+
 const AuthenticationProvider = ({ children }) => {
+  const history = useHistory();
   const [user, setUser] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     try {
-      authService.getAuthentication();
+      const { redirected } = authService.getAuthentication();
       setAuthenticated(true);
-      window.location.hash = '';
+      if (redirected) {
+        const lastFullPath = storage.getLastLocation();
+        const path = lastFullPath || '/';
+        history.push(path);
+      }
       (async () => {
         const { data } = await spotifyWebApi.getUserInfo();
+        data.hash = sha256(nonce + data.id);
         setUser(data);
       })();
     } catch (e) {

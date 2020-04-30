@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import UserDropdown from './components/user-dropdown';
-
+import storage from './services/storage';
 import { serverUrl } from './config';
 import { useAuthentication } from './Authentication';
+import UserDropdown from './components/user-dropdown';
 
 const Header = () => {
+  const location = useLocation();
   const { authenticated } = useAuthentication();
+  const login = useCallback(() => {
+    const { pathname, search } = location;
+    storage.setLastLocation(pathname + search);
+    window.location.href = `${serverUrl}/login`;
+  }, []);
 
   return (
     <header>
@@ -18,9 +25,9 @@ const Header = () => {
           {authenticated ? (
             <UserDropdown />
           ) : (
-            <a href={`${serverUrl}/login`} className="btn btn-login">
+            <button type="button" onClick={login} className="btn btn-login">
               Login with Spotify
-            </a>
+            </button>
           )}
         </div>
       </div>

@@ -9,7 +9,7 @@ const FIVE_MINUTES = 5 * 60 * 1000; // ms
 const HOUR = 3600 * 1000;
 
 const useRefreshAccessToken = () => {
-  const expiration = authService.getExpirationTime();
+  const expiration = authService.getExpiration();
   const [refreshInterval, setRefreshInterval] = useState(FIVE_MINUTES);
 
   // Update access token before it expires

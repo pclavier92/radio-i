@@ -20,8 +20,8 @@ switch (process.env.SCOPE) {
   case 'dev':
   default:
     user = 'root';
-    pass = 'root';
-    db = 'devDbName';
+    pass = '25031992';
+    db = 'radioidb';
     host = '127.0.0.1';
     port = 3306;
     serverPort = 8888;

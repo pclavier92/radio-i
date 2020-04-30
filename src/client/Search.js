@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 
 import SearchBar from './components/search-bar';
 import SearchList from './components/search-list';
@@ -41,14 +40,14 @@ const Search = () => {
   }, [searchInput]);
 
   return (
-    <div>
+    <Fragment>
       <SearchBar
         topArtist={topArtist}
         setSearchsearchInput={debounce(setSearchsearchInput, ONE_SECOND)}
         triggerSearch={triggerSearch}
       />
       <SearchList searchResults={searchResults} />
-    </div>
+    </Fragment>
   );
 };
 

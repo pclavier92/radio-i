@@ -1,12 +1,12 @@
 import { getHashParams } from '../utils';
-import localStorage from '../local-storage';
+import storage from './storage';
 
 class AuthService {
   constructor() {
     this.accessToken = null;
     this.refreshToken = null;
     this.expiration = null;
-    this.localStorage = localStorage;
+    this.storage = storage;
   }
 
   getAccessToken() {
@@ -17,7 +17,7 @@ class AuthService {
     return this.refreshToken;
   }
 
-  getExpirationTime() {
+  getExpiration() {
     return this.expiration;
   }
 
@@ -25,17 +25,19 @@ class AuthService {
     let access = null;
     let refresh = null;
     let expiration = null;
+    let redirected = false;
     const { access_token, refresh_token, expires_in, error } = getHashParams();
     if (access_token) {
       access = access_token;
       refresh = refresh_token;
       expiration = new Date().getTime() + expires_in * 1000;
+      redirected = true;
     } else {
       const {
         accessToken,
         refreshToken,
         expirationTimestamp
-      } = this.localStorage.getApiTokens();
+      } = this.storage.getApiTokens();
       access = accessToken;
       refresh = refreshToken;
       expiration = expirationTimestamp;
@@ -47,26 +49,33 @@ class AuthService {
     this.accessToken = access;
     this.refreshToken = refresh;
     this.expiration = expiration;
-    this.localStorage.setAccessToken(access);
-    this.localStorage.setRefreshToken(refresh);
-    this.localStorage.setExpiration(expiration);
+    this.storage.setAccessToken(access);
+    this.storage.setRefreshToken(refresh);
+    this.storage.setExpiration(expiration);
+
+    return { redirected };
   }
 
   setAccessToken(accessToken) {
     this.accessToken = accessToken;
-    this.localStorage.setAccessToken(accessToken);
+    this.storage.setAccessToken(accessToken);
   }
 
   setRefreshToken(refreshToken) {
     this.refreshToken = refreshToken;
-    this.localStorage.setRefreshToken(refreshToken);
+    this.storage.setRefreshToken(refreshToken);
+  }
+
+  setExpiration(expiration) {
+    this.expiration = expiration;
+    this.storage.setExpiration(expiration);
   }
 
   logOut() {
     this.accessToken = null;
     this.refreshToken = null;
     this.expiration = null;
-    this.localStorage.clearApiTokens();
+    this.storage.clearApiTokens();
   }
 }
 
