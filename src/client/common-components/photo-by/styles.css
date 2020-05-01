@@ -1,0 +1,11 @@
+.photo-by {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #6e6e6e;
+}
+
+.photo-by a {
+  text-decoration: none;
+  color: #6e6e6e;
+}

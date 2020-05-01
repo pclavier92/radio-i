@@ -1,0 +1,19 @@
+header {
+  padding: 5px;
+  box-shadow: 0 30px 40px rgba(0, 1, 22, 0.1);
+}
+
+header .row {
+  margin: 0;
+}
+
+header .logo {
+  float: left;
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+header a,
+header button {
+  float: right;
+}

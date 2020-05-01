@@ -1,7 +1,10 @@
 import React, { useState, useCallback } from 'react';
-
-import useInterval from './hooks/use-interval';
 import { useHistory } from 'react-router-dom';
+
+import useInterval from '../../hooks/use-interval';
+import PhotoBy from '../../common-components/photo-by';
+
+import './styles.css';
 
 const NotFound = () => {
   const history = useHistory();
@@ -18,18 +21,13 @@ const NotFound = () => {
   useInterval(decreaseCount, 1000);
 
   return (
-    <section className="section-not-found">
+    <section className="section-not-found background-img">
       <div className="row">
         <div className="not-found-text-box">
           <h2>404 PAGE NOT FOUND</h2>
           <p>Redirecting to home in ... {count}</p>
         </div>
-        <span>
-          Photo by &nbsp;
-          <a href="https://unsplash.com/@rexcuando?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-            Eric Nopanen
-          </a>
-        </span>
+        <PhotoBy ph="Bruno Cervera" link="https://unsplash.com/@brunocervera" />
       </div>
     </section>
   );

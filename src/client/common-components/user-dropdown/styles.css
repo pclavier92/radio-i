@@ -1,3 +1,19 @@
+.btn-user {
+  font-weight: 500;
+  border-radius: 20px;
+  text-decoration: none;
+  margin: 10px 0 10px 0;
+  cursor: pointer;
+  width: 180px;
+  padding: 0;
+  border: none;
+  background-color: #f6f5f4;
+}
+
+.btn-user:hover {
+  color: #1ed760;
+}
+
 .user-dropdown img {
   margin-right: 0;
 }

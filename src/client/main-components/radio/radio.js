@@ -1,15 +1,17 @@
 import React, { Fragment } from 'react';
 
-import NowPlaying from './NowPlaying';
-import Search from './Search';
-import { useAuthentication } from './Authentication';
+import NowPlaying from './now-playing';
+import Search from './search';
+import { useAuthentication } from '../authentication';
+
+import './styles.css';
 
 const Radio = () => {
   const { authenticated } = useAuthentication();
   return (
     <Fragment>
       {authenticated && (
-        <section className="section-main">
+        <section className="section-radio">
           <div className="row">
             <div className="col span-1-of-3">
               <NowPlaying />

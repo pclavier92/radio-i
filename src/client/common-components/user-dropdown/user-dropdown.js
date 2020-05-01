@@ -2,7 +2,7 @@ import React, { useCallback, useState, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import authService from '../../services/authentication';
-import { useAuthentication } from '../../Authentication';
+import { useAuthentication } from '../../main-components/authentication/authentication';
 
 import './styles.css';
 
@@ -23,7 +23,7 @@ const UserDropdown = () => {
 
   return (
     <div className="user-dropdown">
-      <button type="button" onClick={toggleDropdown} className="btn btn-user">
+      <button type="button" onClick={toggleDropdown} className="btn-user">
         {user && (
           <Fragment>
             <img alt={user.display_name} src={user.images[0].url} />

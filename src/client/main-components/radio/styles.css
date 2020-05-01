@@ -1,0 +1,10 @@
+.section-radio {
+  padding-top: 30px;
+}
+
+.now-playing {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  margin-left: 10%;
+}

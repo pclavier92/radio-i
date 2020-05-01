@@ -11,28 +11,31 @@ CREATE TABLE `User` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `Stream` (
+CREATE TABLE `Radio` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `hash` varchar(256) NOT NULL,
   `user_id` varchar(256) DEFAULT NULL,
+  `name` varchar(35) DEFAULT NULL,
   `is_active` bit DEFAULT 0,
+  `is_public` bit DEFAULT 0,
   `song_id` varchar(256) DEFAULT NULL,
   `timestamp_ms` int(11) DEFAULT 0,
-  PRIMARY KEY (`hash`),
-  FOREIGN KEY `FK_Stream_User` (`user_id`) REFERENCES `User` (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY `FK_Radio_User` (`user_id`) REFERENCES `User` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `StreamQueue` (
-  `hash` varchar(256) NOT NULL,
+CREATE TABLE `RadioQueue` (
+  `radio_id` int(11) NOT NULL,
   `song_id` varchar(256) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
-  PRIMARY KEY (`hash`,`song_id`),
-  FOREIGN KEY `FK_StreamQueue_Steam` (`hash`) REFERENCES `Stream` (`hash`)
+  PRIMARY KEY (`radio_id`,`song_id`),
+  FOREIGN KEY `FK_RadioQueue_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `Subscriptions` (
-  `stream_hash` varchar(256) NOT NULL,
+  `radio_id` int(11) NOT NULL,
   `user_id` varchar(256) DEFAULT NULL,
   `ws` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`stream_hash`,`user_id`),
-  FOREIGN KEY `FK_Subscriptions_Steam` (`stream_hash`) REFERENCES `Stream` (`hash`)
+  PRIMARY KEY (`radio_id`,`user_id`),
+  FOREIGN KEY `FK_Subscriptions_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import spotifyWebApi from './apis/spotify-web-api';
-import useInterval from './hooks/use-interval';
-import { useAuthentication } from './Authentication';
-import SongCard from './components/song-card';
+import spotifyWebApi from '../../apis/spotify-web-api';
+import useInterval from '../../hooks/use-interval';
+import SongCard from '../../common-components/song-card';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
 const UPDATE_INTERVAL = 10 * 1000; // 10 seg
@@ -14,8 +13,6 @@ const INITIAL_CURRENTLY_PLAYING = Object.freeze({
 });
 
 const NowPlaying = () => {
-  const { authenticated } = useAuthentication();
-
   const [currentlyPlaying, setCurrentlyPlaying] = useState(
     INITIAL_CURRENTLY_PLAYING
   );

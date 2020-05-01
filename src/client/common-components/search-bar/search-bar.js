@@ -8,9 +8,9 @@ const SearchBar = ({ topArtist, setSearchsearchInput, triggerSearch }) => (
       type="text"
       name="search"
       id="search"
-      placeholder={`Add songs to your playlist! For example something from... ${topArtist}`}
+      placeholder={`Add songs to your radio! For example something from... ${topArtist}`}
       onChange={event => setSearchsearchInput(event.target.value)}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter') {
           triggerSearch();
         }

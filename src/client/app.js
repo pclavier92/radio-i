@@ -2,11 +2,11 @@ import React from 'react';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import Header from './Header';
-import Radio from './Radio';
-import Home from './Home';
-import NotFound from './NotFound';
-import { AuthenticationProvider as Authentication } from './Authentication';
+import Header from './main-components/header';
+import Radio from './main-components/radio';
+import Home from './main-components/home';
+import NotFound from './main-components/not-found/not-found';
+import { AuthenticationProvider as Authentication } from './main-components/authentication';
 
 import './css/normalize.css';
 import './css/grid.css';

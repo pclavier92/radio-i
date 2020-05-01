@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import sha256 from 'crypto-js/sha256';
 
-import storage from './services/storage';
-import useRefreshAccessToken from './hooks/use-refresh-access-token';
-import authService from './services/authentication';
-import spotifyWebApi from './apis/spotify-web-api';
+import storage from '../../services/storage';
+import useRefreshAccessToken from '../../hooks/use-refresh-access-token';
+import authService from '../../services/authentication';
+import spotifyWebApi from '../../apis/spotify-web-api';
 
 const authentication = React.createContext({});
 

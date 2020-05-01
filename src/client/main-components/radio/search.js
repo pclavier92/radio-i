@@ -1,10 +1,10 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 
-import SearchBar from './components/search-bar';
-import SearchList from './components/search-list';
+import SearchBar from '../../common-components/search-bar';
+import SearchList from '../../common-components/search-list';
 
-import spotifyWebApi from './apis/spotify-web-api';
-import { debounce } from './utils';
+import spotifyWebApi from '../../apis/spotify-web-api';
+import { debounce } from '../../utils';
 
 const ONE_SECOND = 1000; // ms
 

@@ -79,7 +79,7 @@ class SpotifyWebApi {
     const encodedInput = encodeURIComponent(searchInput);
     const requestConfig = {
       method: 'get',
-      url: `${spotifyUrl}/search?q=${encodedInput}&type=track&offset=0&limit=10`,
+      url: `${spotifyUrl}/search?q=${encodedInput}&type=track&offset=0&limit=12`,
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };

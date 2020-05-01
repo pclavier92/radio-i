@@ -1,14 +1,20 @@
 import React, { Fragment, useCallback, useMemo, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { useAuthentication } from './Authentication';
+import SpotifyButton from '../../common-components/spotify-button';
+import PhotoBy from '../../common-components/photo-by';
+import CustomCheckbox from '../../common-components/custom-checkbox';
+import { useAuthentication } from '../authentication';
+import radioiApi from '../../apis/radioi-api';
+
+import './styles.css';
 
 const Lobby = () => {
   const history = useHistory();
   const { user } = useAuthentication();
   const [radioname, setRadioname] = useState('');
   const [makePublic, setMakePublic] = useState(false);
-  const stream = useMemo(() => user && user.hash, [user]);
+  const id = useMemo(() => user && user.hash, [user]);
 
   const onInputChange = useCallback(e => setRadioname(e.target.value), []);
   const onCheckboxChange = useCallback(
@@ -19,20 +25,21 @@ const Lobby = () => {
     e => {
       if (radioname !== '') {
         e.preventDefault();
-        history.push(`/radio?stream=${stream}`);
+        radioiApi.startRadio(id, radioname, makePublic);
+        history.push(`/radio?id=${id}`);
       }
     },
-    [stream, radioname]
+    [id, radioname]
   );
 
   return (
-    <section className="section-lobby">
+    <section className="section-lobby background-img">
       <div className="row">
         <div className="col span-1-of-2">
           <div className="lobby-left-box">
             <h2>Give your radio a name</h2>
             <h2>& start playing some music</h2>
-            <form>
+            <form autoComplete="off">
               <input
                 type="text"
                 name="radio-name"
@@ -41,24 +48,11 @@ const Lobby = () => {
                 required
                 onChange={onInputChange}
               />
-              <button
-                type="submit"
-                className="btn btn-login"
-                onClick={onStartRadioClick}
-              >
+              <SpotifyButton onClick={onStartRadioClick}>
                 Start your radio
-              </button>
+              </SpotifyButton>
 
-              <label htmlFor="make-public" className="make-public">
-                <input
-                  type="checkbox"
-                  onChange={onCheckboxChange}
-                  name="make-public"
-                  id="make-public"
-                />
-                <span className="checkmark">&nbsp;</span>
-              </label>
-
+              <CustomCheckbox className="make-public-checkbox" />
               <h3>Make Radio Public</h3>
             </form>
           </div>
@@ -68,31 +62,21 @@ const Lobby = () => {
             <h2>...or start listening to some radios</h2>
           </div>
         </div>
-        <span className="photo-by">
-          Photo by &nbsp;
-          <a href="https://unsplash.com/@rexcuando?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-            Eric Nopanen
-          </a>
-        </span>
+        <PhotoBy ph="Matt Botsford" link="https://unsplash.com/@mattbotsford" />
       </div>
     </section>
   );
 };
 
 const BaseHome = () => (
-  <section className="section-home">
+  <section className="section-home background-img">
     <div className="row">
       <div className="home-text-box">
         <h2>Create a radio.</h2>
         <h2>Share it with friends.</h2>
         <h2>Let everyone listen to what you play live!</h2>
       </div>
-      <span>
-        Photo by &nbsp;
-        <a href="https://unsplash.com/@rexcuando?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
-          Eric Nopanen
-        </a>
-      </span>
+      <PhotoBy ph="Eric Nopanen" link="https://unsplash.com/@rexcuando" />
     </div>
   </section>
 );
