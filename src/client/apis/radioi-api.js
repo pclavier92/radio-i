@@ -1,19 +1,23 @@
 import axios from 'axios';
 
 import { serverUrl } from '../config';
-import authService from '../services/authentication';
 
-class RadioIApi {
-  constructor() {
-    this.authentication = authService;
-  }
+const refreshAccessToken = () => {
+  const refreshToken = this.authentication.getRefreshToken();
+  return axios.get(`${serverUrl}/refresh_token`, {
+    params: { refresh_token: refreshToken }
+  });
+};
 
-  refreshAccessToken() {
-    const refreshToken = this.authentication.getRefreshToken();
-    return axios.get(`${serverUrl}/refresh_token`, {
-      params: { refresh_token: refreshToken }
-    });
-  }
-}
+const startRadio = (id, userId, name, isPublic) =>
+  axios.post(
+    `${serverUrl}/api/radio`,
+    { id, userId, name, isPublic },
+    {
+      'Content-Type': 'application/json'
+    }
+  );
 
-export default new RadioIApi();
+const getRadio = id => axios.get(`${serverUrl}/api/radio?id=${id}`);
+
+export default { refreshAccessToken, startRadio, getRadio };

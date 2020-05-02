@@ -27,7 +27,7 @@ const AuthenticationProvider = ({ children }) => {
       }
       (async () => {
         const { data } = await spotifyWebApi.getUserInfo();
-        data.hash = sha256(nonce + data.id);
+        data.hash = sha256(nonce + data.id).toString();
         setUser(data);
       })();
     } catch (e) {

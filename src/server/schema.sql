@@ -7,7 +7,7 @@ CREATE TABLE `User` (
   `name` varchar(128) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
   `country` varchar(128) DEFAULT NULL,
-  `premium` bit DEFAULT 0,
+  `premium` TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -16,8 +16,7 @@ CREATE TABLE `Radio` (
   `hash` varchar(256) NOT NULL,
   `user_id` varchar(256) DEFAULT NULL,
   `name` varchar(35) DEFAULT NULL,
-  `is_active` bit DEFAULT 0,
-  `is_public` bit DEFAULT 0,
+  `is_public` TINYINT(1) DEFAULT 0,
   `song_id` varchar(256) DEFAULT NULL,
   `timestamp_ms` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),

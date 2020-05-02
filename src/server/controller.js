@@ -1,15 +1,25 @@
+const path = require('path');
 const request = require('request');
 const querystring = require('querystring');
-const config = require('./config').server;
+const sha256 = require('crypto-js/sha256');
 
+const config = require('./config').server;
 const radioiService = require('./services/radioi');
 const spotifyService = require('./services/spotify');
-
+const logger = require('./request-logger');
+const { ValidationError, PermissionError } = require('./errors');
 const { generateRandomString } = require('./utils');
 
 const stateKey = 'spotify_auth_state';
+const nonce = 'user-hash-key';
+
+const serveApp = (req, res) => {
+  logger.info(req, 'Serve Application');
+  res.sendFile(path.resolve('dist', 'index.html'));
+};
 
 const spotifyLogin = (req, res) => {
+  logger.info(req, 'Login to Spotify');
   const state = generateRandomString(16);
   res.cookie(stateKey, state);
   const url = spotifyService.loginRedirectUrl(state);
@@ -18,6 +28,8 @@ const spotifyLogin = (req, res) => {
 };
 
 const spotifyCallback = (req, res) => {
+  logger.info(req, 'Spotify Login Callback');
+
   // requests refresh and access tokens after checking the state parameter
   const code = req.query.code || null;
   const state = req.query.state || null;
@@ -39,7 +51,7 @@ const spotifyCallback = (req, res) => {
             try {
               const userExists = await radioiService.userExists(user.id);
               if (!userExists) {
-                radioiService.insertUser(user);
+                await radioiService.insertUser(user);
               }
             } catch (e) {
               console.log(e);
@@ -76,4 +88,52 @@ const spotifyTokenRefresh = (req, res) => {
   });
 };
 
-module.exports = { spotifyLogin, spotifyCallback, spotifyTokenRefresh };
+const startRadio = async (req, res) => {
+  try {
+    const { id, userId, name, isPublic } = req.body;
+    if (!id || !userId || !name) {
+      throw new ValidationError('Not matching ids');
+    }
+    const userHash = sha256(nonce + userId).toString();
+    if (userHash !== id) {
+      throw new PermissionError('Not matching ids');
+    }
+    const radioExists = await radioiService.radioExists(id);
+    if (!radioExists) {
+      await radioiService.createRadio(id, userId, name, isPublic);
+      logger.info(req, 'New radio created');
+    } else {
+      logger.info(req, 'Radio already exists');
+    }
+    res.sendStatus(200);
+  } catch (e) {
+    logger.error(req, e.status, e.message);
+    res.sendStatus(e.status || 400);
+  }
+};
+
+const getRadio = async (req, res) => {
+  try {
+    const hash = req.query.id;
+    if (!hash) {
+      throw new ValidationError('Radio id not specified');
+    }
+    const radio = await radioiService.getRadioByHash(hash);
+    logger.info(req, 'Radio fetched');
+    delete radio.userId;
+    delete radio.id;
+    res.status(200).json(radio);
+  } catch (e) {
+    logger.error(req, e.status, e.message);
+    res.sendStatus(e.status);
+  }
+};
+
+module.exports = {
+  serveApp,
+  spotifyLogin,
+  spotifyCallback,
+  spotifyTokenRefresh,
+  startRadio,
+  getRadio
+};

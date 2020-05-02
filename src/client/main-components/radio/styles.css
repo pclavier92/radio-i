@@ -2,9 +2,31 @@
   padding-top: 30px;
 }
 
+.radio-title {
+  width: 100%;
+  height: 50px;
+  margin-left: 50px;
+}
+
 .now-playing {
   display: flex;
   justify-content: center;
   width: 90%;
   margin-left: 10%;
+}
+
+.section-auth-required {
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../images/oscar-keys-ojVMh1QTVGY-unsplash.jpg);
+}
+
+.auth-required-text-box {
+  text-align: center;
+  margin-top: 70px;
+}
+
+.login-required-text-box {
+  text-align: center;
+  margin-top: 25%;
 }
