@@ -4,6 +4,33 @@ const { NotFoundError, DatabaseError } = require('../errors');
 
 const PREMIUM = 'premium';
 
+const getUserByAccessToken = accessToken =>
+  new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'SELECT * FROM User WHERE access_token = ?',
+        accessToken,
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(
+              new DatabaseError('Could not get user by access token from db')
+            );
+          } else if (!results[0]) {
+            console.log(err);
+            reject(
+              new NotFoundError('No user found with the provided access token')
+            );
+          } else {
+            resolve(results[0]);
+          }
+        }
+      );
+    });
+  });
+
 const userExists = userID =>
   new Promise((resolve, reject) => {
     const conn = db.getConnection();
@@ -24,14 +51,23 @@ const userExists = userID =>
     });
   });
 
-const insertUser = user => {
+const insertUser = (user, accessToken) => {
   const premium = user.product === PREMIUM;
   return new Promise((resolve, reject) => {
     const conn = db.getConnection();
     conn.then(dbConnection => {
       dbConnection.query(
-        'INSERT INTO User (id, name, email, country, premium) VALUES (?)',
-        [[user.id, user.display_name, user.email, user.country, premium]],
+        'INSERT INTO User (id, name, email, country, premium, access_token) VALUES (?)',
+        [
+          [
+            user.id,
+            user.display_name,
+            user.email,
+            user.country,
+            premium,
+            accessToken
+          ]
+        ],
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
@@ -45,6 +81,28 @@ const insertUser = user => {
     });
   });
 };
+
+const updateUserToken = (userId, accessToken) =>
+  new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'UPDATE User SET access_token= ? WHERE id = ?',
+        [accessToken, userId],
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(
+              new DatabaseError('Could not update users access token in db')
+            );
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
 
 const radioExists = hash =>
   new Promise((resolve, reject) => {
@@ -122,8 +180,10 @@ const getRadioByHash = hash =>
   });
 
 module.exports = {
+  getUserByAccessToken,
   userExists,
   insertUser,
+  updateUserToken,
   radioExists,
   createRadio,
   getRadioByHash

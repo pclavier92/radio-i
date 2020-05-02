@@ -15,12 +15,20 @@ class ValidationError extends Error {
     this.status = 400;
   }
 }
+class AuthorizationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'PermissionError';
+    this.message = message;
+    this.status = 401;
+  }
+}
 class PermissionError extends Error {
   constructor(message) {
     super(message);
     this.name = 'PermissionError';
     this.message = message;
-    this.status = 400;
+    this.status = 403;
   }
 }
 class DatabaseError extends Error {
@@ -35,6 +43,7 @@ class DatabaseError extends Error {
 module.exports = {
   NotFoundError,
   ValidationError,
+  AuthorizationError,
   PermissionError,
   DatabaseError
 };
