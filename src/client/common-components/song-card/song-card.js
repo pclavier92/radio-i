@@ -16,7 +16,8 @@ const IMG_RESOLUTION = 300;
 const SongCard = ({ song, duration, progress }) => {
   const name = song.name && song.name;
   const album = song.album && song.album.name;
-  const cover =    song.album && song.album.images.find(i => i.height === IMG_RESOLUTION).url;
+  const cover =
+    song.album && song.album.images.find(i => i.height === IMG_RESOLUTION).url;
   const artits = useMemo(
     () => song.artists && song.artists.map(artist => artist.name).join(' - '),
     [song]
@@ -34,7 +35,7 @@ const SongCard = ({ song, duration, progress }) => {
       {name ? (
         <Fragment>
           <div className="cover">
-            <img src={cover} alt={album} />
+            <img src={cover} alt="" />
           </div>
           <div className="content">
             <div className="song-details">

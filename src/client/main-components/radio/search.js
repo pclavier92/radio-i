@@ -40,14 +40,14 @@ const Search = () => {
   }, [searchInput]);
 
   return (
-    <Fragment>
+    <div className="radio-search">
       <SearchBar
         topArtist={topArtist}
         setSearchsearchInput={debounce(setSearchsearchInput, ONE_SECOND)}
         triggerSearch={triggerSearch}
       />
       <SearchList searchResults={searchResults} />
-    </Fragment>
+    </div>
   );
 };
 

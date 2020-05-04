@@ -1,0 +1,15 @@
+.section-auth-required {
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../images/oscar-keys-ojVMh1QTVGY-unsplash.jpg);
+}
+
+.auth-required-text-box {
+  text-align: center;
+  margin-top: 70px;
+}
+
+.login-required-text-box {
+  text-align: center;
+  margin-top: 25%;
+}

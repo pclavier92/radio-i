@@ -6,6 +6,8 @@ const sha256 = require('crypto-js/sha256');
 const config = require('./config').server;
 const radioiService = require('./services/radioi');
 const spotifyService = require('./services/spotify');
+const RadioPlayer = require('./services/radio-player');
+
 const logger = require('./request-logger');
 const {
   ValidationError,
@@ -62,7 +64,7 @@ const spotifyCallback = (req, res) => {
                 logger.info(req, 'New user created');
               }
             } catch (e) {
-              logger.error(req, e.status, e.message);
+              logger.error(req, e);
             }
           }
         });
@@ -102,7 +104,7 @@ const spotifyTokenRefresh = (req, res) => {
           refresh_token
         });
       } catch (e) {
-        logger.error(req, e.status, e.message);
+        logger.error(req, e);
       }
     }
   });
@@ -120,7 +122,7 @@ const getUserByAccessToken = async req => {
     user = await radioiService.getUserByAccessToken(token);
   } catch (e) {
     if (e.status === 404) {
-      throw new AuthorizationError('Access token not found');
+      throw new AuthorizationError('No user matches the given access token');
     } else {
       throw e;
     }
@@ -128,17 +130,22 @@ const getUserByAccessToken = async req => {
   return user;
 };
 
+// If not the owner throws an error
+const checkIfOwner = (radioId, userId) => {
+  const userHash = sha256(nonce + userId).toString();
+  if (userHash !== radioId) {
+    throw new PermissionError('Not matching ids');
+  }
+};
+
 const startRadio = async (req, res) => {
   try {
     const { id, name, isPublic } = req.body;
     if (!id || !name) {
-      throw new ValidationError('Not matching ids');
+      throw new ValidationError('Request missing parameters');
     }
     const user = await getUserByAccessToken(req);
-    const userHash = sha256(nonce + user.id).toString();
-    if (userHash !== id) {
-      throw new PermissionError('Not matching ids');
-    }
+    await checkIfOwner(id, user.id);
     const radioExists = await radioiService.radioExists(id);
     if (!radioExists) {
       await radioiService.createRadio(id, user.id, name, isPublic);
@@ -148,7 +155,7 @@ const startRadio = async (req, res) => {
     }
     res.sendStatus(200);
   } catch (e) {
-    logger.error(req, e.status, e.message);
+    logger.error(req, e);
     res.sendStatus(e.status || 400);
   }
 };
@@ -160,13 +167,62 @@ const getRadio = async (req, res) => {
       throw new ValidationError('Radio id not specified');
     }
     await getUserByAccessToken(req); // just verify logged in user
-    const radio = await radioiService.getRadioByHash(hash);
-    logger.info(req, 'Radio fetched');
-    delete radio.userId;
-    delete radio.id;
-    res.status(200).send(radio);
+    try {
+      const radio = await radioiService.getRadioByHash(hash);
+      logger.info(req, 'Radio fetched');
+      delete radio.userId;
+      delete radio.id;
+      res.status(200).send(radio);
+    } catch (e) {
+      if (e.status === 404) {
+        res.sendStatus(e.status);
+      } else {
+        throw e;
+      }
+    }
   } catch (e) {
-    logger.error(req, e.status, e.message);
+    logger.error(req, e);
+    res.sendStatus(e.status);
+  }
+};
+
+const addSongToRadio = async (req, res) => {
+  try {
+    const { radioId, songId, duration } = req.body;
+    if (!radioId || !songId || !duration) {
+      throw new ValidationError('Request missing parameters');
+    }
+    const user = await getUserByAccessToken(req);
+    await checkIfOwner(radioId, user.id);
+    const radio = await radioiService.getRadioByHash(radioId);
+    if (radio.songId) {
+      // Add song to queue
+      const position = await radioiService.getRadioLastPosition(radio.id);
+      await radioiService.addSongToQueue(radio.id, songId, duration, position);
+      logger.info(req, 'Song added to radio queue');
+    } else {
+      logger.info(req, 'Starting new radio and play song');
+      new RadioPlayer(radio.id).playSong(songId, duration);
+    }
+    res.sendStatus(200);
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status || 400);
+  }
+};
+
+const getRadioQueue = async (req, res) => {
+  try {
+    const hash = req.query.id;
+    if (!hash) {
+      throw new ValidationError('Radio id not specified');
+    }
+    await getUserByAccessToken(req); // just verify logged in user
+    const queue = await radioiService.getRadioQueueFromHash(hash);
+    logger.info(req, 'Radio queue fetched');
+    res.status(200).send({ queue });
+  } catch (e) {
+    logger.error(req, e);
     res.sendStatus(e.status);
   }
 };
@@ -177,5 +233,7 @@ module.exports = {
   spotifyCallback,
   spotifyTokenRefresh,
   startRadio,
-  getRadio
+  getRadio,
+  addSongToRadio,
+  getRadioQueue
 };

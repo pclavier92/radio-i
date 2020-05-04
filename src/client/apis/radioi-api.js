@@ -2,22 +2,69 @@ import axios from 'axios';
 
 import { serverUrl } from '../config';
 
+import authService from '../services/authentication';
+
 const refreshAccessToken = () => {
-  const refreshToken = this.authentication.getRefreshToken();
+  debugger;
+  const accessToken = authService.getAccessToken();
+  const refreshToken = authService.getRefreshToken();
   return axios.get(`${serverUrl}/refresh_token`, {
-    params: { refresh_token: refreshToken }
+    params: { access_token: accessToken, refresh_token: refreshToken }
   });
 };
 
-const startRadio = (id, userId, name, isPublic) =>
-  axios.post(
+const startRadio = (id, name, isPublic) => {
+  const accessToken = authService.getAccessToken();
+  return axios.post(
     `${serverUrl}/api/radio`,
-    { id, userId, name, isPublic },
+    { id, name, isPublic },
     {
-      'Content-Type': 'application/json'
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
     }
   );
+};
 
-const getRadio = id => axios.get(`${serverUrl}/api/radio?id=${id}`);
+const getRadio = id => {
+  const accessToken = authService.getAccessToken();
+  return axios.get(`${serverUrl}/api/radio`, {
+    params: { id },
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
 
-export default { refreshAccessToken, startRadio, getRadio };
+const addSongToRadio = (radioId, songId, duration) => {
+  const accessToken = authService.getAccessToken();
+  return axios.post(
+    `${serverUrl}/api/radio/song`,
+    { radioId, songId, duration },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+};
+
+const getRadioQueue = id => {
+  const accessToken = authService.getAccessToken();
+  return axios.get(`${serverUrl}/api/radio/queue`, {
+    params: { id },
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
+export default {
+  refreshAccessToken,
+  startRadio,
+  getRadio,
+  addSongToRadio,
+  getRadioQueue
+};

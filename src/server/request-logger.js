@@ -3,10 +3,10 @@ const info = (req, message) => {
   console.log(`[Method: ${method}] [Path: ${path}] [Info: ${message}]`);
 };
 
-const error = (req, status, message) => {
+const error = (req, e) => {
   const { method, path } = req;
   console.log(
-    `[Method: ${method}] [Path: ${path}] [Error: [STATUS: ${status}] [MESSAGE: ${message}]]`
+    `[Method: ${method}] [Path: ${path}] [Error: [STATUS: ${e.status}] [MESSAGE: ${e.message}] [STACKTRACE: ${e.stack}]]`
   );
 };
 

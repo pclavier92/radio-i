@@ -19,19 +19,22 @@ CREATE TABLE `Radio` (
   `name` varchar(35) DEFAULT NULL,
   `is_public` TINYINT(1) DEFAULT 0,
   `song_id` varchar(256) DEFAULT NULL,
-  `timestamp_ms` int(11) DEFAULT 0,
+  `timestamp_ms` BIGINT UNSIGNED DEFAULT 0,
   PRIMARY KEY (`id`),
   FOREIGN KEY `FK_Radio_User` (`user_id`) REFERENCES `User` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `RadioQueue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `radio_id` int(11) NOT NULL,
   `song_id` varchar(256) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
-  PRIMARY KEY (`radio_id`,`song_id`),
+  PRIMARY KEY (`id`),
   FOREIGN KEY `FK_RadioQueue_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*
 CREATE TABLE `Subscriptions` (
   `radio_id` int(11) NOT NULL,
   `user_id` varchar(256) DEFAULT NULL,
@@ -39,3 +42,4 @@ CREATE TABLE `Subscriptions` (
   PRIMARY KEY (`radio_id`,`user_id`),
   FOREIGN KEY `FK_Subscriptions_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+*/

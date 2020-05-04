@@ -150,7 +150,7 @@ const getRadioByHash = hash =>
     let conn = db.getConnection();
     conn.then(db => {
       db.query(
-        'SELECT Radio.*, User.name as user_name FROM Radio INNER JOIN User WHERE Radio.user_id = User.id AND Radio.hash = ?',
+        'SELECT Radio.*, User.name as user_name FROM Radio INNER JOIN User ON Radio.user_id = User.id WHERE Radio.hash = ?',
         hash,
         (err, results, fields) => {
           db.release();
@@ -179,6 +179,168 @@ const getRadioByHash = hash =>
     });
   });
 
+const startPlayingSong = (radioId, songId) => {
+  const timestamp = new Date().getTime();
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'UPDATE Radio SET song_id= ?, timestamp_ms = ? WHERE id = ?',
+        [songId, timestamp, radioId],
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(
+              new DatabaseError('Could not update song playing in radio in db')
+            );
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
+const getRadioLastPosition = radioId =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT position FROM `RadioQueue` WHERE radio_id = ? ORDER BY position DESC LIMIT 1',
+        radioId,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(
+              new DatabaseError('Could not get last position from radio queue')
+            );
+          } else if (!results[0]) {
+            resolve(1);
+          } else {
+            resolve(results[0].position + 1);
+          }
+        }
+      );
+    });
+  });
+
+const addSongToQueue = (radioID, songId, duration, position) => {
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'INSERT INTO RadioQueue (radio_id, song_id, duration, position) VALUES (?)',
+        [[radioID, songId, duration, position]],
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not insert song to radio in db'));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
+const getRadioQueueFromHash = hash =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT rq.song_id as songId, rq.duration as duration, ' +
+          'rq.position as position FROM Radio as r ' +
+          'INNER JOIN RadioQueue as rq ON rq.radio_id = r.id WHERE r.hash = ?',
+        hash,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not get radio'));
+          } else if (!results[0]) {
+            console.log(err);
+            reject(
+              new NotFoundError('No radio found corresponding to the hash')
+            );
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+
+const getNextSongFromQueue = radioId =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT * FROM `RadioQueue` WHERE radio_id = ? ORDER BY position ASC LIMIT 1',
+        radioId,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(
+              new DatabaseError('Could not get last position from radio queue')
+            );
+          } else if (!results[0]) {
+            resolve(null);
+          } else {
+            resolve(results[0]);
+          }
+        }
+      );
+    });
+  });
+
+const deleteSongFromQueue = id => {
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'DELETE FROM RadioQueue WHERE id = ?',
+        id,
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not delete song from radio in db'));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
+const deleteRadio = id => {
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'DELETE FROM Radio WHERE id = ?',
+        id,
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not delete radio in db'));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
 module.exports = {
   getUserByAccessToken,
   userExists,
@@ -186,5 +348,12 @@ module.exports = {
   updateUserToken,
   radioExists,
   createRadio,
-  getRadioByHash
+  getRadioByHash,
+  startPlayingSong,
+  getRadioLastPosition,
+  addSongToQueue,
+  getRadioQueueFromHash,
+  getNextSongFromQueue,
+  deleteSongFromQueue,
+  deleteRadio
 };

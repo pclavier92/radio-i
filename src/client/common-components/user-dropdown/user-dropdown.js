@@ -26,7 +26,7 @@ const UserDropdown = () => {
       <button type="button" onClick={toggleDropdown} className="btn-user">
         {user && (
           <Fragment>
-            <img alt={user.display_name} src={user.images[0].url} />
+            <img alt="" src={user.images[0].url} />
             <p>{user.display_name}</p>
           </Fragment>
         )}

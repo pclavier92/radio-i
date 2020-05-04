@@ -97,6 +97,17 @@ class SpotifyWebApi {
     };
     return this.makeRequestWithRetry(requestConfig);
   }
+
+  getSongData(songId) {
+    const accessToken = this.authentication.getAccessToken();
+    const requestConfig = {
+      method: 'get',
+      url: `${spotifyUrl}/tracks/${songId}`,
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: 'json'
+    };
+    return this.makeRequestWithRetry(requestConfig);
+  }
 }
 
 export default new SpotifyWebApi();

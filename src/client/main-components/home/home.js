@@ -31,14 +31,14 @@ const StartRadio = ({ id }) => {
       if (radioname !== '') {
         e.preventDefault();
         try {
-          await radioiApi.startRadio(id, user.id, radioname, makePublic);
+          await radioiApi.startRadio(id, radioname, makePublic);
           history.push(`/radio?id=${id}`);
         } catch (e) {
           console.log('Could not create radio');
         }
       }
     },
-    [id, radioname]
+    [id, radioname, makePublic]
   );
 
   return (

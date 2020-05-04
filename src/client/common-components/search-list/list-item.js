@@ -1,27 +1,26 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-import spotifyWebApi from '../../apis/spotify-web-api';
+import radioiApi from '../../apis/radioi-api';
 import { msToMinutesSeconds } from '../../utils';
+import { useAuthentication } from '../../main-components/authentication';
 
 const ListItem = ({
-  item: {
- name: songName, duration_ms: duration, album, artists, uri 
-}
+  item: { id, name: songName, duration_ms: duration, album, artists }
 }) => {
   const [mainArtist] = artists;
   const [songAdded, setSongAdded] = useState(false);
+  const { user } = useAuthentication();
 
   useEffect(() => {
     setSongAdded(false);
-  }, [uri]);
+  }, [id]);
 
   const addSong = useCallback(() => {
     if (!songAdded) {
       setSongAdded(true);
-      const startPosition = 0;
-      spotifyWebApi.playSongFrom(uri, startPosition);
+      radioiApi.addSongToRadio(user.hash, id, duration);
     }
-  }, [songAdded, uri]);
+  }, [songAdded, id]);
 
   return (
     <li className="row" onClick={addSong}>

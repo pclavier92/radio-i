@@ -2,8 +2,9 @@
   background-color: #fff;
   width: 100%;
   margin: 0 auto;
-  box-shadow: 0 2px 2px #999999;
-  border-radius: 10px;
+  box-shadow: 0 1px 2px #d4d3d3;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   max-height: 150px;
 }
 
@@ -15,7 +16,7 @@
   height: 150px;
   width: 150px;
   border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  background-color: #dfdfdd;
 }
 
 .content {

@@ -17,8 +17,10 @@ app.get('/login', controller.spotifyLogin);
 app.get('/callback', controller.spotifyCallback);
 app.get('/refresh_token', controller.spotifyTokenRefresh);
 
-app.post('/api/radio', controller.startRadio);
 app.get('/api/radio', controller.getRadio);
+app.get('/api/radio/queue', controller.getRadioQueue);
+app.post('/api/radio', controller.startRadio);
+app.post('/api/radio/song', controller.addSongToRadio);
 
 // Request to any other path returns the application
 app.get('*', controller.serveApp);

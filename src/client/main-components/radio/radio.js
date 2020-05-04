@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, Fragment } from 'react';
 
 import radioiApi from '../../apis/radioi-api';
 import useQuery from '../../hooks/use-query';
 
+import RadioQueue from '../../common-components/radio-queue';
+
 import NotFound from '../not-found';
+import AuthenticationRequired from '../auth-required';
 import { useAuthentication } from '../authentication';
 
 import NowPlaying from './now-playing';
@@ -19,29 +22,21 @@ const Radio = ({ radio }) => {
     <section className="section-radio">
       <div className="row">
         <div className="col span-1-of-3">
-          <div className="radio-title">
-            <h3>{radio ? `${radio.name} by ${radio.userName}` : null}</h3>
-          </div>
+          {isOwner && (
+            <div className="radio-title">
+              <h3>
+                {radio.name} by {radio.userName}
+              </h3>
+            </div>
+          )}
           <NowPlaying />
+          <RadioQueue id={radio.hash} />
         </div>
         <div className="col span-2-of-3">{isOwner && <Search />}</div>
       </div>
     </section>
   );
 };
-
-const AuthenticationRequired = () => (
-  <section className="section-auth-required background-img">
-    <div className="row">
-      <div className="auth-required-text-box">
-        <h2>Authentication is required to access this content</h2>
-      </div>
-      <div className="login-required-text-box">
-        <h1>Please login with spotify</h1>
-      </div>
-    </div>
-  </section>
-);
 
 const RadioRouter = () => {
   const [radio, setRadio] = useState(null);
