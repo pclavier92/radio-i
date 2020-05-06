@@ -104,6 +104,15 @@ const updateUserToken = (userId, accessToken) =>
     });
   });
 
+const userLogin = async (user, accessToken) => {
+  const exists = await userExists(user.id);
+  if (exists) {
+    await updateUserToken(user.id, accessToken);
+  } else {
+    await insertUser(user, accessToken);
+  }
+};
+
 const radioExists = hash =>
   new Promise((resolve, reject) => {
     const conn = db.getConnection();
@@ -158,10 +167,7 @@ const getRadioByHash = hash =>
             console.log(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
-            console.log(err);
-            reject(
-              new NotFoundError('No radio found corresponding to the hash')
-            );
+            resolve(null);
           } else {
             resolve({
               id: results[0].id,
@@ -179,9 +185,38 @@ const getRadioByHash = hash =>
     });
   });
 
-const startPlayingSong = (radioId, songId) => {
-  const timestamp = new Date().getTime();
-  return new Promise((resolve, reject) => {
+const getRadioById = id =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT * FROM Radio WHERE id = ?',
+        id,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not get radio'));
+          } else if (!results[0]) {
+            resolve(null);
+          } else {
+            resolve({
+              id: results[0].id,
+              hash: results[0].hash,
+              userId: results[0].user_id,
+              name: results[0].name,
+              isPublic: results[0].is_public ? true : false,
+              songId: results[0].song_id,
+              timestamp: results[0].timestamp_ms
+            });
+          }
+        }
+      );
+    });
+  });
+
+const setPlayingSong = (radioId, songId, timestamp) =>
+  new Promise((resolve, reject) => {
     const conn = db.getConnection();
     conn.then(dbConnection => {
       dbConnection.query(
@@ -201,7 +236,6 @@ const startPlayingSong = (radioId, songId) => {
       );
     });
   });
-};
 
 const getRadioLastPosition = radioId =>
   new Promise((resolve, reject) => {
@@ -263,10 +297,7 @@ const getRadioQueueFromHash = hash =>
             console.log(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
-            console.log(err);
-            reject(
-              new NotFoundError('No radio found corresponding to the hash')
-            );
+            resolve([]);
           } else {
             resolve(results);
           }
@@ -346,10 +377,12 @@ module.exports = {
   userExists,
   insertUser,
   updateUserToken,
+  userLogin,
   radioExists,
   createRadio,
   getRadioByHash,
-  startPlayingSong,
+  getRadioById,
+  setPlayingSong,
   getRadioLastPosition,
   addSongToQueue,
   getRadioQueueFromHash,

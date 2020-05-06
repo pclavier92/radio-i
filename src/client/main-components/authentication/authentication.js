@@ -25,6 +25,7 @@ const AuthenticationProvider = ({ children }) => {
         const path = lastFullPath || '/';
         history.push(path);
       }
+
       (async () => {
         const { data } = await spotifyWebApi.getUserInfo();
         data.hash = sha256(nonce + data.id).toString();
