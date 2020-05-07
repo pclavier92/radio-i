@@ -89,7 +89,6 @@ const Lobby = () => {
         try {
           await radioiApi.getRadio(id);
           setRadioExists(true);
-          debugger;
         } catch (error) {
           if (error.response.status === 404) {
             console.log('Radio doesnt exists');

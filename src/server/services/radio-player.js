@@ -1,12 +1,9 @@
+const { delay } = require('../utils');
 const radioiService = require('./radioi');
 const radioSubscriptions = require('./radio-subscriptions');
 
-const delay = ms =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
+const ONE_SECOND = 1000;
+const IDLE_TIME_BEFORE_CLOSING = 600000; // 10 minutes
 
 class RadioPlayer {
   constructor(radioId, radioHash) {
@@ -20,7 +17,8 @@ class RadioPlayer {
     const timestamp = new Date().getTime();
     await radioiService.setPlayingSong(this.radioId, songId, timestamp);
     radioSubscriptions.playSongForRadio(this.radioHash, songId, timestamp);
-    await delay(duration - 1000); // change one second before ending
+    // Purge radio connections
+    await delay(duration - ONE_SECOND); // change one second before ending
     // Get next song from radio queue
     console.log('Get next song from radio queue');
     const nextSong = await radioiService.getNextSongFromQueue(this.radioId);
@@ -40,12 +38,12 @@ class RadioPlayer {
   async collect() {
     const date = new Date();
     console.log(`Start radio collector - ${new Date().toUTCString()}`);
-    await delay(600000); // 10 min
+    await delay(IDLE_TIME_BEFORE_CLOSING);
     const radio = await radioiService.getRadioById(this.radioId);
     // If radio exists but there is no song playing delete radio
     if (radio && !radio.songId) {
       console.log(`Delete radio - ${new Date().toUTCString()}`);
-      radioSubscriptions.removeRadio(radio.hash);
+      radioSubscriptions.closeRadio(radio.hash);
       await radioiService.deleteRadio(this.radioId);
     }
   }

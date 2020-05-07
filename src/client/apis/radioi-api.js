@@ -5,7 +5,6 @@ import { serverUrl } from '../config';
 import authService from '../services/authentication';
 
 const refreshAccessToken = () => {
-  debugger;
   const accessToken = authService.getAccessToken();
   const refreshToken = authService.getRefreshToken();
   return axios.get(`${serverUrl}/refresh_token`, {

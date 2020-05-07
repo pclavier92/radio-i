@@ -32,23 +32,18 @@ wss.on('connection', (ws, request) => {
   radioSubscriptions.addConnection(userId, ws);
 
   ws.on('message', message => {
-    const data = JSON.parse(message);
-    const { type, payload } = data;
-
-    if (type === 'subscribe') {
-      const { radioId } = payload;
-      radioSubscriptions.addSubscriptor(radioId, userId);
-      console.log('Subscribe to readio');
-    }
-
-    //
-    // Here we can now use session parameters.
-    //
     console.log(`Received message ${message} from ${userId}`);
+
+    const { type, payload } = JSON.parse(message);
+    if (type === 'subscribe') {
+      const { radioHash } = payload;
+      radioSubscriptions.subscribeUser(radioHash, userId);
+      console.log(`Subscribe user ${userId} to radio ${radioHash}`);
+    }
   });
 
   ws.on('close', () => {
-    radioSubscriptions.removeSubscription(userId);
+    radioSubscriptions.unsubscribeUser(userId);
   });
 });
 

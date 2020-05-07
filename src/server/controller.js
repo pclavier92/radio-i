@@ -163,7 +163,7 @@ const startRadio = async (req, res) => {
         name,
         isPublic
       );
-      radioSubscriptions.addRadio(hash);
+      radioSubscriptions.startRadio(hash);
       new RadioPlayer(insertId, hash).collect();
       logger.info(req, 'New radio created');
     } else {
@@ -213,6 +213,7 @@ const addSongToRadio = async (req, res) => {
     if (radio.songId) {
       const position = await radioiService.getRadioLastPosition(radio.id);
       await radioiService.addSongToQueue(radio.id, songId, duration, position);
+      radioSubscriptions.addSongToRadioQueue(hash, songId);
       logger.info(req, 'Song added to radio queue');
     } else {
       logger.info(req, 'Starting new radio and play song');

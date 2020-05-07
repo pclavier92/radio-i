@@ -40,8 +40,6 @@ const RadioQueueItem = ({ data: { songId } }) => {
     })();
   }, [songId]);
 
-  debugger;
-
   return (
     <div className="radio-queue-item">
       {item ? (
