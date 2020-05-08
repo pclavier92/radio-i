@@ -73,8 +73,8 @@ class RadioSubscriptions {
     this.broadcastMessageForRadio(radioHash, message);
   }
 
-  addSongToRadioQueue(radioHash, songId) {
-    const message = { type: ADD_TO_QUEUE, payload: { songId } };
+  addSongToRadioQueue(radioHash, songId, position) {
+    const message = { type: ADD_TO_QUEUE, payload: { songId, position } };
     this.broadcastMessageForRadio(radioHash, message);
   }
 }

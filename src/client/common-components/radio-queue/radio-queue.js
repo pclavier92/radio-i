@@ -1,27 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react';
 
-import radioiApi from '../../apis/radioi-api';
 import spotifyWebApi from '../../apis/spotify-web-api';
 
 import Spinner from '../spinner';
 
 import './styles.css';
 
-const RadioQueue = ({ id }) => {
-  const [radioQueue, setRadioQueue] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const {
-        data: { queue }
-      } = await radioiApi.getRadioQueue(id);
-      queue.sort((a, b) => a.position - b.position);
-      setRadioQueue(queue);
-    })();
-  }, []);
-
+const RadioQueue = ({ queue }) => {
   return (
     <div className="radio-queue">
-      {radioQueue.map((song, index) => (
+      {queue.map((song, index) => (
         <RadioQueueItem key={index} data={song} />
       ))}
     </div>

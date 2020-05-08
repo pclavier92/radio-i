@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import spotifyWebApi from '../../apis/spotify-web-api';
 import useInterval from '../../hooks/use-interval';
 import SongCard from '../../common-components/song-card';
+import spotifyWebApi from '../../apis/spotify-web-api';
+import subscriptionsApi from '../../apis/subscriptions-api';
+import radioiApi from '../../apis/radioi-api';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
 const UPDATE_INTERVAL = 10 * 1000; // 10 seg
@@ -12,48 +14,55 @@ const INITIAL_CURRENTLY_PLAYING = Object.freeze({
   progress_ms: 0
 });
 
-const NowPlaying = () => {
-  const [currentlyPlaying, setCurrentlyPlaying] = useState(
-    INITIAL_CURRENTLY_PLAYING
-  );
-  const { item, progress_ms } = currentlyPlaying;
-  const { duration_ms } = item;
-  const isFetching = useRef(false);
-
-  const getCurrentlyPlaying = useCallback(async () => {
-    isFetching.current = true;
-    const { data } = await spotifyWebApi.getCurrentlyPlaying();
-    isFetching.current = false;
-    if (data && data.is_playing) {
-      setCurrentlyPlaying(data);
-    } else {
-      setCurrentlyPlaying(INITIAL_CURRENTLY_PLAYING);
-    }
-  }, []);
+const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
+  const [song, setSong] = useState({});
+  const [duration, setDuration] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [progressInterval, setProgressInterval] = useState(null);
 
   useEffect(() => {
-    getCurrentlyPlaying();
-  }, []);
+    (async () => {
+      const { songId, timestamp } = radio;
+      const { data } = await spotifyWebApi.getSongData(songId);
+      const progressMs = new Date().getTime() - timestamp;
+      setSong(data);
+      setDuration(data.duration_ms);
+      setProgress(progressMs);
+      setProgressInterval(PROGRESS_INTERVAL);
+    })();
+  }, [radio]);
+
+  useEffect(() => {
+    subscriptionsApi.onPlaySong(
+      async ({ songId, timestamp, subscriptions }) => {
+        const { data } = await spotifyWebApi.getSongData(songId);
+        const progressMs = new Date().getTime() - timestamp;
+        await spotifyWebApi.playSongFrom(data.uri, progressMs);
+        setSong(data);
+        setDuration(data.duration_ms);
+        setProgress(progressMs);
+        setListeners(subscriptions);
+        setProgressInterval(PROGRESS_INTERVAL);
+        shiftQueue();
+      }
+    );
+  }, [shiftQueue]);
 
   const getCurrentProgress = useCallback(() => {
-    if (duration_ms > 0) {
-      if (progress_ms > duration_ms) {
-        getCurrentlyPlaying();
+    if (duration > 0) {
+      if (progress > duration) {
+        setProgressInterval(null);
       } else {
-        setCurrentlyPlaying({
-          ...currentlyPlaying,
-          progress_ms: progress_ms + PROGRESS_INTERVAL
-        });
+        setProgress(progress + PROGRESS_INTERVAL);
       }
     }
-  }, [progress_ms, duration_ms, getCurrentlyPlaying]);
+  }, [progress, duration]);
 
-  useInterval(getCurrentProgress, PROGRESS_INTERVAL);
-  useInterval(getCurrentlyPlaying, UPDATE_INTERVAL);
+  useInterval(getCurrentProgress, progressInterval);
 
   return (
     <div className="now-playing">
-      <SongCard song={item} duration={duration_ms} progress={progress_ms} />
+      <SongCard song={song} duration={duration} progress={progress} />
     </div>
   );
 };
