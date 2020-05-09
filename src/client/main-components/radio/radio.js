@@ -11,7 +11,12 @@ import { useAuthentication } from '../authentication';
 import Search from './search';
 import RadioPlayer from './radio-player';
 
+import spotifySdk from '../../spotify-sdk';
+
 import './styles.css';
+
+import authService from '../../services/authentication';
+import Spinner from '../../common-components/spinner';
 
 const Radio = ({ radio }) => {
   const { user } = useAuthentication();
@@ -20,15 +25,14 @@ const Radio = ({ radio }) => {
 
   return (
     <section className="section-radio">
+      <script src="https://sdk.scdn.co/spotify-player.js"></script>
       <div className="row">
         <div className="row">
-          {isOwner && (
-            <div className="radio-title">
-              <h3>
-                {radio.name} by {radio.userName} | Listeners {listeners}
-              </h3>
-            </div>
-          )}
+          <div className="radio-title">
+            <h3>
+              {radio.name} by {radio.userName} | Listeners {listeners}
+            </h3>
+          </div>
         </div>
         <div className="col span-1-of-3">
           <RadioPlayer radio={radio} setListeners={setListeners} />
@@ -41,12 +45,17 @@ const Radio = ({ radio }) => {
 
 const RadioRouter = () => {
   const [radio, setRadio] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { authenticated } = useAuthentication();
   const q = useQuery();
   const radioId = useMemo(() => q.get('id'), []);
 
   useEffect(() => {
     if (authenticated && radioId) {
+      const accessToken = authService.getAccessToken();
+      spotifySdk.start(accessToken);
+      spotifySdk.setReadyCallback(() => setLoading(false));
+
       (async () => {
         try {
           const { data } = await radioiApi.getRadio(radioId);
@@ -65,7 +74,11 @@ const RadioRouter = () => {
     return <NotFound />;
   } else if (authenticated) {
     if (radio) {
-      return <Radio radio={radio} />;
+      if (loading) {
+        return <Spinner />;
+      } else {
+        return <Radio radio={radio} />;
+      }
     } else {
       return <NotFound />;
     }

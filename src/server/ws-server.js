@@ -42,6 +42,10 @@ wss.on('connection', (ws, request) => {
     }
   });
 
+  ws.on('error', error => {
+    console.log(error);
+  });
+
   ws.on('close', () => {
     radioSubscriptions.unsubscribeUser(userId);
   });

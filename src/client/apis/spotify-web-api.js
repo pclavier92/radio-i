@@ -11,8 +11,14 @@ const UNAUTHORIZED = 401;
 
 class SpotifyWebApi {
   constructor() {
+    this.deviceId = null;
     this.radioiApi = radioiApi;
     this.authentication = authService;
+  }
+
+  setDeviceId(deviceId) {
+    debugger;
+    this.deviceId = deviceId;
   }
 
   // If user is not authenticated (or access token expired) it will
@@ -31,9 +37,11 @@ class SpotifyWebApi {
           response = await axios.request(requestConfig);
         } catch (e) {
           console.log(error);
+          console.log(requestConfig);
         }
       } else {
         console.log(error);
+        console.log(requestConfig);
       }
     }
     return response;
@@ -56,6 +64,7 @@ class SpotifyWebApi {
     const requestConfig = {
       method: 'put',
       url: `${spotifyUrl}/me/player/play`,
+      params: { device_id: this.deviceId },
       data: { uris: [uri], position_ms: position },
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'

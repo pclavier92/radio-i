@@ -7,12 +7,6 @@ import subscriptionsApi from '../../apis/subscriptions-api';
 import radioiApi from '../../apis/radioi-api';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
-const UPDATE_INTERVAL = 10 * 1000; // 10 seg
-
-const INITIAL_CURRENTLY_PLAYING = Object.freeze({
-  item: { duration_ms: 0 },
-  progress_ms: 0
-});
 
 const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
   const [song, setSong] = useState({});
@@ -20,32 +14,29 @@ const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
   const [progress, setProgress] = useState(0);
   const [progressInterval, setProgressInterval] = useState(null);
 
+  const getSongDataAndPlayIt = useCallback(async (songId, timestamp) => {
+    const { data } = await spotifyWebApi.getSongData(songId);
+    const progressMs = new Date().getTime() - timestamp;
+    await spotifyWebApi.playSongFrom(data.uri, progressMs);
+    setSong(data);
+    setDuration(data.duration_ms);
+    setProgress(progressMs);
+    setProgressInterval(PROGRESS_INTERVAL);
+  }, []);
+
   useEffect(() => {
-    (async () => {
-      const { songId, timestamp } = radio;
-      const { data } = await spotifyWebApi.getSongData(songId);
-      const progressMs = new Date().getTime() - timestamp;
-      setSong(data);
-      setDuration(data.duration_ms);
-      setProgress(progressMs);
-      setProgressInterval(PROGRESS_INTERVAL);
-    })();
+    const { songId, timestamp } = radio;
+    if (songId) {
+      getSongDataAndPlayIt(songId, timestamp);
+    }
   }, [radio]);
 
   useEffect(() => {
-    subscriptionsApi.onPlaySong(
-      async ({ songId, timestamp, subscriptions }) => {
-        const { data } = await spotifyWebApi.getSongData(songId);
-        const progressMs = new Date().getTime() - timestamp;
-        await spotifyWebApi.playSongFrom(data.uri, progressMs);
-        setSong(data);
-        setDuration(data.duration_ms);
-        setProgress(progressMs);
-        setListeners(subscriptions);
-        setProgressInterval(PROGRESS_INTERVAL);
-        shiftQueue();
-      }
-    );
+    subscriptionsApi.onPlaySong(({ songId, timestamp, subscriptions }) => {
+      shiftQueue();
+      setListeners(subscriptions);
+      getSongDataAndPlayIt(songId, timestamp);
+    });
   }, [shiftQueue]);
 
   const getCurrentProgress = useCallback(() => {

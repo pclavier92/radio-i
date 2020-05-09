@@ -7,6 +7,7 @@ class AuthService {
     this.refreshToken = null;
     this.expiration = null;
     this.storage = storage;
+    this.redirected = null;
   }
 
   getAccessToken() {
@@ -22,6 +23,13 @@ class AuthService {
   }
 
   getAuthentication() {
+    if (!this.accessToken) {
+      return this._getAuthentication();
+    }
+    return { accessToken: this.accessToken, redirected: this.redirected };
+  }
+
+  _getAuthentication() {
     let access = null;
     let refresh = null;
     let expiration = null;
@@ -49,11 +57,12 @@ class AuthService {
     this.accessToken = access;
     this.refreshToken = refresh;
     this.expiration = expiration;
+    this.redirected = redirected;
     this.storage.setAccessToken(access);
     this.storage.setRefreshToken(refresh);
     this.storage.setExpiration(expiration);
 
-    return { redirected };
+    return { accessToken: access, redirected };
   }
 
   setAccessToken(accessToken) {

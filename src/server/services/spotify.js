@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const { client_id, client_secret, redirect_uri } = require('../../../app-keys');
 
 const scopes = [
+  'streaming',
   'user-read-private',
   'user-read-email',
   'user-read-currently-playing',
@@ -13,8 +14,9 @@ const scopes = [
 
 const scope = scopes.join(' ');
 
-const loginRedirectUrl = state => 'https://accounts.spotify.com/authorize?'
-  + querystring.stringify({
+const loginRedirectUrl = state =>
+  'https://accounts.spotify.com/authorize?' +
+  querystring.stringify({
     response_type: 'code',
     client_id,
     scope,
