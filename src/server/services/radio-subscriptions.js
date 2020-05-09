@@ -42,11 +42,13 @@ class RadioSubscriptions {
 
   closeRadio(radioHash) {
     const radioUsers = this.radios.get(radioHash);
-    radioUsers.forEach(id => {
-      const ws = this.connections.get(id);
-      if (ws) ws.close();
-      this.connections.delete(id);
-    });
+    if (radioUsers) {
+      radioUsers.forEach(id => {
+        const ws = this.connections.get(id);
+        if (ws) ws.close();
+        this.connections.delete(id);
+      });
+    }
     this.radios.delete(radioHash);
     this.subscriptions.delete(id);
   }

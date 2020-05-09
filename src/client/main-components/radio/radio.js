@@ -15,45 +15,57 @@ import Search from './search';
 import RadioPlayer from './radio-player';
 
 import './styles.css';
+import useScript from '../../hooks/use-script';
+
+const SPOTIFY_PLAYER_SCRIPT = 'https://sdk.scdn.co/spotify-player.js';
 
 const Radio = ({ radio }) => {
   const { user } = useAuthentication();
+  const [loading, setLoading] = useState(true);
   const [listeners, setListeners] = useState(null);
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
 
+  useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
+
+  useEffect(() => {
+    const onReady = () => setLoading(false);
+    spotifySdk.start(onReady);
+  }, []);
+
   return (
-    <section className="section-radio">
-      <script src="https://sdk.scdn.co/spotify-player.js"></script>
-      <div className="row">
-        <div className="row">
-          <div className="radio-title">
-            <h3>
-              {radio.name} by {radio.userName} | Listeners {listeners}
-            </h3>
+    <Fragment>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <section className="section-radio">
+          <div className="row">
+            <div className="row">
+              <div className="radio-title">
+                <h3>
+                  {radio.name} by {radio.userName} | Listeners {listeners}
+                </h3>
+              </div>
+            </div>
+            <div className="col span-1-of-3">
+              <RadioPlayer radio={radio} setListeners={setListeners} />
+            </div>
+            <div className="col span-2-of-3">{isOwner && <Search />}</div>
           </div>
-        </div>
-        <div className="col span-1-of-3">
-          <RadioPlayer radio={radio} setListeners={setListeners} />
-        </div>
-        <div className="col span-2-of-3">{isOwner && <Search />}</div>
-      </div>
-    </section>
+        </section>
+      )}
+    </Fragment>
   );
 };
 
 const RadioRouter = () => {
   const [radio, setRadio] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { authenticated } = useAuthentication();
+
   const q = useQuery();
   const radioId = useMemo(() => q.get('id'), []);
 
   useEffect(() => {
     if (authenticated && radioId) {
-      const accessToken = authService.getAccessToken();
-      spotifySdk.start(accessToken);
-      spotifySdk.setReadyCallback(() => setLoading(false));
-
       (async () => {
         try {
           const { data } = await radioiApi.getRadio(radioId);
@@ -72,11 +84,7 @@ const RadioRouter = () => {
     return <NotFound />;
   } else if (authenticated) {
     if (radio) {
-      if (loading) {
-        return <Spinner />;
-      } else {
-        return <Radio radio={radio} />;
-      }
+      return <Radio radio={radio} />;
     } else {
       return <NotFound />;
     }

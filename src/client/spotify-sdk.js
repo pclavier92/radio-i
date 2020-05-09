@@ -1,20 +1,19 @@
 import spotifyWebApi from './apis/spotify-web-api';
-
-const noop = () => {};
+import authentication from './services/authentication';
 
 class SpotifySDK {
   constructor() {
     this.player = null;
-    this.onReady = noop;
   }
 
-  start(token) {
+  start(onReady) {
     window.onSpotifyWebPlaybackSDKReady = () => {
       console.log('onSpotifyWebPlaybackSDKReady');
 
       this.player = new Spotify.Player({
         name: 'RadioI Player',
         getOAuthToken: cb => {
+          const token = authentication.getAccessToken();
           cb(token);
         }
       });
@@ -42,7 +41,7 @@ class SpotifySDK {
       this.player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         spotifyWebApi.setDeviceId(device_id);
-        this.onReady();
+        onReady();
       });
 
       // Not Ready
@@ -53,10 +52,6 @@ class SpotifySDK {
       // Connect to the player!
       this.player.connect();
     };
-  }
-
-  setReadyCallback(cb) {
-    this.onReady = cb;
   }
 }
 
