@@ -11,6 +11,13 @@ const sessionParser = session({
   resave: false
 });
 
+const types = {
+  SUBSCRIBE: 'subscribe',
+  SUBSCRIPTION_FAILED: 'subscription_failed',
+  PLAY_SONG: 'play_song',
+  ADD_TO_QUEUE: 'add_to_queue'
+};
+
 const onWebsocketUpgrade = (request, socket, head) => {
   sessionParser(request, {}, () => {
     if (!request.session.userId) {
@@ -32,13 +39,24 @@ wss.on('connection', (ws, request) => {
   radioSubscriptions.addConnection(userId, ws);
 
   ws.on('message', message => {
-    console.log(`Received message ${message} from ${userId}`);
-
     const { type, payload } = JSON.parse(message);
-    if (type === 'subscribe') {
+    if (type === types.SUBSCRIBE) {
       const { radioHash } = payload;
-      radioSubscriptions.subscribeUser(radioHash, userId);
-      console.log(`Subscribe user ${userId} to radio ${radioHash}`);
+      try {
+        radioSubscriptions.subscribeUser(radioHash, userId);
+        console.log(`Subscribe user ${userId} to radio ${radioHash}`);
+      } catch (e) {
+        console.log(e);
+        console.log(
+          `Subscription failed of user ${userId} to radio ${radioHash}`
+        );
+        ws.send(
+          JSON.stringify({
+            type: types.SUBSCRIPTION_FAILED,
+            payload: { message: e.message }
+          })
+        );
+      }
     }
   });
 
@@ -46,7 +64,9 @@ wss.on('connection', (ws, request) => {
     console.log(error);
   });
 
-  ws.on('close', () => {
+  ws.on('close', event => {
+    console.log('close event', event);
+    console.log(`Connection closed for user ${userId}`);
     radioSubscriptions.unsubscribeUser(userId);
   });
 });

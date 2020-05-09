@@ -1,5 +1,11 @@
-const PLAY_SONG = 'play_song';
-const ADD_TO_QUEUE = 'add_to_queue';
+import config from '../config';
+
+const types = {
+  SUBSCRIBE: 'subscribe',
+  SUBSCRIPTION_FAILED: 'subscription_failed',
+  PLAY_SONG: 'play_song',
+  ADD_TO_QUEUE: 'add_to_queue'
+};
 
 const noop = () => {};
 
@@ -11,26 +17,26 @@ class SubscriptionsApi {
   }
 
   subscribe(radioHash) {
-    this.ws = new WebSocket('ws://localhost:8888');
+    this.ws = new WebSocket(config.wsUrl);
     this.ws.onopen = event => {
       console.log('open event', event);
       const message = JSON.stringify({
-        type: 'subscribe',
+        type: types.SUBSCRIBE,
         payload: { radioHash }
       });
       this.ws.send(message);
     };
     this.ws.onmessage = event => {
-      console.log(event.data);
       const { type, payload } = JSON.parse(event.data);
-      console.log(type, payload);
       switch (type) {
-        case PLAY_SONG:
-          console.log('play song ->', payload);
+        case types.SUBSCRIPTION_FAILED:
+          // TODO -> MODAL
+          this.ws.close();
+          break;
+        case types.PLAY_SONG:
           this.playSong(payload);
           break;
-        case ADD_TO_QUEUE:
-          console.log('add to queue ->', payload);
+        case types.ADD_TO_QUEUE:
           this.addToQueue(payload);
           break;
 
@@ -40,9 +46,11 @@ class SubscriptionsApi {
     };
     this.ws.onerror = event => {
       console.log('error event', event);
+      // TODO -> MODAL SHOWING CONNECTION LOST
     };
     this.ws.onclose = event => {
       console.log('close event', event);
+      // TODO -> MODAL SHOWING CONNECTION LOST
     };
   }
 

@@ -8,8 +8,6 @@ class SpotifySDK {
 
   start(onReady) {
     window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('onSpotifyWebPlaybackSDKReady');
-
       this.player = new Spotify.Player({
         name: 'RadioI Player',
         getOAuthToken: cb => {

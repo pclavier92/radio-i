@@ -31,12 +31,12 @@ class RadioPlayer {
     } else {
       // Remove Song from radio
       await radioiService.setPlayingSong(this.radioId, null, null);
+      console.log('Player is now idle');
       this.collect();
     }
   }
 
   async collect() {
-    const date = new Date();
     console.log(`Start radio collector - ${new Date().toUTCString()}`);
     await delay(IDLE_TIME_BEFORE_CLOSING);
     const radio = await radioiService.getRadioById(this.radioId);

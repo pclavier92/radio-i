@@ -36,7 +36,7 @@ const spotifyLogin = (req, res) => {
 };
 
 const logOut = (req, res) => {
-  logger.info(req, 'Login Out');
+  logger.info(req, 'Log Out');
   // remove access token from db
   const ws = map.get(request.session.userId);
   req.session.destroy(() => {
@@ -166,10 +166,11 @@ const startRadio = async (req, res) => {
       radioSubscriptions.startRadio(hash);
       new RadioPlayer(insertId, hash).collect();
       logger.info(req, 'New radio created');
+      res.sendStatus(200);
     } else {
       logger.info(req, 'Radio already exists');
+      res.sendStatus(400);
     }
-    res.sendStatus(200);
   } catch (e) {
     logger.error(req, e);
     res.sendStatus(e.status || 400);

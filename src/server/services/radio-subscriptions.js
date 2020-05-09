@@ -1,5 +1,9 @@
-const PLAY_SONG = 'play_song';
-const ADD_TO_QUEUE = 'add_to_queue';
+const types = {
+  SUBSCRIBE: 'subscribe',
+  SUBSCRIPTION_FAILED: 'subscription_failed',
+  PLAY_SONG: 'play_song',
+  ADD_TO_QUEUE: 'add_to_queue'
+};
 
 class RadioSubscriptions {
   constructor() {
@@ -17,19 +21,25 @@ class RadioSubscriptions {
   }
 
   subscribeUser(radioHash, userId) {
-    const radio = this.subscriptions.get(userId);
-    if (!radio) {
-      const radioUsers = this.radios.get(radioHash);
+    // If radioUsers for the radio is undefined the radio does not exists
+    const radioUsers = this.radios.get(radioHash);
+    if (radioUsers) {
       radioUsers.push(userId);
       this.radios.set(radioHash, radioUsers);
       this.subscriptions.set(userId, radioHash);
-    } else if (radio !== radioHash) {
-      // See if user is trying to subscribe to other radio
-      // and handle that case
+    } else {
+      throw new Error('Radio does not exist');
     }
+    // const radio = this.subscriptions.get(userId);
+    // if (!radio) {
+    // } else if (radio !== radioHash) {
+    //   // See if user is trying to subscribe to other radio
+    //   // and handle that case
+    // }
   }
 
   unsubscribeUser(userId) {
+    console.log(`Unsubscribe user ${userId}`);
     const radioHash = this.subscriptions.get(userId);
     const radioUsers = this.radios.get(radioHash);
     if (radioUsers) {
@@ -43,16 +53,15 @@ class RadioSubscriptions {
   }
 
   closeRadio(radioHash) {
+    console.log('Close radio and websockets');
     const radioUsers = this.radios.get(radioHash);
-    if (radioUsers) {
-      radioUsers.forEach(id => {
-        const ws = this.connections.get(id);
-        if (ws) ws.close();
-        this.connections.delete(id);
-      });
-    }
+    radioUsers.forEach(id => {
+      const ws = this.connections.get(id);
+      if (ws) ws.close();
+      this.connections.delete(id);
+      this.subscriptions.delete(id);
+    });
     this.radios.delete(radioHash);
-    this.subscriptions.delete(id);
   }
 
   broadcastMessageForRadio(radioHash, msg) {
@@ -66,19 +75,19 @@ class RadioSubscriptions {
           JSON.stringify({ type, payload: { subscriptions, ...payload } })
         );
       } else {
-        // TODO
-        console.log('Websocket not found for user in radio');
+        console.log(`Websocket not found for user ${userId} in radio`);
+        this.unsubscribeUser(userId);
       }
     });
   }
 
   playSongForRadio(radioHash, songId, timestamp) {
-    const message = { type: PLAY_SONG, payload: { songId, timestamp } };
+    const message = { type: types.PLAY_SONG, payload: { songId, timestamp } };
     this.broadcastMessageForRadio(radioHash, message);
   }
 
   addSongToRadioQueue(radioHash, songId, position) {
-    const message = { type: ADD_TO_QUEUE, payload: { songId, position } };
+    const message = { type: types.ADD_TO_QUEUE, payload: { songId, position } };
     this.broadcastMessageForRadio(radioHash, message);
   }
 }
