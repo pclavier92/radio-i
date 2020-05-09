@@ -32,8 +32,10 @@ class RadioSubscriptions {
   unsubscribeUser(userId) {
     const radioHash = this.subscriptions.get(userId);
     const radioUsers = this.radios.get(radioHash);
-    const newRadioUsers = radioUsers.filter(id => id !== userId);
-    this.radios.set(radioHash, newRadioUsers);
+    if (radioUsers) {
+      const newRadioUsers = radioUsers.filter(id => id !== userId);
+      this.radios.set(radioHash, newRadioUsers);
+    }
     const ws = this.connections.get(userId);
     if (ws) ws.close();
     this.connections.delete(userId);

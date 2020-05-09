@@ -30,6 +30,7 @@ const Radio = ({ radio }) => {
   useEffect(() => {
     const onReady = () => setLoading(false);
     spotifySdk.start(onReady);
+    return () => spotifySdk.disconnect();
   }, []);
 
   return (

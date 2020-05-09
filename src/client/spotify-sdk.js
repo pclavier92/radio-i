@@ -53,6 +53,11 @@ class SpotifySDK {
       this.player.connect();
     };
   }
+
+  disconnect() {
+    // Disconnect from the player
+    this.player.disconnect();
+  }
 }
 
 export default new SpotifySDK();
