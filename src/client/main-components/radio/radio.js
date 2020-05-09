@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState, Fragment } from 'react';
 
+import spotifySdk from '../../spotify-sdk';
 import radioiApi from '../../apis/radioi-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
+import authService from '../../services/authentication';
 import useQuery from '../../hooks/use-query';
+import Spinner from '../../common-components/spinner';
 
 import NotFound from '../not-found';
 import AuthenticationRequired from '../auth-required';
@@ -11,12 +14,7 @@ import { useAuthentication } from '../authentication';
 import Search from './search';
 import RadioPlayer from './radio-player';
 
-import spotifySdk from '../../spotify-sdk';
-
 import './styles.css';
-
-import authService from '../../services/authentication';
-import Spinner from '../../common-components/spinner';
 
 const Radio = ({ radio }) => {
   const { user } = useAuthentication();

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PhotoBy from '../../common-components/photo-by';
+
 import './styles.css';
 
 const AuthenticationRequired = () => (
@@ -11,6 +13,7 @@ const AuthenticationRequired = () => (
       <div className="login-required-text-box">
         <h1>Please login with spotify</h1>
       </div>
+      <PhotoBy ph="Oscar Keys" link="https://unsplash.com/@oscartothekeys" />
     </div>
   </section>
 );
