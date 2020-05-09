@@ -1,14 +1,16 @@
-.section-radio {
-}
-
 .radio-search {
   padding-top: 30px;
 }
 
-.radio-title {
-  width: 100%;
-  margin-left: 50px;
+.radio-header {
   padding: 20px 0;
+}
+.radio-header .row div:first-of-type {
+  padding-left: 50px;
+}
+
+.radio-header .share-radio {
+  float: right;
 }
 
 .now-playing {

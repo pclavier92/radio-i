@@ -17,7 +17,6 @@ class SpotifyWebApi {
   }
 
   setDeviceId(deviceId) {
-    debugger;
     this.deviceId = deviceId;
   }
 

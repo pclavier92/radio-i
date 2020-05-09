@@ -40,18 +40,26 @@
 .user-button-dropdown {
   z-index: 1;
   position: absolute;
-  width: 175px;
+  width: 180px;
   top: 55px;
   right: 28px;
+  border-radius: 5px;
 }
 
 .user-button-dropdown ul {
   list-style: none;
 }
 
+.user-button-dropdown li:first-child button {
+  border-radius: 5px 5px 0 0;
+}
+
+.user-button-dropdown li:last-child button {
+  border-radius: 0 0 5px 5px;
+}
+
 .user-button-dropdown button {
   width: 100%;
-  border-radius: 5px;
   border: 1px solid #dfdfdf;
   height: 30px;
   background-color: #f6f5f4;

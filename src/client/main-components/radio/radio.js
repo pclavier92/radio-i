@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useState, Fragment } from 'react';
 import spotifySdk from '../../spotify-sdk';
 import radioiApi from '../../apis/radioi-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
-import authService from '../../services/authentication';
 import useQuery from '../../hooks/use-query';
 import Spinner from '../../common-components/spinner';
+import SharePopUp from '../../common-components/share-pop-up';
 
 import NotFound from '../not-found';
 import AuthenticationRequired from '../auth-required';
@@ -39,11 +39,18 @@ const Radio = ({ radio }) => {
       ) : (
         <section className="section-radio">
           <div className="row">
-            <div className="row">
-              <div className="radio-title">
-                <h3>
-                  {radio.name} by {radio.userName} | Listeners {listeners}
-                </h3>
+            <div className="radio-header">
+              <div className="row">
+                <div className="col span-1-of-3">
+                  <h3>
+                    {radio.name} by {radio.userName}
+                  </h3>
+                </div>
+                <div className="col span-1-of-3">
+                  <h3>Listeners: {listeners}</h3>
+                </div>
+                <div className="col span-1-of-3"></div>
+                <SharePopUp />
               </div>
             </div>
             <div className="col span-1-of-3">

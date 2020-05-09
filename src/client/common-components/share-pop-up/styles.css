@@ -1,0 +1,51 @@
+.share-radio {
+  position: relative;
+}
+
+.btn-share {
+  cursor: pointer;
+  height: 30px;
+  width: 180px;
+  margin-right: 30px;
+  font-weight: 300;
+  border-radius: 20px;
+  text-decoration: none;
+  color: #6e6e6e;
+  background-color: #f6f5f4;
+  border: 1px solid #dfdfdf;
+}
+
+.btn-share:hover {
+  color: #1ed760;
+}
+
+.btn-share p {
+  text-transform: uppercase;
+}
+
+.share-pop-up {
+  z-index: 1;
+  position: absolute;
+  top: 35px;
+  right: 28px;
+
+  width: 400px;
+}
+
+.share-pop-up input {
+  padding-left: 65px;
+}
+
+.share-pop-up .btn-copy {
+  position: absolute;
+  cursor: pointer;
+  width: 60px;
+  height: 40px;
+  font-weight: 300;
+  border-radius: 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #6e6e6e;
+  background-color: #f6f5f4;
+  border: 1px solid #dfdfdf;
+}
