@@ -28,8 +28,13 @@ const Radio = ({ radio }) => {
   useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
 
   useEffect(() => {
-    const onReady = () => setLoading(false);
-    spotifySdk.start(onReady);
+    try {
+      const onReady = () => setLoading(false);
+      spotifySdk.start(onReady);
+      subscriptionsApi.subscribe(radio.hash);
+    } catch (error) {
+      console.log(error);
+    }
     return () => spotifySdk.disconnect();
   }, []);
 
@@ -78,10 +83,11 @@ const RadioRouter = () => {
         try {
           const { data } = await radioiApi.getRadio(radioId);
           setRadio(data);
-          subscriptionsApi.subscribe(radioId);
         } catch (error) {
           if (error.response.status === 404) {
-            console.log('Radio doesnt exists');
+            setRadio(null);
+          } else {
+            console.log(error);
           }
         }
       })();

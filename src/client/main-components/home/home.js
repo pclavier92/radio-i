@@ -91,7 +91,9 @@ const Lobby = () => {
           setRadioExists(true);
         } catch (error) {
           if (error.response.status === 404) {
-            console.log('Radio doesnt exists');
+            setRadioExists(false);
+          } else {
+            console.log(error);
           }
         }
       })();

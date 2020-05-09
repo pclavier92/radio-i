@@ -6,6 +6,7 @@ import storage from '../../services/storage';
 import useRefreshAccessToken from '../../hooks/use-refresh-access-token';
 import authService from '../../services/authentication';
 import spotifyWebApi from '../../apis/spotify-web-api';
+import radioiApi from '../../apis/radioi-api';
 
 const authentication = React.createContext({});
 
@@ -24,6 +25,17 @@ const AuthenticationProvider = ({ children }) => {
         const lastFullPath = storage.getLastLocation();
         const path = lastFullPath || '/';
         history.push(path);
+      } else {
+        (async () => {
+          try {
+            const response = await radioiApi.refreshSession();
+            debugger;
+            console.log(response);
+          } catch (e) {
+            debugger;
+            console.log(e);
+          }
+        })();
       }
 
       (async () => {

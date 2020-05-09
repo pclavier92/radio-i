@@ -25,7 +25,7 @@ switch (process.env.SCOPE) {
     host = '127.0.0.1';
     port = 3306;
     serverPort = 8888;
-    clientUrl = 'http://localhost:3000';
+    clientUrl = 'http://localhost:8888';
     break;
 }
 
