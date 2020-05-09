@@ -43,9 +43,7 @@ class RadioSubscriptions {
     const radioHash = this.subscriptions.get(userId);
     const radioUsers = this.radios.get(radioHash);
     if (radioUsers) {
-      console.log('radioUsers', radioUsers);
       const newRadioUsers = radioUsers.filter(id => id !== userId);
-      console.log('newRadioUsers', newRadioUsers);
       this.radios.set(radioHash, newRadioUsers);
     }
     const ws = this.connections.get(userId);

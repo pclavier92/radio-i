@@ -5,15 +5,17 @@ import authService from '../../services/authentication';
 import { useAuthentication } from '../../main-components/authentication/authentication';
 
 import './styles.css';
+import radioiApi from '../../apis/radioi-api';
 
 const UserDropdown = () => {
   const history = useHistory();
   const { user, setAuthenticated } = useAuthentication();
   const [open, setOpen] = useState(false);
 
-  const logOut = useCallback(() => {
+  const logOut = useCallback(async () => {
     setAuthenticated(false);
     authService.logOut();
+    await radioiApi.logOut();
     history.push('/');
   }, []);
 

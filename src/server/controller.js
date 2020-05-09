@@ -47,13 +47,14 @@ const refreshSession = async (req, res) => {
   }
 };
 
-const logOut = (req, res) => {
+const logOut = async (req, res) => {
   logger.info(req, 'Log Out');
-  // remove access token from db
-  const ws = map.get(request.session.userId);
+  const userId = req.session.userId;
+  console.log('userId ->', userId);
+  await dbService.updateUserToken(userId, null);
+  radioSubscriptions.unsubscribeUser(userId);
   req.session.destroy(() => {
-    if (ws) ws.close();
-    response.send({ result: 'OK', message: 'Session destroyed' });
+    res.send({ result: 'OK', message: 'Session destroyed' });
   });
 };
 

@@ -8,7 +8,7 @@ CREATE TABLE `User` (
   `email` varchar(128) DEFAULT NULL,
   `country` varchar(128) DEFAULT NULL,
   `premium` TINYINT(1) DEFAULT 0,
-  `access_token` varchar(256) NOT NULL,
+  `access_token` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -4,6 +4,15 @@ import { serverUrl } from '../config';
 
 import authService from '../services/authentication';
 
+const logOut = () => {
+  const accessToken = authService.getAccessToken();
+  return axios.delete(`${serverUrl}/logout`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
 const refreshSession = () => {
   const accessToken = authService.getAccessToken();
   return axios.get(`${serverUrl}/refresh_session`, {
@@ -71,6 +80,7 @@ const getRadioQueue = id => {
 };
 
 export default {
+  logOut,
   refreshSession,
   refreshAccessToken,
   startRadio,
