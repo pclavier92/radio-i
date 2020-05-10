@@ -11,7 +11,7 @@ import NotFound from '../not-found';
 import AuthenticationRequired from '../auth-required';
 import { useAuthentication } from '../authentication';
 
-import Search from './search';
+import RigthPanel from './right-panel';
 import RadioPlayer from './radio-player';
 
 import './styles.css';
@@ -62,7 +62,9 @@ const Radio = ({ radio }) => {
             <div className="col span-1-of-3">
               <RadioPlayer radio={radio} setListeners={setListeners} />
             </div>
-            <div className="col span-2-of-3">{isOwner && <Search />}</div>
+            <div className="col span-2-of-3">
+              <RigthPanel isOwner={isOwner} />
+            </div>
           </div>
         </section>
       )}

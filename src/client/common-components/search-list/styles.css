@@ -1,7 +1,5 @@
 .serach-results {
-  padding: 15px 0 0 0;
-  width: 90%;
-  margin: 0 3% 0 7%;
+  padding-top: 15px;
   color: #6e6e6e;
 
   -webkit-touch-callout: none;

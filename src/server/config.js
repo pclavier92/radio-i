@@ -14,7 +14,7 @@ switch (process.env.SCOPE) {
     host = 'prodDbHost';
     port = 6612;
     serverPort = 8888;
-    clientUrl = '';
+    clientUrl = 'http://localhost:8888';
     break;
 
   case 'dev':
@@ -25,7 +25,7 @@ switch (process.env.SCOPE) {
     host = '127.0.0.1';
     port = 3306;
     serverPort = 8888;
-    clientUrl = 'http://localhost:8888';
+    clientUrl = 'http://localhost:3000';
     break;
 }
 
