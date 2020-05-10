@@ -14,7 +14,7 @@ const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
   const [progress, setProgress] = useState(0);
   const [progressInterval, setProgressInterval] = useState(null);
 
-  const getSongDataAndPlayIt = useCallback(async (songId, timestamp) => {
+  const getSongDataAndPlay = useCallback(async (songId, timestamp) => {
     const { data } = await spotifyWebApi.getSongData(songId);
     const progressMs = new Date().getTime() - timestamp;
     await spotifyWebApi.playSongFrom(data.uri, progressMs);
@@ -27,7 +27,7 @@ const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
   useEffect(() => {
     const { songId, timestamp } = radio;
     if (songId) {
-      getSongDataAndPlayIt(songId, timestamp);
+      getSongDataAndPlay(songId, timestamp);
     }
   }, [radio]);
 
@@ -35,14 +35,18 @@ const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
     subscriptionsApi.onPlaySong(({ songId, timestamp, subscriptions }) => {
       shiftQueue();
       setListeners(subscriptions);
-      getSongDataAndPlayIt(songId, timestamp);
+      getSongDataAndPlay(songId, timestamp);
     });
   }, [shiftQueue]);
 
   const getCurrentProgress = useCallback(() => {
     if (duration > 0) {
       if (progress > duration) {
+        setSong({});
+        setDuration(0);
+        setProgress(0);
         setProgressInterval(null);
+        spotifyWebApi.pausePlayer();
       } else {
         setProgress(progress + PROGRESS_INTERVAL);
       }
