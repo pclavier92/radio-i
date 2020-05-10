@@ -8,16 +8,8 @@ import './styles.css';
 import radioiApi from '../../apis/radioi-api';
 
 const UserDropdown = () => {
-  const history = useHistory();
-  const { user, setAuthenticated } = useAuthentication();
+  const { user, logOut } = useAuthentication();
   const [open, setOpen] = useState(false);
-
-  const logOut = useCallback(async () => {
-    setAuthenticated(false);
-    authService.logOut();
-    await radioiApi.logOut();
-    history.push('/');
-  }, []);
 
   const toggleDropdown = useCallback(() => {
     setOpen(!open);

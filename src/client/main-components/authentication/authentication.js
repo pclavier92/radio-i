@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import sha256 from 'crypto-js/sha256';
 
@@ -17,6 +23,13 @@ const AuthenticationProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
+  const logOut = useCallback(async () => {
+    setAuthenticated(false);
+    authService.logOut();
+    await radioiApi.logOut();
+    history.push('/');
+  }, []);
+
   useEffect(() => {
     try {
       const { redirected } = authService.getAuthentication();
@@ -28,23 +41,24 @@ const AuthenticationProvider = ({ children }) => {
       } else {
         (async () => {
           try {
-            const response = await radioiApi.refreshSession();
-            debugger;
-            console.log(response);
+            await radioiApi.refreshSession();
           } catch (e) {
-            debugger;
-            console.log(e);
+            logOut();
           }
         })();
       }
 
       (async () => {
-        const { data } = await spotifyWebApi.getUserInfo();
-        data.hash = sha256(nonce + data.id).toString();
-        setUser(data);
+        try {
+          const { data } = await spotifyWebApi.getUserInfo();
+          data.hash = sha256(nonce + data.id).toString();
+          setUser(data);
+        } catch (e) {
+          logOut();
+        }
       })();
     } catch (e) {
-      console.log(e);
+      logOut();
     }
   }, []);
 
@@ -52,7 +66,7 @@ const AuthenticationProvider = ({ children }) => {
     () => ({
       user,
       authenticated,
-      setAuthenticated
+      logOut
     }),
     [user, authenticated, setAuthenticated]
   );
