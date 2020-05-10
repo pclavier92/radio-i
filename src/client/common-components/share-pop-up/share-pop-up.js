@@ -26,10 +26,12 @@ const SharePopUp = () => {
             Copy
           </button>
           <input
-            ref={inputRef}
             type="text"
-            value={window.location.href}
+            spellCheck="false"
+            autoComplete="off"
             id="radio-link-share"
+            ref={inputRef}
+            value={window.location.href}
           />
         </div>
       )}

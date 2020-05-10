@@ -1,4 +1,7 @@
+import radioiApi from '../apis/radioi-api';
+
 import { getHashParams } from '../utils';
+
 import storage from './storage';
 
 class AuthService {
@@ -63,6 +66,17 @@ class AuthService {
     this.storage.setExpiration(expiration);
 
     return { accessToken: access, redirected };
+  }
+
+  async refreshAuthentication() {
+    // if circular dependency issues arrise move to radioiApi
+    const {
+      data: { access_token, refresh_token }
+    } = await radioiApi.refreshAccessToken();
+    this.setAccessToken(access_token);
+    if (refresh_token) {
+      this.setRefreshToken(refresh_token);
+    }
   }
 
   setAccessToken(accessToken) {

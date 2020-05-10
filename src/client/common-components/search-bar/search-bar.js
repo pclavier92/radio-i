@@ -8,6 +8,8 @@ const SearchBar = ({ topArtist, setSearchsearchInput, triggerSearch }) => (
       type="text"
       name="search"
       id="search"
+      spellCheck="false"
+      autoComplete="off"
       placeholder={`Add songs to your radio! For example something from... ${topArtist}`}
       onChange={event => setSearchsearchInput(event.target.value)}
       onKeyDown={e => {

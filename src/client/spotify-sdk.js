@@ -1,5 +1,5 @@
 import spotifyWebApi from './apis/spotify-web-api';
-import authentication from './services/authentication';
+import authService from './services/authentication';
 
 class SpotifySDK {
   constructor() {
@@ -11,7 +11,7 @@ class SpotifySDK {
       this.player = new Spotify.Player({
         name: 'RadioI Player',
         getOAuthToken: cb => {
-          const token = authentication.getAccessToken();
+          const token = authService.getAccessToken();
           cb(token);
         }
       });
@@ -20,8 +20,13 @@ class SpotifySDK {
       this.player.addListener('initialization_error', ({ message }) => {
         console.error(message);
       });
-      this.player.addListener('authentication_error', ({ message }) => {
-        console.error(message);
+      this.player.addListener('authentication_error', async ({ message }) => {
+        try {
+          await authService.refreshAuthentication();
+        } catch (e) {
+          console.log(message);
+          console.log(e);
+        }
       });
       this.player.addListener('account_error', ({ message }) => {
         console.error(message);
@@ -37,7 +42,7 @@ class SpotifySDK {
 
       // Ready
       this.player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
+        console.log('Spotify Player Ready with Device ID', device_id);
         spotifyWebApi.setDeviceId(device_id);
         onReady();
       });

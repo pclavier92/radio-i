@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import radioiApi from './radioi-api';
 import authService from '../services/authentication';
 
 const baseURL = 'https://api.spotify.com';
@@ -12,8 +11,6 @@ const UNAUTHORIZED = 401;
 class SpotifyWebApi {
   constructor() {
     this.deviceId = null;
-    this.radioiApi = radioiApi;
-    this.authentication = authService;
   }
 
   setDeviceId(deviceId) {
@@ -29,12 +26,10 @@ class SpotifyWebApi {
     } catch (error) {
       if (error.response.status === UNAUTHORIZED) {
         try {
-          const {
-            data: { access_token }
-          } = await this.radioiApi.refreshAccessToken();
-          this.authentication.setAccessToken(access_token);
+          await authService.refreshAuthentication();
           response = await axios.request(requestConfig);
         } catch (e) {
+          console.log(e);
           console.log(error);
           console.log(requestConfig);
         }
@@ -47,7 +42,7 @@ class SpotifyWebApi {
   }
 
   getUserInfo() {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
     console.log('[AT]', accessToken);
     const requestConfig = {
       method: 'get',
@@ -59,7 +54,7 @@ class SpotifyWebApi {
   }
 
   playSongFrom(uri, position) {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
     const requestConfig = {
       method: 'put',
       url: `${spotifyUrl}/me/player/play`,
@@ -72,7 +67,7 @@ class SpotifyWebApi {
   }
 
   getCurrentlyPlaying() {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
     const requestConfig = {
       method: 'get',
       url: `${spotifyUrl}/me/player/currently-playing`,
@@ -83,7 +78,7 @@ class SpotifyWebApi {
   }
 
   getSearchResults(searchInput) {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
     const encodedInput = encodeURIComponent(searchInput);
     const requestConfig = {
       method: 'get',
@@ -95,7 +90,7 @@ class SpotifyWebApi {
   }
 
   getTopArtists() {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
 
     const requestConfig = {
       method: 'get',
@@ -107,7 +102,7 @@ class SpotifyWebApi {
   }
 
   getSongData(songId) {
-    const accessToken = this.authentication.getAccessToken();
+    const accessToken = authService.getAccessToken();
     const requestConfig = {
       method: 'get',
       url: `${spotifyUrl}/tracks/${songId}`,

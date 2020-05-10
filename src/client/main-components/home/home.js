@@ -50,6 +50,7 @@ const StartRadio = ({ id }) => {
           type="text"
           name="radio-name"
           id="radio-name"
+          spellCheck="false"
           maxLength="35"
           required
           onChange={onInputChange}

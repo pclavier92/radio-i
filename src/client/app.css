@@ -37,6 +37,15 @@ input {
   outline: none;
 }
 
+::-moz-selection {
+  /* Code for Firefox */
+  color: #1ed760;
+}
+
+::selection {
+  color: #1ed760;
+}
+
 /* ------------------------------------------------------ */
 /* REUSABLE COMPONENTS */
 /* ------------------------------------------------------ */
