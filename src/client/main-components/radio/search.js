@@ -14,6 +14,7 @@ const Search = () => {
   const [topArtist, setTopArtist] = useState('');
 
   const triggerSearch = useCallback(async () => {
+    setSearchResults([]);
     const {
       data: {
         tracks: { items }
