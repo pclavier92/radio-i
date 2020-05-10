@@ -51,7 +51,6 @@ const logOut = async (req, res) => {
   logger.info(req, 'Log Out');
   const userId = req.session.userId;
   await dbService.updateUserToken(userId, null);
-  radioSubscriptions.unsubscribeUser(userId);
   req.session.destroy(() => {
     res.send({ result: 'OK', message: 'Session destroyed' });
   });

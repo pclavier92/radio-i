@@ -30,12 +30,6 @@ class RadioSubscriptions {
     } else {
       throw new Error('Radio does not exist');
     }
-    // const radio = this.subscriptions.get(userId);
-    // if (!radio) {
-    // } else if (radio !== radioHash) {
-    //   // See if user is trying to subscribe to other radio
-    //   // and handle that case
-    // }
   }
 
   unsubscribeUser(userId) {

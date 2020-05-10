@@ -13,6 +13,7 @@ import useRefreshAccessToken from '../../hooks/use-refresh-access-token';
 import authService from '../../services/authentication';
 import spotifyWebApi from '../../apis/spotify-web-api';
 import radioiApi from '../../apis/radioi-api';
+import subscriptionsApi from '../../apis/subscriptions-api';
 
 const authentication = React.createContext({});
 
@@ -26,6 +27,7 @@ const AuthenticationProvider = ({ children }) => {
   const logOut = useCallback(async () => {
     setAuthenticated(false);
     authService.logOut();
+    subscriptionsApi.unsubscribe();
     await radioiApi.logOut();
     history.push('/');
   }, []);

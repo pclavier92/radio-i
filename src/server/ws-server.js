@@ -46,7 +46,6 @@ wss.on('connection', (ws, request) => {
         radioSubscriptions.subscribeUser(radioHash, userId);
         console.log(`Subscribe user ${userId} to radio ${radioHash}`);
       } catch (e) {
-        console.log(e);
         console.log(
           `Subscription failed of user ${userId} to radio ${radioHash}`
         );
@@ -64,10 +63,9 @@ wss.on('connection', (ws, request) => {
     console.log(error);
   });
 
-  ws.on('close', event => {
-    console.log('close event', event);
-    console.log(`Connection closed for user ${userId}`);
+  ws.on('close', () => {
     radioSubscriptions.unsubscribeUser(userId);
+    console.log(`Connection closed for user ${userId}`);
   });
 });
 

@@ -61,6 +61,12 @@ class SubscriptionsApi {
   onAddToQueue(callback) {
     this.addToQueue = callback;
   }
+
+  unsubscribe() {
+    if (this.ws) {
+      this.ws.close();
+    }
+  }
 }
 
 export default new SubscriptionsApi();
