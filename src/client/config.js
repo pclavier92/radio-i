@@ -4,6 +4,11 @@ console.log('[SCOPE]', process.env.SCOPE);
 switch (process.env.SCOPE) {
   case 'prod':
     serverUrl = '';
+    wsUrl = 'wss://radioi.herokuapp.com';
+    break;
+
+  case 'preprod':
+    serverUrl = '';
     wsUrl = 'ws://localhost:8888';
     break;
 

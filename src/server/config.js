@@ -14,6 +14,16 @@ switch (process.env.SCOPE) {
     host = 'prodDbHost';
     port = 6612;
     serverPort = 8888;
+    clientUrl = 'https://radioi.herokuapp.com';
+    break;
+
+  case 'preprod':
+    user = 'root';
+    pass = '25031992';
+    db = 'radioidb';
+    host = '127.0.0.1';
+    port = 3306;
+    serverPort = 8888;
     clientUrl = 'http://localhost:8888';
     break;
 

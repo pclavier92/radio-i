@@ -5,7 +5,9 @@
   "main": "src/server/index.js",
   "scripts": {
     "build": "webpack --env.SCOPE=prod --mode production",
-    "start": "env SCOPE=prod npm run build && node src/server/index.js",
+    "build-preprod": "webpack --env.SCOPE=preprod --mode production",
+    "start": "npm run build && env SCOPE=prod node src/server/index.js",
+    "preprod": "npm run build-preprod && env SCOPE=preprod node src/server/index.js",
     "client": "webpack-dev-server --env.SCOPE=dev --mode development --devtool inline-source-map --hot",
     "server": "nodemon src/server/index.js",
     "dev": "env SCOPE=dev concurrently \"npm run server\" \"npm run client\""
