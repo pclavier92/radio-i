@@ -53,6 +53,18 @@ class SpotifyWebApi {
     return this.makeRequestWithRetry(requestConfig);
   }
 
+  getUserInfoById(userId) {
+    const accessToken = authService.getAccessToken();
+    console.log('[AT]', accessToken);
+    const requestConfig = {
+      method: 'get',
+      url: `${spotifyUrl}/users/${userId}`,
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: 'json'
+    };
+    return this.makeRequestWithRetry(requestConfig);
+  }
+
   playSongFrom(uri, position) {
     const accessToken = authService.getAccessToken();
     const requestConfig = {

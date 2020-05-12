@@ -1,4 +1,6 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import subscriptionsApi from '../../apis/subscriptions-api';
 
 import Search from './search';
 import Chat from './chat';
@@ -8,18 +10,29 @@ const SEARCH_SELECTOR = 'search';
 
 const RightPanel = ({ isOwner }) => {
   const [selector, setSelector] = useState(SEARCH_SELECTOR);
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() => {
+    subscriptionsApi.onChatMessage(message => {
+      if (chatMessages.length < 8) {
+        setChatMessages([...chatMessages, message]);
+      } else {
+        setChatMessages([...chatMessages.splice(1), message]);
+      }
+    });
+  }, [chatMessages]);
 
   const selectedComponent = useMemo(() => {
     if (isOwner) {
       if (selector === CHAT_SELECTOR) {
-        return <Chat />;
+        return <Chat messages={chatMessages} />;
       } else {
         return <Search />;
       }
     } else {
-      return <Chat />;
+      return <Chat messages={chatMessages} />;
     }
-  }, [isOwner, selector]);
+  }, [isOwner, selector, chatMessages]);
 
   const selectChat = useCallback(() => {
     setSelector(CHAT_SELECTOR);

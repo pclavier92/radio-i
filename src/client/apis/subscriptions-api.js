@@ -4,7 +4,8 @@ const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
   PLAY_SONG: 'play_song',
-  ADD_TO_QUEUE: 'add_to_queue'
+  ADD_TO_QUEUE: 'add_to_queue',
+  CHAT_MESSAGE: 'chat_message'
 };
 
 const noop = () => {};
@@ -14,6 +15,7 @@ class SubscriptionsApi {
     this.ws = null;
     this.playSong = noop;
     this.addToQueue = noop;
+    this.chatMessage = noop;
   }
 
   subscribe(radioHash) {
@@ -39,7 +41,9 @@ class SubscriptionsApi {
         case types.ADD_TO_QUEUE:
           this.addToQueue(payload);
           break;
-
+        case types.CHAT_MESSAGE:
+          this.chatMessage(payload);
+          break;
         default:
           break;
       }
@@ -60,6 +64,18 @@ class SubscriptionsApi {
 
   onAddToQueue(callback) {
     this.addToQueue = callback;
+  }
+
+  onChatMessage(callback) {
+    this.chatMessage = callback;
+  }
+
+  sendChatMessage(user, message) {
+    const msg = JSON.stringify({
+      type: types.CHAT_MESSAGE,
+      payload: { user, message }
+    });
+    this.ws.send(msg);
   }
 
   unsubscribe() {

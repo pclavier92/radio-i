@@ -15,7 +15,8 @@ const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
   PLAY_SONG: 'play_song',
-  ADD_TO_QUEUE: 'add_to_queue'
+  ADD_TO_QUEUE: 'add_to_queue',
+  CHAT_MESSAGE: 'chat_message'
 };
 
 const onWebsocketUpgrade = (request, socket, head) => {
@@ -56,6 +57,8 @@ wss.on('connection', (ws, request) => {
           })
         );
       }
+    } else if (type === types.CHAT_MESSAGE) {
+      radioSubscriptions.sendChatMessage(userId, payload);
     }
   });
 

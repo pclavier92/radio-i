@@ -2,7 +2,8 @@ const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
   PLAY_SONG: 'play_song',
-  ADD_TO_QUEUE: 'add_to_queue'
+  ADD_TO_QUEUE: 'add_to_queue',
+  CHAT_MESSAGE: 'chat_message'
 };
 
 class RadioSubscriptions {
@@ -82,6 +83,12 @@ class RadioSubscriptions {
 
   addSongToRadioQueue(radioHash, songId, position) {
     const message = { type: types.ADD_TO_QUEUE, payload: { songId, position } };
+    this.broadcastMessageForRadio(radioHash, message);
+  }
+
+  sendChatMessage(userId, payload) {
+    const radioHash = this.subscriptions.get(userId);
+    const message = { type: types.CHAT_MESSAGE, payload };
     this.broadcastMessageForRadio(radioHash, message);
   }
 }
