@@ -1,5 +1,7 @@
 import config from '../config';
 
+import { generateRandomString } from '../utils';
+
 const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
@@ -71,9 +73,10 @@ class SubscriptionsApi {
   }
 
   sendChatMessage(user, message) {
+    const id = generateRandomString(10);
     const msg = JSON.stringify({
       type: types.CHAT_MESSAGE,
-      payload: { user, message }
+      payload: { id, user, message }
     });
     this.ws.send(msg);
   }

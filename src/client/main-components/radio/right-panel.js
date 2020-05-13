@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { delay } from '../../utils';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
 import Search from './search';
 import Chat from './chat';
+
+const ONE_SECOND = 1000;
 
 const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
@@ -14,7 +17,7 @@ const RightPanel = ({ isOwner }) => {
 
   useEffect(() => {
     subscriptionsApi.onChatMessage(message => {
-      if (chatMessages.length < 8) {
+      if (chatMessages.length < 9) {
         setChatMessages([...chatMessages, message]);
       } else {
         setChatMessages([...chatMessages.splice(1), message]);

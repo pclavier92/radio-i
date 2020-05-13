@@ -1,8 +1,25 @@
 /**
+ * Generates a random string containing numbers and letters
+ * @param  {number} length The length of the string
+ * @return {string} The generated string
+ */
+const generateRandomString = length => {
+  let text = '';
+  const possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+/**
  * Obtains parameters from the hash of the URL
  * @return Object
  */
-const getHashParams = () => window.location.hash
+const getHashParams = () =>
+  window.location.hash
     .substring(1)
     .split('&')
     .reduce((initial, item) => {
@@ -13,7 +30,7 @@ const getHashParams = () => window.location.hash
       return initial;
     }, {});
 
-const msToMinutesSeconds = (ms) => {
+const msToMinutesSeconds = ms => {
   if (ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const min = Math.floor(totalSeconds / 60);
@@ -42,4 +59,17 @@ const debounce = (func, wait, immediate) => {
   };
 };
 
-export { getHashParams, msToMinutesSeconds, debounce };
+const delay = ms =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+
+export {
+  generateRandomString,
+  getHashParams,
+  msToMinutesSeconds,
+  debounce,
+  delay
+};

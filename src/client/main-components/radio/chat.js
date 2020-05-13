@@ -24,13 +24,13 @@ const ChatLine = ({ userId, message }) => {
 };
 
 const Chat = ({ messages }) => {
-  const fading = messages.length < 8 ? '' : 'fading';
+  const animationType = messages.length < 9 ? 'filling-chat' : 'full-chat';
   return (
     <div className="radio-chat">
       <div className="chat-box">
-        <ul className={fading}>
-          {messages.map(({ user, message }, index) => (
-            <ChatLine key={index} userId={user} message={message} />
+        <ul className={animationType}>
+          {messages.map(({ id, user, message }, index) => (
+            <ChatLine key={index + id} userId={user} message={message} />
           ))}
         </ul>
       </div>

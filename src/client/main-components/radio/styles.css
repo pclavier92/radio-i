@@ -59,14 +59,6 @@
   list-style: none;
 }
 
-.fading li:first-child {
-  opacity: 0.1;
-}
-
-.fading li:nth-child(2) {
-  opacity: 0.3;
-}
-
 .radio-chat .chat-box ul li img {
   height: 30px;
   width: 30px;
@@ -76,4 +68,33 @@
 }
 .radio-chat input {
   margin-top: 20px;
+}
+
+.filling-chat li {
+  animation-name: filling-chat-animation;
+  animation-duration: 1s;
+}
+
+.full-chat li {
+  transform: translateY(-100%);
+  animation-name: full-chat-animation;
+  animation-duration: 1s;
+}
+
+@keyframes full-chat-animation {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes filling-chat-animation {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
 }
