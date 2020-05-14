@@ -45,6 +45,15 @@ const startRadio = (id, name, isPublic) => {
   );
 };
 
+const stopRadio = () => {
+  const accessToken = authService.getAccessToken();
+  return axios.delete(`${serverUrl}/api/radio`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
 const getRadio = id => {
   const accessToken = authService.getAccessToken();
   return axios.get(`${serverUrl}/api/radio`, {
@@ -84,6 +93,7 @@ export default {
   refreshSession,
   refreshAccessToken,
   startRadio,
+  stopRadio,
   getRadio,
   addSongToRadio,
   getRadioQueue

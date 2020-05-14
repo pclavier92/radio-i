@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Fragment } from 'react';
 
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
@@ -16,10 +16,14 @@ const ChatLine = ({ userId, message }) => {
   }, [userId]);
 
   return (
-    <li>
-      {user && <img alt="" src={user.images[0].url} />}
-      <span>{user && user.display_name}:</span> {message}
-    </li>
+    <Fragment>
+      {user && (
+        <li>
+          <img alt="" src={user.images[0].url} />
+          <span>{user.display_name}:</span> {message}
+        </li>
+      )}
+    </Fragment>
   );
 };
 

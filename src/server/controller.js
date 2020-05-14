@@ -166,9 +166,10 @@ const startRadio = async (req, res) => {
       throw new ValidationError('Request missing parameters');
     }
     const user = await getUserByAccessToken(req);
-    await checkIfOwner(hash, user.id);
-    const radioExists = await dbService.radioExists(hash);
+    await checkIfOwner(hash, user.id); // to be deprecated
+    const radioExists = await dbService.radioExists(hash); // TODO - by user_id
     if (!radioExists) {
+      // TODO - create radio hash
       const { insertId } = await dbService.createRadio(
         hash,
         user.id,
@@ -178,11 +179,26 @@ const startRadio = async (req, res) => {
       radioSubscriptions.startRadio(hash);
       new RadioPlayer(insertId, hash).collect();
       logger.info(req, 'New radio created');
-      res.sendStatus(200);
+      res.sendStatus(200); // return radio hash
     } else {
       logger.info(req, 'Radio already exists');
       res.sendStatus(400);
     }
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status || 400);
+  }
+};
+
+const stopRadio = async (req, res) => {
+  try {
+    const user = await getUserByAccessToken(req);
+    const radio = await dbService.getRadioByUserId(user.id);
+    if (radio) {
+      await dbService.deleteRadioQueue(radio.id);
+      await dbService.deleteRadio(radio.id);
+    }
+    res.sendStatus(200);
   } catch (e) {
     logger.error(req, e);
     res.sendStatus(e.status || 400);
@@ -267,6 +283,7 @@ module.exports = {
   spotifyCallback,
   spotifyTokenRefresh,
   startRadio,
+  stopRadio,
   getRadio,
   addSongToRadio,
   getRadioQueue

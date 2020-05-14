@@ -53,6 +53,10 @@
   margin-left: 30px;
 }
 
+.lobby-left-box button {
+  margin-right: 10px;
+}
+
 .lobby-right-box {
   padding: 5%;
 }

@@ -7,16 +7,17 @@ import React, {
 } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import radioiApi from '../../apis/radioi-api';
 import SpotifyButton from '../../common-components/spotify-button';
+import InverseSpotifyButton from '../../common-components/inverse-spotify-button';
 import PhotoBy from '../../common-components/photo-by';
 import CustomCheckbox from '../../common-components/custom-checkbox';
+
 import { useAuthentication } from '../authentication';
-import radioiApi from '../../apis/radioi-api';
 
 import './styles.css';
 
 const StartRadio = ({ id }) => {
-  const { user } = useAuthentication();
   const history = useHistory();
   const [radioname, setRadioname] = useState('');
   const [makePublic, setMakePublic] = useState(false);
@@ -71,10 +72,17 @@ const RadioStarted = ({ id }) => {
   const goToRadio = useCallback(() => {
     history.push(`/radio?id=${id}`);
   }, [id]);
+  const stopRadio = useCallback(async () => {
+    await radioiApi.stopRadio();
+    window.location.reload(false);
+  }, [id]);
   return (
     <Fragment>
-      <h2>Your radio is live!</h2>
+      <h2>Your radio is broadcasting!</h2>
       <SpotifyButton onClick={goToRadio}>Go to Radio</SpotifyButton>
+      <InverseSpotifyButton onClick={stopRadio}>
+        Stop Radio
+      </InverseSpotifyButton>
     </Fragment>
   );
 };

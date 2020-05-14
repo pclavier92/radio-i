@@ -215,6 +215,36 @@ const getRadioById = id =>
     });
   });
 
+const getRadioByUserId = userId =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT * FROM Radio WHERE user_id = ?',
+        userId,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not get radio'));
+          } else if (!results[0]) {
+            resolve(null);
+          } else {
+            resolve({
+              id: results[0].id,
+              hash: results[0].hash,
+              userId: results[0].user_id,
+              name: results[0].name,
+              isPublic: results[0].is_public ? true : false,
+              songId: results[0].song_id,
+              timestamp: results[0].timestamp_ms
+            });
+          }
+        }
+      );
+    });
+  });
+
 const setPlayingSong = (radioId, songId, timestamp) =>
   new Promise((resolve, reject) => {
     const conn = db.getConnection();
@@ -372,6 +402,27 @@ const deleteRadio = id => {
   });
 };
 
+const deleteRadioQueue = radioId => {
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'DELETE FROM RadioQueue WHERE radio_id = ?',
+        radioId,
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not delete radio in db'));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
 module.exports = {
   getUserByAccessToken,
   userExists,
@@ -382,11 +433,13 @@ module.exports = {
   createRadio,
   getRadioByHash,
   getRadioById,
+  getRadioByUserId,
   setPlayingSong,
   getRadioLastPosition,
   addSongToQueue,
   getRadioQueueFromHash,
   getNextSongFromQueue,
   deleteSongFromQueue,
-  deleteRadio
+  deleteRadio,
+  deleteRadioQueue
 };

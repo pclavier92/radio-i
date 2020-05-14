@@ -28,6 +28,7 @@ app.get('/api/radio', controller.getRadio);
 app.get('/api/radio/queue', controller.getRadioQueue);
 app.post('/api/radio', controller.startRadio);
 app.post('/api/radio/song', controller.addSongToRadio);
+app.delete('/api/radio', controller.stopRadio);
 
 // Request to any other path returns the application
 app.get('*', controller.serveApp);
