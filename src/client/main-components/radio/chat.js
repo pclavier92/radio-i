@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect, Fragment } from 'react';
+import { Emojione } from 'react-emoji-render';
 
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
 import { useAuthentication } from '../authentication';
-import { delay } from '../../utils';
 
 const ChatLine = ({ userId, message }) => {
   const [user, setUser] = useState(null);
@@ -21,7 +21,8 @@ const ChatLine = ({ userId, message }) => {
       {user && (
         <li>
           <img alt="" src={user.images[0].url} />
-          <span>{user.display_name}:</span> {message}
+          <span>{user.display_name}:</span>&nbsp;
+          <Emojione text={message} />
         </li>
       )}
     </Fragment>

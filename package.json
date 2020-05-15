@@ -28,6 +28,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-emoji-render": "^1.2.4",
     "react-router-dom": "^5.1.2",
     "request": "^2.88.0",
     "ws": "^7.2.5"
