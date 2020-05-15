@@ -35,7 +35,10 @@ const Radio = ({ radio }) => {
     } catch (error) {
       console.log(error);
     }
-    return () => spotifySdk.disconnect();
+    return () => {
+      spotifySdk.disconnect();
+      subscriptionsApi.unsubscribe();
+    };
   }, []);
 
   return (
@@ -55,7 +58,7 @@ const Radio = ({ radio }) => {
                 <div className="col span-1-of-3">
                   <h3>Listeners: {listeners}</h3>
                 </div>
-                <div className="col span-1-of-3"></div>
+                <div className="col span-1-of-3">&nspb;</div>
                 <SharePopUp />
               </div>
             </div>
