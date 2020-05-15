@@ -4,6 +4,7 @@ import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
 import { useAuthentication } from '../authentication';
+import { delay } from '../../utils';
 
 const ChatLine = ({ userId, message }) => {
   const [user, setUser] = useState(null);
@@ -27,14 +28,13 @@ const ChatLine = ({ userId, message }) => {
   );
 };
 
-const Chat = ({ messages }) => {
-  const animationType = messages.length < 9 ? 'filling-chat' : 'full-chat';
+const Chat = ({ messages, animation }) => {
   return (
     <div className="radio-chat">
       <div className="chat-box">
-        <ul className={animationType}>
-          {messages.map(({ id, user, message }, index) => (
-            <ChatLine key={index + id} userId={user} message={message} />
+        <ul className={animation}>
+          {messages.map(({ id, user, message }) => (
+            <ChatLine key={id} userId={user} message={message} />
           ))}
         </ul>
       </div>

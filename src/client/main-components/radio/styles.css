@@ -59,6 +59,11 @@
   list-style: none;
 }
 
+.radio-chat .chat-box ul li span {
+  font-weight: 500;
+  color: #6b6b6b;
+}
+
 .radio-chat .chat-box ul li img {
   height: 30px;
   width: 30px;
@@ -73,6 +78,10 @@
 .filling-chat li {
   animation-name: filling-chat-animation;
   animation-duration: 1s;
+}
+
+.full-chat-refresh li {
+  transform: translateY(0%);
 }
 
 .full-chat li {

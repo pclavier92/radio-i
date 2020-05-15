@@ -6,17 +6,23 @@ import subscriptionsApi from '../../apis/subscriptions-api';
 import Search from './search';
 import Chat from './chat';
 
-const ONE_SECOND = 1000;
-
 const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
 
 const RightPanel = ({ isOwner }) => {
   const [selector, setSelector] = useState(SEARCH_SELECTOR);
   const [chatMessages, setChatMessages] = useState([]);
+  const [animation, setAnimation] = useState('filling-chat');
 
   useEffect(() => {
     subscriptionsApi.onChatMessage(message => {
+      if (chatMessages.length > 7) {
+        setAnimation('full-chat-refresh');
+        (async () => {
+          await delay(50);
+          setAnimation('full-chat');
+        })();
+      }
       if (chatMessages.length < 9) {
         setChatMessages([...chatMessages, message]);
       } else {
@@ -28,14 +34,14 @@ const RightPanel = ({ isOwner }) => {
   const selectedComponent = useMemo(() => {
     if (isOwner) {
       if (selector === CHAT_SELECTOR) {
-        return <Chat messages={chatMessages} />;
+        return <Chat messages={chatMessages} animation={animation} />;
       } else {
         return <Search />;
       }
     } else {
-      return <Chat messages={chatMessages} />;
+      return <Chat messages={chatMessages} animation={animation} />;
     }
-  }, [isOwner, selector, chatMessages]);
+  }, [isOwner, selector, chatMessages, animation]);
 
   const selectChat = useCallback(() => {
     setSelector(CHAT_SELECTOR);
