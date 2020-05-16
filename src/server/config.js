@@ -8,11 +8,11 @@ let clientUrl;
 console.log('SCOPE: ', process.env.SCOPE);
 switch (process.env.SCOPE) {
   case 'prod':
-    user = 'prodDbUser';
-    pass = 'prodDbPass';
-    db = 'prodDbName';
-    host = 'prodDbHost';
-    port = 6612;
+    user = 'b1cd10122f9a6b';
+    pass = '820aea9b';
+    db = 'heroku_f1e8caaf043f227';
+    host = 'us-cdbr-east-06.cleardb.net';
+    port = 3306;
     serverPort = 8888;
     clientUrl = 'https://radioi.herokuapp.com';
     break;
