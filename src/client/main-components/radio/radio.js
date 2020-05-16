@@ -26,9 +26,6 @@ const Radio = ({ radio }) => {
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
   const canSearch = isOwner || radio.isCollaborative;
 
-  const radioName = radio.name !== '' ? radio.name : 'Radio';
-  const radioBy = radio.isAnonymous ? '' : `by ${radio.userName}`;
-
   useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
 
   useEffect(() => {
@@ -58,9 +55,7 @@ const Radio = ({ radio }) => {
             <div className="radio-header">
               <div className="row">
                 <div className="col span-1-of-3">
-                  <h3>
-                    {radioName} {radioBy}
-                  </h3>
+                  <h3>{radio.name}</h3>
                 </div>
                 <div className="col span-1-of-3">
                   <h3>Listeners: {listeners}</h3>

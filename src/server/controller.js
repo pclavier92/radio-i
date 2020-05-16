@@ -207,6 +207,18 @@ const stopRadio = async (req, res) => {
   }
 };
 
+const getLatestRadios = async (req, res) => {
+  try {
+    await getUserByAccessToken(req); // just verify logged in user
+    const radios = await dbService.getLatestRadios();
+    logger.info(req, 'Lastest radios fetched');
+    res.status(200).send(radios);
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status);
+  }
+};
+
 const getRadio = async (req, res) => {
   try {
     const hash = req.query.id;
@@ -291,6 +303,7 @@ module.exports = {
   spotifyTokenRefresh,
   startRadio,
   stopRadio,
+  getLatestRadios,
   getRadio,
   addSongToRadio,
   getRadioQueue

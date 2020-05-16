@@ -25,6 +25,8 @@ const anonymousRadioTooltip = 'Your username will not be shown in the radio';
 
 const StartRadio = ({ id }) => {
   const history = useHistory();
+  const { user } = useAuthentication();
+
   const [radioname, setRadioname] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [isCollaborative, setIsCollaborative] = useState(false);
@@ -44,9 +46,11 @@ const StartRadio = ({ id }) => {
     async e => {
       e.preventDefault();
       try {
+        const radioName = radioname !== '' ? radioname : 'Radio';
+        const radioBy = isAnonymous ? '' : `by ${user.display_name}`;
         await radioiApi.startRadio(
           id,
-          radioname,
+          `${radioName} ${radioBy}`,
           isPublic,
           isCollaborative,
           isAnonymous
@@ -56,7 +60,7 @@ const StartRadio = ({ id }) => {
         console.log('Could not create radio');
       }
     },
-    [id, radioname, isPublic, isCollaborative, isAnonymous]
+    [id, user, radioname, isPublic, isCollaborative, isAnonymous]
   );
 
   return (
@@ -140,6 +144,49 @@ const RadioStarted = ({ id }) => {
   );
 };
 
+const RadiosDisplay = () => {
+  const history = useHistory();
+  const [latestRadios, setLatestRadios] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const { data } = await radioiApi.getLatestRadio();
+      setLatestRadios(data);
+    })();
+  }, []);
+
+  const goToRadio = useCallback(id => {
+    history.push(`/radio?id=${id}`);
+  }, []);
+
+  return (
+    <section className="section-radios-display">
+      <div className="row">
+        <h2>...or start listening to some radios</h2>
+        <ul className="radios-list">
+          {latestRadios.length > 0 ? (
+            latestRadios.map(({ hash, radioName, isCollaborative }) => (
+              <li>
+                <SpotifyButton onClick={() => goToRadio(hash)}>
+                  Go to Radio
+                </SpotifyButton>
+                <h3>{radioName}</h3>
+                {isCollaborative ? (
+                  <span>
+                    <h5>Collaborative</h5>
+                    <i className="material-icons">check_circle</i>
+                  </span>
+                ) : null}
+              </li>
+            ))
+          ) : (
+            <h3>The are no active radios right now </h3>
+          )}
+        </ul>
+      </div>
+    </section>
+  );
+};
+
 const Lobby = () => {
   const [radioExists, setRadioExists] = useState(false);
   const { user } = useAuthentication();
@@ -163,21 +210,23 @@ const Lobby = () => {
   }, [id]);
 
   return (
-    <section className="section-lobby background-img">
-      <div className="row">
-        <div className="col span-1-of-2">
-          <div className="lobby-left-box">
-            {radioExists ? <RadioStarted id={id} /> : <StartRadio id={id} />}
+    <Fragment>
+      <section className="section-lobby background-img">
+        <div className="row">
+          <div className="col span-1-of-2">
+            <div className="lobby-left-box">
+              {radioExists ? <RadioStarted id={id} /> : <StartRadio id={id} />}
+            </div>
           </div>
+          <div className="col span-1-of-2"></div>
+          <PhotoBy
+            ph="Matt Botsford"
+            link="https://unsplash.com/@mattbotsford"
+          />
         </div>
-        <div className="col span-1-of-2">
-          <div className="lobby-right-box">
-            <h2>...or start listening to some radios</h2>
-          </div>
-        </div>
-        <PhotoBy ph="Matt Botsford" link="https://unsplash.com/@mattbotsford" />
-      </div>
-    </section>
+      </section>
+      {!radioExists && <RadiosDisplay />}
+    </Fragment>
   );
 };
 
@@ -187,7 +236,7 @@ const Home = () => (
       <div className="home-text-box">
         <h2>Create a radio.</h2>
         <h2>Share it with friends.</h2>
-        <h2>Let everyone listen to what you play live!</h2>
+        <h2>Let everyone listen to what you play!</h2>
       </div>
       <PhotoBy ph="Eric Nopanen" link="https://unsplash.com/@rexcuando" />
     </div>

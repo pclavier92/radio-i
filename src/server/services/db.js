@@ -161,6 +161,28 @@ const createRadio = (
   });
 };
 
+const getLatestRadios = () =>
+  new Promise((resolve, reject) => {
+    let conn = db.getConnection();
+    conn.then(db => {
+      db.query(
+        'SELECT hash, name as radioName, is_collaborative as isCollaborative, is_anonymous as isAnonymous FROM Radio WHERE is_public = 1 ORDER BY id DESC LIMIT 10',
+        null,
+        (err, results, fields) => {
+          db.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not get last radios'));
+          } else if (!results[0]) {
+            resolve([]);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+
 const getRadioByHash = hash =>
   new Promise((resolve, reject) => {
     let conn = db.getConnection();
@@ -444,6 +466,7 @@ module.exports = {
   userLogin,
   radioExists,
   createRadio,
+  getLatestRadios,
   getRadioByHash,
   getRadioById,
   getRadioByUserId,

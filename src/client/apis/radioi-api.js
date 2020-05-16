@@ -88,6 +88,15 @@ const getRadioQueue = id => {
   });
 };
 
+const getLatestRadio = () => {
+  const accessToken = authService.getAccessToken();
+  return axios.get(`${serverUrl}/api/radio/latest`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
 export default {
   logOut,
   refreshSession,
@@ -96,5 +105,6 @@ export default {
   stopRadio,
   getRadio,
   addSongToRadio,
-  getRadioQueue
+  getRadioQueue,
+  getLatestRadio
 };

@@ -14,7 +14,6 @@ const ConditionalRotation = ({ id, maxHeight, children }) => {
 
   const refCallback = useCallback(
     node => {
-      debugger;
       if (node && node.offsetHeight > maxHeight) {
         setRotate(true);
       }

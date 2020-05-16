@@ -25,7 +25,7 @@
 }
 
 .lobby-left-box {
-  padding: 25% 15%;
+  padding: 20% 15%;
 }
 
 .lobby-left-box input[type='text'] {
@@ -69,4 +69,33 @@
 
 .lobby-right-box {
   padding: 5%;
+}
+
+.section-radios-display {
+  text-align: center;
+}
+
+.section-radios-display h2 {
+  color: #5c5c5c;
+  margin-top: 40px;
+}
+
+.section-radios-display .radios-list {
+  list-style: none;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.section-radios-display .radios-list li button,
+.section-radios-display .radios-list li h3,
+.section-radios-display .radios-list li h5,
+.section-radios-display .radios-list li i {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.section-radios-display .radios-list li button,
+.section-radios-display .radios-list li h3,
+.section-radios-display .radios-list li span {
+  margin: 10px;
 }

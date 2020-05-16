@@ -17,7 +17,7 @@ CREATE TABLE `Radio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hash` varchar(256) NOT NULL,
   `user_id` varchar(256) DEFAULT NULL,
-  `name` varchar(35) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `is_public` TINYINT(1) DEFAULT 0,
   `is_collaborative` TINYINT(1) DEFAULT 0,
   `is_anonymous` TINYINT(1) DEFAULT 0,

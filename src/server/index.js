@@ -25,6 +25,7 @@ app.get('/refresh_session', controller.refreshSession);
 app.delete('/logout', controller.logOut);
 
 app.get('/api/radio', controller.getRadio);
+app.get('/api/radio/latest', controller.getLatestRadios);
 app.get('/api/radio/queue', controller.getRadioQueue);
 app.post('/api/radio', controller.startRadio);
 app.post('/api/radio/song', controller.addSongToRadio);
