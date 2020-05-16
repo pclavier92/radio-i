@@ -4,15 +4,18 @@ import React, {
   Fragment,
   useCallback,
   useMemo,
-  useState
+  useState,
+  useEffect
 } from 'react';
 import RotatingText from './rotating-text';
 
-const ConditionalRotation = ({ children, maxHeight }) => {
+const ConditionalRotation = ({ id, maxHeight, children }) => {
   const [rotate, setRotate] = useState(false);
+  const [childrenWithRef, setChildrenWithRef] = useState(null);
 
   const refCallback = useCallback(
-    (node) => {
+    node => {
+      debugger;
       if (node && node.offsetHeight > maxHeight) {
         setRotate(true);
       }
@@ -20,19 +23,40 @@ const ConditionalRotation = ({ children, maxHeight }) => {
     [maxHeight]
   );
 
-  const childrenWithProps = useMemo(
-    () => Children.map(children, (child) => {
-        const childProps = { ref: refCallback };
+  useEffect(() => {
+    setRotate(false);
+    setChildrenWithRef(
+      Children.map(children, child => {
+        const childProps = {
+          ref: refCallback,
+          key: id
+        };
         return cloneElement(child, childProps);
-      }),
-    [children]
-  );
+      })
+    );
+  }, [id]);
 
   return (
     <Fragment>
-      {rotate ? <RotatingText>{children}</RotatingText> : childrenWithProps}
+      {rotate ? <RotatingText>{children}</RotatingText> : childrenWithRef}
     </Fragment>
   );
 };
 
 export default ConditionalRotation;
+
+/*
+  const [childrenWithRef, setChildrenWithRef] = useState(null);
+
+  const refCallback = useCallback(
+    node => {
+      debugger;
+      if (node && node.offsetHeight > maxHeight) {
+        setRotate(true);
+      }
+    },
+    [maxHeight]
+  );
+
+  
+  */
