@@ -7,7 +7,7 @@ import RadioQueue from '../../common-components/radio-queue';
 
 import NowPlaying from './now-playing';
 
-const RadioPlayer = ({ radio, setListeners }) => {
+const RadioPlayer = ({ radio }) => {
   const [radioQueue, setRadioQueue] = useState([]);
 
   const shiftQueue = useCallback(() => {
@@ -27,21 +27,16 @@ const RadioPlayer = ({ radio, setListeners }) => {
 
   useEffect(() => {
     // Set callback everytime the queue updates
-    subscriptionsApi.onAddToQueue(({ songId, position, subscriptions }) => {
+    subscriptionsApi.onAddToQueue(({ songId, position }) => {
       const queue = [...radioQueue, { songId, position }];
       queue.sort((a, b) => a.position - b.position);
       setRadioQueue(queue);
-      setListeners(subscriptions);
     });
   }, [radioQueue]);
 
   return (
     <Fragment>
-      <NowPlaying
-        radio={radio}
-        shiftQueue={shiftQueue}
-        setListeners={setListeners}
-      />
+      <NowPlaying radio={radio} shiftQueue={shiftQueue} />
       <RadioQueue queue={radioQueue} />
     </Fragment>
   );

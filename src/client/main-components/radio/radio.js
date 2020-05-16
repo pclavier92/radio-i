@@ -22,7 +22,7 @@ const SPOTIFY_PLAYER_SCRIPT = 'https://sdk.scdn.co/spotify-player.js';
 const Radio = ({ radio }) => {
   const { user } = useAuthentication();
   const [loading, setLoading] = useState(true);
-  const [listeners, setListeners] = useState(null);
+  const [listeners, setListeners] = useState(0);
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
   const canSearch = isOwner || radio.isCollaborative;
 
@@ -36,6 +36,9 @@ const Radio = ({ radio }) => {
       const onReady = () => setLoading(false);
       spotifySdk.start(onReady);
       subscriptionsApi.subscribe(radio.hash);
+      subscriptionsApi.onListenersUpdate(({ listeners }) => {
+        setListeners(listeners);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +70,7 @@ const Radio = ({ radio }) => {
               </div>
             </div>
             <div className="col span-1-of-3">
-              <RadioPlayer radio={radio} setListeners={setListeners} />
+              <RadioPlayer radio={radio} />
             </div>
             <div className="col span-2-of-3">
               <RigthPanel canSearch={canSearch} />

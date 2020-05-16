@@ -5,6 +5,7 @@ import { generateRandomString } from '../utils';
 const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
+  LISTENERS_UPDATE: 'listeners_update',
   PLAY_SONG: 'play_song',
   ADD_TO_QUEUE: 'add_to_queue',
   CHAT_MESSAGE: 'chat_message'
@@ -15,6 +16,7 @@ const noop = () => {};
 class SubscriptionsApi {
   constructor() {
     this.ws = null;
+    this.listenersUpdate = noop;
     this.playSong = noop;
     this.addToQueue = noop;
     this.chatMessage = noop;
@@ -33,9 +35,12 @@ class SubscriptionsApi {
     this.ws.onmessage = event => {
       const { type, payload } = JSON.parse(event.data);
       switch (type) {
-        case types.SUBSCRIPTION_FAILED:
+        case types.SUBSCRIPTION_FAILED: // do we need this
           // TODO -> MODAL
           this.ws.close();
+          break;
+        case types.LISTENERS_UPDATE:
+          this.listenersUpdate(payload);
           break;
         case types.PLAY_SONG:
           this.playSong(payload);
@@ -58,6 +63,10 @@ class SubscriptionsApi {
       console.log('close event', event);
       // TODO -> MODAL SHOWING CONNECTION LOST
     };
+  }
+
+  onListenersUpdate(callback) {
+    this.listenersUpdate = callback;
   }
 
   onPlaySong(callback) {

@@ -1,6 +1,7 @@
 const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
+  LISTENERS_UPDATE: 'listeners_update',
   PLAY_SONG: 'play_song',
   ADD_TO_QUEUE: 'add_to_queue',
   CHAT_MESSAGE: 'chat_message'
@@ -28,6 +29,7 @@ class RadioSubscriptions {
       radioUsers.push(userId);
       this.radios.set(radioHash, radioUsers);
       this.subscriptions.set(userId, radioHash);
+      this.updateListenersForRadio(radioHash);
     } else {
       throw new Error('Radio does not exist');
     }
@@ -45,6 +47,7 @@ class RadioSubscriptions {
     if (ws) ws.close();
     this.connections.delete(userId);
     this.subscriptions.delete(userId);
+    this.updateListenersForRadio(radioHash);
   }
 
   closeRadio(radioHash) {
@@ -61,19 +64,23 @@ class RadioSubscriptions {
 
   broadcastMessageForRadio(radioHash, msg) {
     const radioUsers = this.radios.get(radioHash);
-    const subscriptions = radioUsers.length;
     radioUsers.forEach(userId => {
       const ws = this.connections.get(userId);
       const { type, payload } = msg;
       if (ws) {
-        ws.send(
-          JSON.stringify({ type, payload: { subscriptions, ...payload } })
-        );
+        ws.send(JSON.stringify({ type, payload: { ...payload } }));
       } else {
         console.log(`Websocket not found for user ${userId} in radio`);
         this.unsubscribeUser(userId);
       }
     });
+  }
+
+  updateListenersForRadio(radioHash) {
+    const radioUsers = this.radios.get(radioHash);
+    const listeners = radioUsers.length;
+    const message = { type: types.LISTENERS_UPDATE, payload: { listeners } };
+    this.broadcastMessageForRadio(radioHash, message);
   }
 
   playSongForRadio(radioHash, songId, timestamp) {

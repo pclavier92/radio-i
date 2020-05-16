@@ -8,7 +8,7 @@ import radioiApi from '../../apis/radioi-api';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
 
-const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
+const NowPlaying = ({ radio, shiftQueue }) => {
   const [song, setSong] = useState({});
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -32,9 +32,8 @@ const NowPlaying = ({ radio, shiftQueue, setListeners }) => {
   }, [radio]);
 
   useEffect(() => {
-    subscriptionsApi.onPlaySong(({ songId, timestamp, subscriptions }) => {
+    subscriptionsApi.onPlaySong(({ songId, timestamp }) => {
       shiftQueue();
-      setListeners(subscriptions);
       getSongDataAndPlay(songId, timestamp);
     });
   }, [shiftQueue]);
