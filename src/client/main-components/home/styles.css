@@ -42,10 +42,15 @@
   box-shadow: 0 0 5px #1ed760;
 }
 
-.make-public-checkbox {
+.lobby-left-box button {
+  width: 90%;
+  margin: 0 10% 0 0;
+}
+
+.radio-option-checkbox {
   display: inline;
   vertical-align: middle;
-  margin-left: 40px;
+  margin-left: 5%;
 }
 
 .lobby-left-box h3 {

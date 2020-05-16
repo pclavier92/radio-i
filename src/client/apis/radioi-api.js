@@ -31,11 +31,11 @@ const refreshAccessToken = () => {
   });
 };
 
-const startRadio = (id, name, isPublic) => {
+const startRadio = (id, name, isPublic, isCollaborative, isAnonymous) => {
   const accessToken = authService.getAccessToken();
   return axios.post(
     `${serverUrl}/api/radio`,
-    { id, name, isPublic },
+    { id, name, isPublic, isCollaborative, isAnonymous },
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

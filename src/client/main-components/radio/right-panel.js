@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  Fragment
+} from 'react';
 
 import { delay } from '../../utils';
 import subscriptionsApi from '../../apis/subscriptions-api';
@@ -9,7 +15,7 @@ import Chat from './chat';
 const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
 
-const RightPanel = ({ isOwner }) => {
+const RightPanel = ({ canSearch }) => {
   const [selector, setSelector] = useState(SEARCH_SELECTOR);
   const [chatMessages, setChatMessages] = useState([]);
   const [animation, setAnimation] = useState('filling-chat');
@@ -32,7 +38,7 @@ const RightPanel = ({ isOwner }) => {
   }, [chatMessages]);
 
   const selectedComponent = useMemo(() => {
-    if (isOwner) {
+    if (canSearch) {
       if (selector === CHAT_SELECTOR) {
         return <Chat messages={chatMessages} animation={animation} />;
       } else {
@@ -41,7 +47,7 @@ const RightPanel = ({ isOwner }) => {
     } else {
       return <Chat messages={chatMessages} animation={animation} />;
     }
-  }, [isOwner, selector, chatMessages, animation]);
+  }, [canSearch, selector, chatMessages, animation]);
 
   const selectChat = useCallback(() => {
     setSelector(CHAT_SELECTOR);
@@ -56,16 +62,19 @@ const RightPanel = ({ isOwner }) => {
 
   return (
     <div className="right-panel">
-      {isOwner && (
-        <div className="component-selector">
-          <span className={searchSelected} onClick={selectSearch}>
-            Search
-          </span>
-          <span className={chatSelected} onClick={selectChat}>
-            Chat
-          </span>
-        </div>
-      )}
+      <div className="component-selector">
+        {canSearch && (
+          <Fragment>
+            <span className={searchSelected} onClick={selectSearch}>
+              Search
+            </span>
+            <span className={chatSelected} onClick={selectChat}>
+              Chat
+            </span>
+          </Fragment>
+        )}
+      </div>
+
       {selectedComponent}
     </div>
   );

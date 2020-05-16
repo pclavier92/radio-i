@@ -24,6 +24,10 @@ const Radio = ({ radio }) => {
   const [loading, setLoading] = useState(true);
   const [listeners, setListeners] = useState(null);
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
+  const canSearch = isOwner || radio.isCollaborative;
+
+  const radioName = radio.name !== '' ? radio.name : 'Radio';
+  const radioBy = radio.isAnonymous ? '' : `by ${radio.userName}`;
 
   useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
 
@@ -52,13 +56,13 @@ const Radio = ({ radio }) => {
               <div className="row">
                 <div className="col span-1-of-3">
                   <h3>
-                    {radio.name} by {radio.userName}
+                    {radioName} {radioBy}
                   </h3>
                 </div>
                 <div className="col span-1-of-3">
                   <h3>Listeners: {listeners}</h3>
                 </div>
-                <div className="col span-1-of-3">&nspb;</div>
+                <div className="col span-1-of-3"></div>
                 <SharePopUp />
               </div>
             </div>
@@ -66,7 +70,7 @@ const Radio = ({ radio }) => {
               <RadioPlayer radio={radio} setListeners={setListeners} />
             </div>
             <div className="col span-2-of-3">
-              <RigthPanel isOwner={isOwner} />
+              <RigthPanel canSearch={canSearch} />
             </div>
           </div>
         </section>
@@ -80,7 +84,7 @@ const RadioRouter = () => {
   const { authenticated } = useAuthentication();
 
   const q = useQuery();
-  const radioId = useMemo(() => q.get('id'), []);
+  const radioId = q.get('id');
 
   useEffect(() => {
     if (authenticated && radioId) {

@@ -1,6 +1,11 @@
 .radio-header {
-  padding: 20px 0;
+  padding: 15px 0;
 }
+
+.radio-header .row h3 {
+  margin: 3px 0;
+}
+
 .radio-header .row div:first-of-type {
   padding-left: 50px;
 }
@@ -25,6 +30,7 @@
 }
 
 .component-selector {
+  height: 20px;
   margin-bottom: 10px;
 }
 
@@ -59,7 +65,7 @@
   list-style: none;
 }
 
-.radio-chat .chat-box ul li span {
+.radio-chat .chat-box ul li span:first-of-type {
   font-weight: 500;
   color: #6b6b6b;
 }

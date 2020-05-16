@@ -161,8 +161,8 @@ const checkIfOwner = (radioHash, userId) => {
 
 const startRadio = async (req, res) => {
   try {
-    const { id: hash, name, isPublic } = req.body;
-    if (!hash || !name) {
+    const { id: hash, name, isPublic, isCollaborative, isAnonymous } = req.body;
+    if (!hash) {
       throw new ValidationError('Request missing parameters');
     }
     const user = await getUserByAccessToken(req);
@@ -174,7 +174,9 @@ const startRadio = async (req, res) => {
         hash,
         user.id,
         name,
-        isPublic
+        isPublic,
+        isCollaborative,
+        isAnonymous
       );
       radioSubscriptions.startRadio(hash);
       new RadioPlayer(insertId, hash).collect();
@@ -215,7 +217,10 @@ const getRadio = async (req, res) => {
     const radio = await dbService.getRadioByHash(hash);
     if (radio) {
       logger.info(req, 'Radio fetched');
-      delete radio.userId;
+      if (radio.isAnonymous) {
+        delete radio.userId;
+        delete radio.userName;
+      }
       delete radio.id;
       res.status(200).send(radio);
     } else {
@@ -234,10 +239,12 @@ const addSongToRadio = async (req, res) => {
       throw new ValidationError('Request missing parameters');
     }
     const user = await getUserByAccessToken(req);
-    await checkIfOwner(hash, user.id);
     const radio = await dbService.getRadioByHash(hash);
     if (!radio) {
       throw new NotFoundError('Trying to add song to non existent radio');
+    }
+    if (!radio.isCollaborative) {
+      await checkIfOwner(hash, user.id);
     }
     if (radio.songId) {
       const position = await dbService.getRadioLastPosition(radio.id);
@@ -262,8 +269,8 @@ const getRadioQueue = async (req, res) => {
       throw new ValidationError('Radio id not specified');
     }
     await getUserByAccessToken(req); // just verify logged in user
-    const radio = await dbService.getRadioByHash(hash); // verify radio exists
-    if (!radio) {
+    const exists = await dbService.radioExists(hash);
+    if (!exists) {
       throw new NotFoundError('The radio does not exists');
     }
     const queue = await dbService.getRadioQueueFromHash(hash);

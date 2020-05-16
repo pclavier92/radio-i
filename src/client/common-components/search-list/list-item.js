@@ -1,15 +1,17 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
 import radioiApi from '../../apis/radioi-api';
+import useQuery from '../../hooks/use-query';
 import { msToMinutesSeconds } from '../../utils';
-import { useAuthentication } from '../../main-components/authentication';
 
 const ListItem = ({
   item: { id, name: songName, duration_ms: duration, album, artists }
 }) => {
   const [mainArtist] = artists;
   const [songAdded, setSongAdded] = useState(false);
-  const { user } = useAuthentication();
+
+  const q = useQuery();
+  const radioId = q.get('id');
 
   useEffect(() => {
     setSongAdded(false);
@@ -18,9 +20,9 @@ const ListItem = ({
   const addSong = useCallback(() => {
     if (!songAdded) {
       setSongAdded(true);
-      radioiApi.addSongToRadio(user.hash, id, duration);
+      radioiApi.addSongToRadio(radioId, id, duration);
     }
-  }, [songAdded, id]);
+  }, [radioId, songAdded, id, duration]);
 
   return (
     <li className="row" onClick={addSong}>

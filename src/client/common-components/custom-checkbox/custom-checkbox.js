@@ -2,15 +2,10 @@ import React from 'react';
 
 import './styles.css';
 
-const CustomCheckbox = ({ className, onChange }) => (
+const CustomCheckbox = ({ className, id, onChange }) => (
   <div className={className}>
-    <label htmlFor="custom-checkbox" className="custom-checkbox-container">
-      <input
-        type="checkbox"
-        onChange={onChange}
-        name="custom-checkbox"
-        id="custom-checkbox"
-      />
+    <label htmlFor={id} className="custom-checkbox-container">
+      <input type="checkbox" onChange={onChange} name={id} id={id} />
       <span className="custom-checkmark">&nbsp;</span>
     </label>
   </div>

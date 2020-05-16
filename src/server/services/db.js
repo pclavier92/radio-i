@@ -133,13 +133,20 @@ const radioExists = hash =>
     });
   });
 
-const createRadio = (hash, userId, name, isPublic) => {
+const createRadio = (
+  hash,
+  userId,
+  name,
+  isPublic,
+  isCollaborative,
+  isAnonymous
+) => {
   return new Promise((resolve, reject) => {
     const conn = db.getConnection();
     conn.then(dbConnection => {
       dbConnection.query(
-        'INSERT INTO Radio (hash, user_id, name, is_public) VALUES (?)',
-        [[hash, userId, name, isPublic]],
+        'INSERT INTO Radio (hash, user_id, name, is_public, is_collaborative, is_anonymous) VALUES (?)',
+        [[hash, userId, name, isPublic, isCollaborative, isAnonymous]],
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
@@ -176,6 +183,8 @@ const getRadioByHash = hash =>
               userName: results[0].user_name,
               name: results[0].name,
               isPublic: results[0].is_public ? true : false,
+              isCollaborative: results[0].is_collaborative ? true : false,
+              isAnonymous: results[0].is_anonymous ? true : false,
               songId: results[0].song_id,
               timestamp: results[0].timestamp_ms
             });
@@ -206,6 +215,8 @@ const getRadioById = id =>
               userId: results[0].user_id,
               name: results[0].name,
               isPublic: results[0].is_public ? true : false,
+              isCollaborative: results[0].is_collaborative ? true : false,
+              isAnonymous: results[0].is_anonymous ? true : false,
               songId: results[0].song_id,
               timestamp: results[0].timestamp_ms
             });
@@ -236,6 +247,8 @@ const getRadioByUserId = userId =>
               userId: results[0].user_id,
               name: results[0].name,
               isPublic: results[0].is_public ? true : false,
+              isCollaborative: results[0].is_collaborative ? true : false,
+              isAnonymous: results[0].is_anonymous ? true : false,
               songId: results[0].song_id,
               timestamp: results[0].timestamp_ms
             });

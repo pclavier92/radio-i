@@ -20,26 +20,37 @@ import './styles.css';
 const StartRadio = ({ id }) => {
   const history = useHistory();
   const [radioname, setRadioname] = useState('');
-  const [makePublic, setMakePublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
+  const [isCollaborative, setIsCollaborative] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   const onInputChange = useCallback(e => setRadioname(e.target.value), []);
-  const onCheckboxChange = useCallback(
-    e => setMakePublic(e.target.checked),
+  const onPublicChange = useCallback(e => setIsPublic(e.target.checked), []);
+  const onCollaborativeChange = useCallback(
+    e => setIsCollaborative(e.target.checked),
+    []
+  );
+  const onAnonymousChange = useCallback(
+    e => setIsAnonymous(e.target.checked),
     []
   );
   const startRadio = useCallback(
     async e => {
-      if (radioname !== '') {
-        e.preventDefault();
-        try {
-          await radioiApi.startRadio(id, radioname, makePublic);
-          history.push(`/radio?id=${id}`);
-        } catch (e) {
-          console.log('Could not create radio');
-        }
+      e.preventDefault();
+      try {
+        await radioiApi.startRadio(
+          id,
+          radioname,
+          isPublic,
+          isCollaborative,
+          isAnonymous
+        );
+        history.push(`/radio?id=${id}`);
+      } catch (e) {
+        console.log('Could not create radio');
       }
     },
-    [id, radioname, makePublic]
+    [id, radioname, isPublic, isCollaborative, isAnonymous]
   );
 
   return (
@@ -53,15 +64,39 @@ const StartRadio = ({ id }) => {
           id="radio-name"
           spellCheck="false"
           maxLength="35"
-          required
           onChange={onInputChange}
         />
-        <SpotifyButton onClick={startRadio}>Start your radio</SpotifyButton>
-        <CustomCheckbox
-          onChange={onCheckboxChange}
-          className="make-public-checkbox"
-        />
-        <h3>Make Radio Public</h3>
+        <div className="row">
+          <div className="col span-1-of-2">
+            <SpotifyButton onClick={startRadio}>Start your radio</SpotifyButton>
+          </div>
+          <div className="col span-1-of-2">
+            <div>
+              <CustomCheckbox
+                id="is-public"
+                onChange={onPublicChange}
+                className="radio-option-checkbox"
+              />
+              <h3>Public Radio</h3>
+            </div>
+            <div>
+              <CustomCheckbox
+                id="is-collaborative"
+                onChange={onCollaborativeChange}
+                className="radio-option-checkbox"
+              />
+              <h3>Collaborative Radio</h3>
+            </div>
+            <div>
+              <CustomCheckbox
+                id="is-anonymous"
+                onChange={onAnonymousChange}
+                className="radio-option-checkbox"
+              />
+              <h3>Anonymous Radio</h3>
+            </div>
+          </div>
+        </div>
       </form>
     </Fragment>
   );
@@ -79,10 +114,16 @@ const RadioStarted = ({ id }) => {
   return (
     <Fragment>
       <h2>Your radio is broadcasting!</h2>
-      <SpotifyButton onClick={goToRadio}>Go to Radio</SpotifyButton>
-      <InverseSpotifyButton onClick={stopRadio}>
-        Stop Radio
-      </InverseSpotifyButton>
+      <div className="row">
+        <div className="col span-1-of-2">
+          <SpotifyButton onClick={goToRadio}>Go to Radio</SpotifyButton>
+        </div>
+        <div className="col span-1-of-2">
+          <InverseSpotifyButton onClick={stopRadio}>
+            Stop Radio
+          </InverseSpotifyButton>
+        </div>
+      </div>
     </Fragment>
   );
 };
