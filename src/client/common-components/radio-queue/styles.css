@@ -26,6 +26,7 @@
 .radio-queue-item {
   width: 100%;
   padding: 1px;
+  padding-right: 30px;
   box-shadow: 0 1px 2px #d4d3d3;
 }
 
@@ -38,6 +39,10 @@
   display: inline-block;
   vertical-align: middle;
   height: 100%;
+  width: calc(100% - 150px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -45,6 +50,12 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.queue-item-info-container h5,
+.queue-item-info-container h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .radio-queue-item .spinner {

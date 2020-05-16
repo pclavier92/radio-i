@@ -16,7 +16,6 @@
 
 .serach-results-list li div {
   padding: 5px 10px;
-  overflow: hidden;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

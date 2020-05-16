@@ -3,7 +3,6 @@ import React, {
   cloneElement,
   Fragment,
   useCallback,
-  useMemo,
   useState,
   useEffect
 } from 'react';
@@ -44,19 +43,3 @@ const ConditionalRotation = ({ id, maxHeight, children }) => {
 };
 
 export default ConditionalRotation;
-
-/*
-  const [childrenWithRef, setChildrenWithRef] = useState(null);
-
-  const refCallback = useCallback(
-    node => {
-      debugger;
-      if (node && node.offsetHeight > maxHeight) {
-        setRotate(true);
-      }
-    },
-    [maxHeight]
-  );
-
-  
-  */
