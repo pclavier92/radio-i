@@ -53,9 +53,14 @@
   margin-left: 5%;
 }
 
+.lobby-left-box .tooltip {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 30px;
+}
+
 .lobby-left-box h3 {
   display: inline-block;
-  margin-left: 30px;
 }
 
 .lobby-left-box button {

@@ -16,6 +16,12 @@ import CustomCheckbox from '../../common-components/custom-checkbox';
 import { useAuthentication } from '../authentication';
 
 import './styles.css';
+import Tooltip from '../../common-components/tooltip';
+
+const publicRadioTooltip = 'Will be published in the home page';
+const collaborativeRadioTooltip =
+  'Anyone will be able to add new songs to the radio';
+const anonymousRadioTooltip = 'Your username will not be shown in the radio';
 
 const StartRadio = ({ id }) => {
   const history = useHistory();
@@ -77,7 +83,9 @@ const StartRadio = ({ id }) => {
                 onChange={onPublicChange}
                 className="radio-option-checkbox"
               />
-              <h3>Public Radio</h3>
+              <Tooltip text={publicRadioTooltip}>
+                <h3>Public Radio</h3>
+              </Tooltip>
             </div>
             <div>
               <CustomCheckbox
@@ -85,7 +93,9 @@ const StartRadio = ({ id }) => {
                 onChange={onCollaborativeChange}
                 className="radio-option-checkbox"
               />
-              <h3>Collaborative Radio</h3>
+              <Tooltip text={collaborativeRadioTooltip}>
+                <h3>Collaborative Radio</h3>
+              </Tooltip>
             </div>
             <div>
               <CustomCheckbox
@@ -93,7 +103,9 @@ const StartRadio = ({ id }) => {
                 onChange={onAnonymousChange}
                 className="radio-option-checkbox"
               />
-              <h3>Anonymous Radio</h3>
+              <Tooltip text={anonymousRadioTooltip}>
+                <h3>Anonymous Radio</h3>
+              </Tooltip>
             </div>
           </div>
         </div>
