@@ -1,8 +1,10 @@
 import React, { useCallback, useState, useRef } from 'react';
 
+import { withLastClickInside } from '../with-last-click-inside';
+
 import './styles.css';
 
-const SharePopUp = () => {
+const SharePopUp = ({ lastClickInside }) => {
   const inputRef = useRef();
   const [open, setOpen] = useState(false);
 
@@ -20,7 +22,7 @@ const SharePopUp = () => {
       <button type="button" onClick={toggleDropdown} className="btn-share">
         <p>Share Radio</p>
       </button>
-      {open && (
+      {lastClickInside && open && (
         <div className="share-pop-up">
           <button className="btn-copy" onClick={copyInput}>
             Copy
@@ -39,4 +41,4 @@ const SharePopUp = () => {
   );
 };
 
-export default SharePopUp;
+export default withLastClickInside(SharePopUp);

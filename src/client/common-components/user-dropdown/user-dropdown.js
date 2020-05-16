@@ -1,13 +1,12 @@
 import React, { useCallback, useState, Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
 
-import authService from '../../services/authentication';
 import { useAuthentication } from '../../main-components/authentication/authentication';
 
-import './styles.css';
-import radioiApi from '../../apis/radioi-api';
+import { withLastClickInside } from '../with-last-click-inside';
 
-const UserDropdown = () => {
+import './styles.css';
+
+const UserDropdown = ({ lastClickInside }) => {
   const { user, logOut } = useAuthentication();
   const [open, setOpen] = useState(false);
 
@@ -30,7 +29,7 @@ const UserDropdown = () => {
           <i className="material-icons">arrow_drop_down</i>
         )}
       </button>
-      {open && (
+      {lastClickInside && open && (
         <div className="user-button-dropdown">
           <ul>
             <li>
@@ -48,4 +47,4 @@ const UserDropdown = () => {
   );
 };
 
-export default UserDropdown;
+export default withLastClickInside(UserDropdown);

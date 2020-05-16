@@ -78,9 +78,11 @@ class RadioSubscriptions {
 
   updateListenersForRadio(radioHash) {
     const radioUsers = this.radios.get(radioHash);
-    const listeners = radioUsers.length;
-    const message = { type: types.LISTENERS_UPDATE, payload: { listeners } };
-    this.broadcastMessageForRadio(radioHash, message);
+    if (radioUsers) {
+      const listeners = radioUsers.length;
+      const message = { type: types.LISTENERS_UPDATE, payload: { listeners } };
+      this.broadcastMessageForRadio(radioHash, message);
+    }
   }
 
   playSongForRadio(radioHash, songId, timestamp) {
