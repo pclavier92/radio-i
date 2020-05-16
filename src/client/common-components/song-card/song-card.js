@@ -39,13 +39,13 @@ const SongCard = ({ song, duration, progress }) => {
           </div>
           <div className="content">
             <div className="song-details">
-              <RotatingText maxHeight={MAX_H4_HEIGHT}>
+              <RotatingText key={name} maxHeight={MAX_H4_HEIGHT}>
                 <h4>{name}</h4>
               </RotatingText>
-              <RotatingText maxHeight={MAX_H5_HEIGHT}>
+              <RotatingText key={artits} maxHeight={MAX_H5_HEIGHT}>
                 <h5>{artits}</h5>
               </RotatingText>
-              <RotatingText maxHeight={MAX_H6_HEIGHT}>
+              <RotatingText key={album} maxHeight={MAX_H6_HEIGHT}>
                 <h6>{album}</h6>
               </RotatingText>
 
