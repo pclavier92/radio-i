@@ -3,7 +3,7 @@ const session = require('express-session');
 
 const radioSubscriptions = require('./services/radio-subscriptions');
 
-const wss = new WebSocket.Server({ clientTracking: false, noServer: true });
+const wss = new WebSocket.Server({ noServer: true });
 
 const sessionParser = session({
   saveUninitialized: false,
@@ -34,7 +34,17 @@ const onWebsocketUpgrade = (request, socket, head) => {
   });
 };
 
+const noop = () => {};
+
+const heartbeat = () => {
+  console.log('Pong!!!');
+  this.isAlive = true;
+};
+
 wss.on('connection', (ws, request) => {
+  ws.isAlive = true;
+  ws.on('pong', heartbeat);
+
   const userId = request.session.userId;
 
   radioSubscriptions.addConnection(userId, ws);
@@ -70,6 +80,19 @@ wss.on('connection', (ws, request) => {
     radioSubscriptions.unsubscribeUser(userId);
     console.log(`Connection closed for user ${userId}`);
   });
+});
+
+const interval = setInterval(() => {
+  wss.clients.forEach(ws => {
+    if (ws.isAlive === false) return ws.terminate();
+
+    ws.isAlive = false;
+    ws.ping(noop);
+  });
+}, 15000);
+
+wss.on('close', () => {
+  clearInterval(interval);
 });
 
 module.exports = { onWebsocketUpgrade, sessionParser };
