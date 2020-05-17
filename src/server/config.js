@@ -5,6 +5,9 @@ let host;
 let port;
 let serverPort;
 let clientUrl;
+let client_id;
+let client_secret;
+let redirect_uri;
 console.log('SCOPE: ', process.env.SCOPE);
 switch (process.env.SCOPE) {
   case 'prod':
@@ -15,6 +18,9 @@ switch (process.env.SCOPE) {
     port = 3306;
     serverPort = 8888;
     clientUrl = 'https://radioi.herokuapp.com';
+    client_id = '284faef9d7c24d14b2e14930c27caba1';
+    client_secret = '196d33bc88c3492583e9be8831d85a25';
+    redirect_uri = 'https://radioi.herokuapp.com/callback/';
     break;
 
   case 'preprod':
@@ -25,6 +31,9 @@ switch (process.env.SCOPE) {
     port = 3306;
     serverPort = 8888;
     clientUrl = 'http://localhost:8888';
+    client_id = '284faef9d7c24d14b2e14930c27caba1';
+    client_secret = '196d33bc88c3492583e9be8831d85a25';
+    redirect_uri = 'https://radioi.herokuapp.com/callback/';
     break;
 
   case 'dev':
@@ -36,6 +45,9 @@ switch (process.env.SCOPE) {
     port = 3306;
     serverPort = 8888;
     clientUrl = 'http://localhost:3000';
+    client_id = '284faef9d7c24d14b2e14930c27caba1';
+    client_secret = '196d33bc88c3492583e9be8831d85a25';
+    redirect_uri = 'http://localhost:8888/callback/';
     break;
 }
 
@@ -56,6 +68,9 @@ module.exports = {
   },
   server: {
     port: serverPort,
-    clientUrl
+    clientUrl,
+    client_id,
+    client_secret,
+    redirect_uri
   }
 };

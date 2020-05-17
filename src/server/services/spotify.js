@@ -1,6 +1,6 @@
 const querystring = require('querystring');
 
-const { client_id, client_secret, redirect_uri } = require('../../../app-keys');
+const { client_id, client_secret, redirect_uri } = require('../config').server;
 
 const scopes = [
   'streaming',
