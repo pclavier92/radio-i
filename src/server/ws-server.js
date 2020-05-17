@@ -76,9 +76,10 @@ wss.on('connection', (ws, request) => {
     console.log(error);
   });
 
-  ws.on('close', () => {
-    radioSubscriptions.unsubscribeUser(userId);
+  ws.on('close', code => {
     console.log(`Connection closed for user ${userId}`);
+    console.log('Closing code:', code);
+    radioSubscriptions.unsubscribeUser(userId);
   });
 });
 
@@ -89,7 +90,7 @@ const interval = setInterval(() => {
     ws.isAlive = false;
     ws.ping(noop);
   });
-}, 15000);
+}, 30000);
 
 wss.on('close', () => {
   clearInterval(interval);

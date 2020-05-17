@@ -41,7 +41,7 @@ const Radio = ({ radio }) => {
     }
     return () => {
       spotifySdk.disconnect();
-      subscriptionsApi.unsubscribe();
+      subscriptionsApi.unsubscribe('Radio player component unmounting');
     };
   }, []);
 

@@ -1,6 +1,6 @@
 import config from '../config';
 
-import { generateRandomString } from '../utils';
+import { generateRandomString, delay } from '../utils';
 
 const types = {
   SUBSCRIBE: 'subscribe',
@@ -10,6 +10,11 @@ const types = {
   ADD_TO_QUEUE: 'add_to_queue',
   CHAT_MESSAGE: 'chat_message'
 };
+
+const ONE_SECOND = 1000;
+
+const CLOSE_NORMAL = 1000;
+const CLOSE_ABNORMAL = 1006;
 
 const noop = () => {};
 
@@ -37,7 +42,8 @@ class SubscriptionsApi {
       switch (type) {
         case types.SUBSCRIPTION_FAILED: // do we need this
           // TODO -> MODAL
-          this.ws.close();
+          const reason = 'Subscription failed';
+          this.ws.close(CLOSE_NORMAL, reason);
           break;
         case types.LISTENERS_UPDATE:
           this.listenersUpdate(payload);
@@ -59,8 +65,11 @@ class SubscriptionsApi {
       console.log('error event', event);
       // TODO -> MODAL SHOWING CONNECTION LOST
     };
-    this.ws.onclose = event => {
-      console.log('close event', event);
+    this.ws.onclose = async event => {
+      if (event.code === CLOSE_ABNORMAL) {
+        await delay(ONE_SECOND);
+        this.subscribe(radioHash);
+      }
       // TODO -> MODAL SHOWING CONNECTION LOST
     };
   }
@@ -90,9 +99,9 @@ class SubscriptionsApi {
     this.ws.send(msg);
   }
 
-  unsubscribe() {
+  unsubscribe(reason) {
     if (this.ws) {
-      this.ws.close();
+      this.ws.close(CLOSE_NORMAL, reason);
     }
   }
 }

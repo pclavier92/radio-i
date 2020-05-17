@@ -27,7 +27,7 @@ const AuthenticationProvider = ({ children }) => {
   const logOut = useCallback(async () => {
     setAuthenticated(false);
     authService.logOut();
-    subscriptionsApi.unsubscribe();
+    subscriptionsApi.unsubscribe('Logging out');
     await radioiApi.logOut();
     history.push('/');
   }, []);

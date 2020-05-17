@@ -7,6 +7,8 @@ const types = {
   CHAT_MESSAGE: 'chat_message'
 };
 
+const CLOSE_NORMAL = 1000;
+
 class RadioSubscriptions {
   constructor() {
     this.connections = new Map(); // userId -> ws
@@ -44,7 +46,7 @@ class RadioSubscriptions {
       this.radios.set(radioHash, newRadioUsers);
     }
     const ws = this.connections.get(userId);
-    if (ws) ws.close();
+    if (ws) ws.close(CLOSE_NORMAL, 'Unsubscribing user from server');
     this.connections.delete(userId);
     this.subscriptions.delete(userId);
     this.updateListenersForRadio(radioHash);
@@ -55,7 +57,7 @@ class RadioSubscriptions {
     const radioUsers = this.radios.get(radioHash);
     radioUsers.forEach(id => {
       const ws = this.connections.get(id);
-      if (ws) ws.close();
+      if (ws) ws.close(CLOSE_NORMAL, 'Radio has been closed');
       this.connections.delete(id);
       this.subscriptions.delete(id);
     });
