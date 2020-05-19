@@ -47,37 +47,34 @@ const Radio = ({ radio }) => {
 
   return (
     <Fragment>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <section className="section-radio">
-          <div className="row">
-            <div className="radio-header">
-              <div className="row">
-                <div className="col span-1-of-3">
-                  <h3>{radio.name}</h3>
-                </div>
-                <div className="col span-1-of-3">
-                  <h3>Listeners: {listeners}</h3>
-                </div>
-                <div className="col span-1-of-3"></div>
-                <SharePopUp />
+      <section className="section-radio">
+        <div className="row">
+          <div className="radio-header">
+            <div className="row">
+              <div className="col span-1-of-3">
+                <h3>{radio.name}</h3>
               </div>
-            </div>
-            <div className="col span-1-of-3">
-              <RadioPlayer radio={radio} />
-            </div>
-            <div className="col span-2-of-3">
-              <RigthPanel canSearch={canSearch} />
+              <div className="col span-1-of-3">
+                <h3>Listeners: {listeners}</h3>
+              </div>
+              <div className="col span-1-of-3"></div>
+              <SharePopUp />
             </div>
           </div>
-        </section>
-      )}
+          <div className="col span-1-of-3">
+            {loading ? <Spinner /> : <RadioPlayer radio={radio} />}
+          </div>
+          <div className="col span-2-of-3">
+            <RigthPanel canSearch={canSearch} />
+          </div>
+        </div>
+      </section>
     </Fragment>
   );
 };
 
 const RadioRouter = () => {
+  const [loading, setLoading] = useState(true);
   const [radio, setRadio] = useState(null);
   const { authenticated } = useAuthentication();
 
@@ -90,9 +87,11 @@ const RadioRouter = () => {
         try {
           const { data } = await radioiApi.getRadio(radioId);
           setRadio(data);
+          setLoading(false);
         } catch (error) {
           if (error.response.status === 404) {
             setRadio(null);
+            setLoading(false);
           } else {
             console.log(error);
           }
@@ -100,6 +99,10 @@ const RadioRouter = () => {
       })();
     }
   }, [authenticated]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   if (!radioId) {
     return <NotFound />;

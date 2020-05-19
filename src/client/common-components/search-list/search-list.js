@@ -12,13 +12,15 @@ const SearchList = ({ searchResults }) => (
       <Spinner />
     ) : (
       <div className="serach-results">
-        <ul className="serach-results-list">
+        <ul className="serach-results-header">
           <li key="heading" className="row first-row">
             <div className="col span-4-of-12">Name</div>
             <div className="col span-3-of-12">Artist</div>
             <div className="col span-3-of-12">Album</div>
             <div className="col span-2-of-12">Duration</div>
           </li>
+        </ul>
+        <ul className="scroll-results-list">
           {searchResults &&
             searchResults.map((item, index) => (
               <ListItem key={index} item={item} />

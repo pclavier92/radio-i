@@ -8,10 +8,11 @@ import React, {
 import { useHistory } from 'react-router-dom';
 
 import radioiApi from '../../apis/radioi-api';
+import PhotoBy from '../../common-components/photo-by';
+import Spinner from '../../common-components/spinner';
+import CustomCheckbox from '../../common-components/custom-checkbox';
 import SpotifyButton from '../../common-components/spotify-button';
 import InverseSpotifyButton from '../../common-components/inverse-spotify-button';
-import PhotoBy from '../../common-components/photo-by';
-import CustomCheckbox from '../../common-components/custom-checkbox';
 
 import { useAuthentication } from '../authentication';
 
@@ -188,6 +189,7 @@ const RadiosDisplay = () => {
 };
 
 const Lobby = () => {
+  const [loading, setLoading] = useState(true);
   const [radioExists, setRadioExists] = useState(false);
   const { user } = useAuthentication();
   const id = useMemo(() => user && user.hash, [user]);
@@ -198,9 +200,11 @@ const Lobby = () => {
         try {
           await radioiApi.getRadio(id);
           setRadioExists(true);
+          setLoading(false);
         } catch (error) {
           if (error.response.status === 404) {
             setRadioExists(false);
+            setLoading(false);
           } else {
             console.log(error);
           }
@@ -215,7 +219,13 @@ const Lobby = () => {
         <div className="row">
           <div className="col span-1-of-2">
             <div className="lobby-left-box">
-              {radioExists ? <RadioStarted id={id} /> : <StartRadio id={id} />}
+              {loading ? (
+                <Spinner />
+              ) : radioExists ? (
+                <RadioStarted id={id} />
+              ) : (
+                <StartRadio id={id} />
+              )}
             </div>
           </div>
           <div className="col span-1-of-2"></div>
@@ -225,7 +235,7 @@ const Lobby = () => {
           />
         </div>
       </section>
-      {!radioExists && <RadiosDisplay />}
+      {!loading && !radioExists && <RadiosDisplay />}
     </Fragment>
   );
 };

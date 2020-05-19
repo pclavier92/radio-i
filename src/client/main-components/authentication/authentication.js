@@ -24,19 +24,19 @@ const AuthenticationProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
-  const logOut = useCallback(async () => {
-    setAuthenticated(false);
-    authService.logOut();
+  const logOut = useCallback(() => {
     subscriptionsApi.unsubscribe('Logging out');
-    await radioiApi.logOut();
+    radioiApi.logOut(); // do not wait for log out
+    authService.logOut();
+    setAuthenticated(false);
     history.push('/');
   }, []);
 
   useEffect(() => {
     try {
       const { redirected } = authService.getAuthentication();
-      setAuthenticated(true);
       if (redirected) {
+        setAuthenticated(true);
         const lastFullPath = storage.getLastLocation();
         const path = lastFullPath || '/';
         history.push(path);
@@ -44,12 +44,12 @@ const AuthenticationProvider = ({ children }) => {
         (async () => {
           try {
             await radioiApi.refreshSession();
+            setAuthenticated(true);
           } catch (e) {
             logOut();
           }
         })();
       }
-
       (async () => {
         try {
           const { data } = await spotifyWebApi.getUserInfo();
@@ -70,10 +70,10 @@ const AuthenticationProvider = ({ children }) => {
       authenticated,
       logOut
     }),
-    [user, authenticated, setAuthenticated]
+    [user, authenticated, logOut]
   );
 
-  useRefreshAccessToken();
+  // useRefreshAccessToken();
 
   return (
     <authentication.Provider value={authValue}>

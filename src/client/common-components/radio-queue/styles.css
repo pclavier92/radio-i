@@ -2,7 +2,7 @@
   width: 90%;
   margin-left: 10%;
 
-  height: 336px;
+  height: calc(100vh - 320px);
   overflow: auto;
   overscroll-behavior-y: contain;
 
