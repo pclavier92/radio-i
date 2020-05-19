@@ -119,14 +119,14 @@ const StartRadio = ({ id }) => {
   );
 };
 
-const RadioStarted = ({ id }) => {
+const RadioStarted = ({ id, setRadioExists }) => {
   const history = useHistory();
   const goToRadio = useCallback(() => {
     history.push(`/radio?id=${id}`);
   }, [id]);
   const stopRadio = useCallback(async () => {
     await radioiApi.stopRadio();
-    window.location.reload(false);
+    setRadioExists(false);
   }, [id]);
   return (
     <Fragment>
@@ -222,7 +222,7 @@ const Lobby = () => {
               {loading ? (
                 <Spinner />
               ) : radioExists ? (
-                <RadioStarted id={id} />
+                <RadioStarted id={id} setRadioExists={setRadioExists} />
               ) : (
                 <StartRadio id={id} />
               )}
