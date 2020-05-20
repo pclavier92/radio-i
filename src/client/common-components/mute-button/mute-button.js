@@ -8,7 +8,6 @@ const MuteButton = ({ setVolume }) => {
   const onClick = useCallback(() => {
     setVolume(!muted);
     setMuted(!muted);
-    console.log(muted);
   }, [muted]);
 
   return (

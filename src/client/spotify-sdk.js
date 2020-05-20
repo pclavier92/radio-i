@@ -9,7 +9,7 @@ class SpotifySDK {
   start(onReady) {
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new Spotify.Player({
-        name: 'RadioI Player',
+        name: 'RadioI',
         getOAuthToken: cb => {
           const token = authService.getAccessToken();
           cb(token);
@@ -36,9 +36,9 @@ class SpotifySDK {
       });
 
       // Playback status updates
-      this.player.addListener('player_state_changed', state => {
-        console.log(state);
-      });
+      // this.player.addListener('player_state_changed', state => {
+      //   console.log(state);
+      // });
 
       // Ready
       this.player.addListener('ready', ({ device_id }) => {

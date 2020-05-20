@@ -29,8 +29,7 @@ class SubscriptionsApi {
 
   subscribe(radioHash) {
     this.ws = new WebSocket(config.wsUrl);
-    this.ws.onopen = event => {
-      console.log('open event', event);
+    this.ws.onopen = () => {
       const message = JSON.stringify({
         type: types.SUBSCRIBE,
         payload: { radioHash }
@@ -62,13 +61,15 @@ class SubscriptionsApi {
       }
     };
     this.ws.onerror = event => {
-      console.log('error event', event);
+      console.error('error event', event);
       // TODO -> MODAL SHOWING CONNECTION LOST
     };
     this.ws.onclose = async event => {
       if (event.code === CLOSE_ABNORMAL) {
         await delay(HALF_SECOND);
         this.subscribe(radioHash);
+      } else {
+        console.log('close event', event);
       }
       // TODO -> MODAL SHOWING CONNECTION LOST
     };
