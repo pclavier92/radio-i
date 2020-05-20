@@ -74,46 +74,48 @@ const Radio = ({ radio }) => {
 };
 
 const RadioRouter = () => {
-  const [loading, setLoading] = useState(true);
   const [radio, setRadio] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { authenticated } = useAuthentication();
 
   const q = useQuery();
   const radioId = q.get('id');
 
   useEffect(() => {
-    if (authenticated && radioId) {
+    if (radioId && authenticated) {
       (async () => {
         try {
           const { data } = await radioiApi.getRadio(radioId);
           setRadio(data);
           setLoading(false);
         } catch (error) {
-          if (error.response.status === 404) {
+          if (error.response && error.response.status === 404) {
             setRadio(null);
             setLoading(false);
           } else {
-            console.log(error);
+            console.error(error);
           }
         }
       })();
     }
-  }, [authenticated]);
+  }, [radioId, authenticated]);
 
   if (loading) {
     return <Spinner />;
   }
 
-  if (!radioId) {
-    return <NotFound />;
-  } else if (authenticated) {
-    if (radio) {
-      return <Radio radio={radio} />;
+  if (radioId) {
+    if (authenticated) {
+      if (radio) {
+        return <Radio radio={radio} />;
+      } else {
+        return <NotFound />;
+      }
     } else {
-      return <NotFound />;
+      return <AuthenticationRequired />;
     }
   } else {
-    return <AuthenticationRequired />;
+    return <NotFound />;
   }
 };
 
