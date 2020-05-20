@@ -53,7 +53,6 @@ class AuthService {
       refresh = refreshToken;
       expiration = expirationTimestamp;
     }
-    debugger;
     if (!access) {
       throw error;
     }
@@ -65,8 +64,6 @@ class AuthService {
     this.storage.setAccessToken(access);
     this.storage.setRefreshToken(refresh);
     this.storage.setExpiration(expiration);
-
-    debugger;
 
     return { accessToken: access, redirected };
   }

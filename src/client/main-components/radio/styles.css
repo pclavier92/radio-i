@@ -19,10 +19,21 @@
 }
 
 .now-playing {
+  position: relative;
   display: flex;
   justify-content: center;
   width: 90%;
   margin-left: 10%;
+}
+
+.now-playing .card {
+  z-index: 1;
+}
+
+.now-playing .mute-button {
+  position: absolute;
+  top: 10px;
+  right: -30px;
 }
 
 .right-panel {

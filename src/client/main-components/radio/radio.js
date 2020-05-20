@@ -103,27 +103,20 @@ const RadioRouter = () => {
   }, [radioId, authenticated]);
 
   if (loading) {
-    debugger;
     return <Spinner />;
   }
 
-  debugger;
-
   if (radioId) {
-    debugger;
     if (authenticated) {
-      debugger;
       if (radio) {
         return <Radio radio={radio} />;
       } else {
         return <NotFound />;
       }
     } else {
-      debugger;
       return <AuthenticationRequired />;
     }
   } else {
-    debugger;
     return <NotFound />;
   }
 };

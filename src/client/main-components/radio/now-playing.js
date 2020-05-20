@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import useInterval from '../../hooks/use-interval';
 import SongCard from '../../common-components/song-card';
+import MuteButton from '../../common-components/mute-button';
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
-import radioiApi from '../../apis/radioi-api';
 
 const PROGRESS_INTERVAL = 1000; // 1 seg
 
@@ -22,6 +22,11 @@ const NowPlaying = ({ radio, shiftQueue }) => {
     setDuration(data.duration_ms);
     setProgress(progressMs);
     setProgressInterval(PROGRESS_INTERVAL);
+  }, []);
+
+  const setVolume = useCallback(async muted => {
+    const volume = muted ? 0 : 100;
+    await spotifyWebApi.setVolume(volume);
   }, []);
 
   useEffect(() => {
@@ -57,6 +62,7 @@ const NowPlaying = ({ radio, shiftQueue }) => {
   return (
     <div className="now-playing">
       <SongCard song={song} duration={duration} progress={progress} />
+      <MuteButton setVolume={setVolume} />
     </div>
   );
 };

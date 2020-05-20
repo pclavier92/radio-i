@@ -1,0 +1,27 @@
+.mute-button {
+  height: 30px;
+  width: 40px;
+  border: 1px solid #eeeeee;
+  background-color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 1s;
+  transform: translateX(-10px);
+}
+
+.mute-button:hover {
+  transform: translateX(0px);
+}
+
+.mute-button i {
+  float: right;
+  margin: 7px 2px 7px 0;
+  font-size: 15px;
+  transition: font-size 1s, margin 1s;
+}
+
+.mute-button:hover i {
+  color: #1ed760;
+  margin: 2px;
+  font-size: 25px;
+}

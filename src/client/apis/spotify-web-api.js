@@ -78,6 +78,18 @@ class SpotifyWebApi {
     this.makeRequestWithRetry(requestConfig);
   }
 
+  setVolume(volume) {
+    const accessToken = authService.getAccessToken();
+    const requestConfig = {
+      method: 'put',
+      url: `${spotifyUrl}/me/player/volume`,
+      params: { volume_percent: volume, device_id: this.deviceId },
+      headers: { Authorization: `Bearer ${accessToken}` },
+      responseType: 'json'
+    };
+    this.makeRequestWithRetry(requestConfig);
+  }
+
   pausePlayer() {
     const accessToken = authService.getAccessToken();
     const requestConfig = {
