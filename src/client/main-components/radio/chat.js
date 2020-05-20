@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, Fragment } from 'react';
 import { Emojione } from 'react-emoji-render';
 
+import { delay } from '../../utils';
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
@@ -29,18 +30,50 @@ const ChatLine = ({ userId, message }) => {
   );
 };
 
-const Chat = ({ messages, animation }) => {
+const Chat = ({ open }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+  const [animation, setAnimation] = useState('filling-chat');
+  const [lines, setLines] = useState(0);
+
+  const callbackRef = useCallback(node => {
+    if (node) {
+      const numberLines = Math.ceil((node.offsetHeight - 20) / 40);
+      setLines(numberLines);
+    }
+  });
+
+  useEffect(() => {
+    subscriptionsApi.onChatMessage(message => {
+      if (chatMessages.length > lines - 1) {
+        setAnimation('full-chat-refresh');
+        (async () => {
+          await delay(50);
+          setAnimation('full-chat');
+        })();
+      }
+      if (chatMessages.length < lines + 1) {
+        setChatMessages([...chatMessages, message]);
+      } else {
+        setChatMessages([...chatMessages.splice(1), message]);
+      }
+    });
+  }, [lines, chatMessages]);
+
   return (
-    <div className="radio-chat">
-      <div className="chat-box">
-        <ul className={animation}>
-          {messages.map(({ id, user, message }) => (
-            <ChatLine key={id} userId={user} message={message} />
-          ))}
-        </ul>
-      </div>
-      <ChatInput />
-    </div>
+    <Fragment>
+      {open && (
+        <div className="radio-chat">
+          <div ref={callbackRef} className="chat-box">
+            <ul className={animation}>
+              {chatMessages.map(({ id, user, message }) => (
+                <ChatLine key={id} userId={user} message={message} />
+              ))}
+            </ul>
+          </div>
+          <ChatInput />
+        </div>
+      )}
+    </Fragment>
   );
 };
 
