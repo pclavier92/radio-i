@@ -14,10 +14,11 @@ const SearchList = ({ searchResults }) => (
       <div className="serach-results">
         <ul className="serach-results-header">
           <li key="heading" className="row first-row">
+            <div className="col span-1-of-12">&nbsp;</div>
             <div className="col span-4-of-12">Name</div>
             <div className="col span-3-of-12">Artist</div>
             <div className="col span-3-of-12">Album</div>
-            <div className="col span-2-of-12">Duration</div>
+            <div className="col span-1-of-12">Duration</div>
           </li>
         </ul>
         <ul className="scroll-results-list">

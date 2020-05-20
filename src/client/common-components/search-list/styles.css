@@ -71,7 +71,7 @@
 }
 
 .scroll-results-list li div i {
-  float: right;
+  float: left;
   vertical-align: middle;
   color: #1ed760;
   font-size: 150%;

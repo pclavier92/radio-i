@@ -26,17 +26,17 @@ const ListItem = ({
 
   return (
     <li className="row" onClick={addSong}>
+      <div className="col span-1-of-12">
+        {songAdded ? (
+          <i className="material-icons">check_circle</i>
+        ) : (
+          <i className="material-icons">add_circle_outline</i>
+        )}
+      </div>
       <div className="col span-4-of-12">{songName}</div>
       <div className="col span-3-of-12">{mainArtist.name}</div>
       <div className="col span-3-of-12">{album.name}</div>
-      <div className="col span-2-of-12">{msToMinutesSeconds(duration)}</div>
-      <div>
-        {songAdded ? (
-          <i className="material-icons">playlist_add_check</i>
-        ) : (
-          <i className="material-icons">playlist_add</i>
-        )}
-      </div>
+      <div className="col span-1-of-12">{msToMinutesSeconds(duration)}</div>
     </li>
   );
 };
