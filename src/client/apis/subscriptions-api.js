@@ -11,7 +11,7 @@ const types = {
   CHAT_MESSAGE: 'chat_message'
 };
 
-const ONE_SECOND = 1000;
+const HALF_SECOND = 500;
 
 const CLOSE_NORMAL = 1000;
 const CLOSE_ABNORMAL = 1006;
@@ -67,7 +67,7 @@ class SubscriptionsApi {
     };
     this.ws.onclose = async event => {
       if (event.code === CLOSE_ABNORMAL) {
-        await delay(ONE_SECOND);
+        await delay(HALF_SECOND);
         this.subscribe(radioHash);
       }
       // TODO -> MODAL SHOWING CONNECTION LOST
