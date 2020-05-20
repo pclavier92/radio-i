@@ -60,7 +60,7 @@ const AuthenticationProvider = ({ children }) => {
         }
       })();
     } catch (e) {
-      logOut();
+      setAuthenticated(false);
     }
   }, []);
 
