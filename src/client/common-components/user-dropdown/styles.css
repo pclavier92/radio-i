@@ -10,12 +10,17 @@
   background-color: #f6f5f4;
 }
 
-.btn-user:hover {
+.btn-user:hover i:last-child {
   color: #1ed760;
 }
 
 .user-dropdown img {
   margin-right: 0;
+}
+
+.user-dropdown i:first-child {
+  float: left;
+  margin: 3px 6px;
 }
 
 .user-dropdown img {

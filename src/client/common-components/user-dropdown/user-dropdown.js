@@ -14,12 +14,18 @@ const UserDropdown = ({ lastClickInside }) => {
     setOpen(!open);
   }, [open]);
 
+  debugger;
+
   return (
     <div className="user-dropdown">
       <button type="button" onClick={toggleDropdown} className="btn-user">
         {user && (
           <Fragment>
-            {user.images && <img alt="" src={user.images[0].url} />}
+            {user.images.lenght > 0 ? (
+              <img alt="" src={user.images[0].url} />
+            ) : (
+              <i className="material-icons no-image-user">person</i>
+            )}
             <p>{user.display_name}</p>
           </Fragment>
         )}
