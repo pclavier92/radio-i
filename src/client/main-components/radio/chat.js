@@ -21,7 +21,11 @@ const ChatLine = ({ userId, message }) => {
     <Fragment>
       {user && (
         <li>
-          <img alt="" src={user.images[0].url} />
+          {user.images.lenght > 0 ? (
+            <img alt="" src={user.images[0].url} />
+          ) : (
+            <i className="material-icons no-image-user">person</i>
+          )}
           <span>{user.display_name}:</span>&nbsp;
           <Emojione text={message} />
         </li>

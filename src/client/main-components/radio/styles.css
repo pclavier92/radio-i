@@ -114,10 +114,18 @@
 .radio-chat .chat-box ul li img {
   height: 30px;
   width: 30px;
-  vertical-align: middle;
+
   border-radius: 50%;
   margin: 5px;
 }
+
+.radio-chat .chat-box ul li i {
+  height: 30px;
+  width: 30px;
+  vertical-align: middle;
+  margin: 5px;
+}
+
 .radio-chat input {
   margin-top: 20px;
 }

@@ -7,7 +7,9 @@ const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
 
 const RightPanel = ({ canSearch }) => {
-  const [selector, setSelector] = useState(SEARCH_SELECTOR);
+  const [selector, setSelector] = useState(() =>
+    canSearch ? SEARCH_SELECTOR : CHAT_SELECTOR
+  );
 
   const selectChat = useCallback(() => {
     setSelector(CHAT_SELECTOR);
