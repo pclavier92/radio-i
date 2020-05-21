@@ -21,7 +21,7 @@ const UserDropdown = ({ lastClickInside }) => {
       <button type="button" onClick={toggleDropdown} className="btn-user">
         {user && (
           <Fragment>
-            {user.images.lenght > 0 ? (
+            {user.images.length > 0 ? (
               <img alt="" src={user.images[0].url} />
             ) : (
               <i className="material-icons no-image-user">person</i>
