@@ -30,6 +30,36 @@
   z-index: 1;
 }
 
+.now-playing .play-to-start {
+  height: 150px;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  background-color: #ffffffc1;
+}
+
+.now-playing .play-to-start .container {
+  height: 150px;
+  width: 100%;
+  text-align: center;
+  padding: 30px 0;
+  cursor: pointer;
+}
+
+.now-playing .play-to-start .container h3 {
+  font-weight: 600;
+}
+
+.now-playing .play-to-start .container:hover {
+  color: #1ed760;
+}
+
+.now-playing .play-to-start i {
+  margin-top: 10px;
+  font-size: 350%;
+}
+
 .now-playing .mute-button {
   position: absolute;
   top: 10px;

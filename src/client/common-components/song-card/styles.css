@@ -51,8 +51,9 @@
 }
 
 .no-song {
+  height: 150px;
   text-align: center;
-  padding: 30px;
+  padding: 60px;
 }
 
 .progress {

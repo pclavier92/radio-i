@@ -13,7 +13,8 @@ class SpotifySDK {
         getOAuthToken: cb => {
           const token = authService.getAccessToken();
           cb(token);
-        }
+        },
+        volume: 0.001
       });
 
       // Error handling

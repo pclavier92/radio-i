@@ -6,9 +6,10 @@ import Spinner from '../spinner';
 
 import './styles.css';
 
-const RadioQueue = ({ queue }) => {
+const RadioQueue = ({ queue, started }) => {
+  const transparent = !started ? 'transparent' : '';
   return (
-    <div className="radio-queue">
+    <div className={`radio-queue ${transparent}`}>
       {queue.map((song, index) => (
         <RadioQueueItem key={index} data={song} />
       ))}

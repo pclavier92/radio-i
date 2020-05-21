@@ -1,3 +1,4 @@
 import SongCard from './song-card';
+import Card from './card';
 
-export default SongCard;
+export { SongCard as default, Card };

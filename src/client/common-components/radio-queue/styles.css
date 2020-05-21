@@ -10,6 +10,10 @@
   scrollbar-color: #dadada #eeeeee;
 }
 
+.radio-queue.transparent {
+  opacity: 0.3;
+}
+
 .radio-queue::-webkit-scrollbar {
   width: 6px;
 }

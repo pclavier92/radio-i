@@ -1,12 +1,13 @@
 import React, { Fragment, useMemo } from 'react';
 
+import { msToMinutesSeconds } from '../../utils';
+import RotatingText from '../rotating-text';
+
 import ProgessBar from '../progress-bar';
 
+import Card from './card';
+
 import './styles.css';
-
-import { msToMinutesSeconds } from '../../utils';
-
-import RotatingText from '../rotating-text';
 
 const MAX_H4_HEIGHT = 35;
 const MAX_H5_HEIGHT = 30;
@@ -31,7 +32,7 @@ const SongCard = ({ song, duration, progress }) => {
   const completed = progress ? (progress * 100) / duration : 0;
 
   return (
-    <div className="card clearfix">
+    <Card>
       {name ? (
         <Fragment>
           <div className="cover">
@@ -64,7 +65,7 @@ const SongCard = ({ song, duration, progress }) => {
           <h3>No song playing...</h3>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 

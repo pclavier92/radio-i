@@ -8,6 +8,7 @@ import RadioQueue from '../../common-components/radio-queue';
 import NowPlaying from './now-playing';
 
 const RadioPlayer = ({ radio }) => {
+  const [started, setStarted] = useState(false);
   const [radioQueue, setRadioQueue] = useState([]);
 
   const shiftQueue = useCallback(() => {
@@ -36,8 +37,13 @@ const RadioPlayer = ({ radio }) => {
 
   return (
     <Fragment>
-      <NowPlaying radio={radio} shiftQueue={shiftQueue} />
-      <RadioQueue queue={radioQueue} />
+      <NowPlaying
+        radio={radio}
+        started={started}
+        setStarted={setStarted}
+        shiftQueue={shiftQueue}
+      />
+      <RadioQueue queue={radioQueue} started={started} />
     </Fragment>
   );
 };
