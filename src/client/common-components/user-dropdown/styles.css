@@ -4,7 +4,6 @@
   text-decoration: none;
   margin: 10px 0 10px 0;
   cursor: pointer;
-  width: 180px;
   padding: 0;
   border: none;
   background-color: #f6f5f4;
@@ -32,14 +31,14 @@
 
 .user-dropdown p {
   float: left;
-  margin: 7px 0 7px 10px;
+  margin: 7px 0 7px 8px;
   font-weight: 400;
   color: #6e6e6e;
 }
 
 .user-dropdown i {
   float: right;
-  margin: 3px 2px 3px 0;
+  margin: 3px;
 }
 
 .user-button-dropdown {
