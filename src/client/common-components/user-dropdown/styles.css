@@ -19,7 +19,7 @@
 
 .user-dropdown i:first-child {
   float: left;
-  margin: 3px 6px;
+  margin: 3px 0 3px 6px;
 }
 
 .user-dropdown img {
@@ -46,7 +46,7 @@
   position: absolute;
   width: 180px;
   top: 55px;
-  right: 28px;
+  right: 25px;
   border-radius: 5px;
 }
 
