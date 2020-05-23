@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useEffect, Fragment } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  Fragment,
+  useRef
+} from 'react';
 import { Emojione } from 'react-emoji-render';
 
 import { delay } from '../../utils';
@@ -46,31 +52,42 @@ const Chat = ({ open }) => {
   });
   const { messages, animation } = chat;
 
+  const chatboxRef = useRef();
+
+  useEffect(() => {
+    if (open) {
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+    }
+  }, [open]);
+
   useEffect(() => {
     subscriptionsApi.onChatMessage(message => {
       // setAnimation('chat-refresh');
       // setChatMessages([message, ...chatMessages]);
-      setChat({
-        messages: [message, ...messages],
-        animation: 'chat-refresh'
-      });
+
+      if (chatboxRef.current.scrollHeight > chatboxRef.current.offsetHeight) {
+        setChat({
+          messages: [...messages, message],
+          animation: 'chat-refresh'
+        });
+      }
+      // Scroll to the bottom
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
       (async () => {
         await delay(100);
         setChat({
-          messages: [message, ...messages],
+          messages: [...messages, message],
           animation: 'filling-chat'
         });
       })();
     });
   }, [messages]);
 
-  debugger;
-
   return (
     <Fragment>
       {open && (
         <div className="radio-chat">
-          <ul className={`chat-box ${animation}`}>
+          <ul ref={chatboxRef} className={`chat-box ${animation}`}>
             {messages.map(({ id, user, message }) => (
               <ChatLine key={id} userId={user} message={message} />
             ))}
