@@ -96,7 +96,7 @@
 .radio-chat .chat-box {
   width: 100%;
   height: calc(100vh - 260px);
-  padding: 5px 10px;
+  padding: 5px 20px;
   box-shadow: inset 0 0 5px 2px #d6d6d6;
   border-radius: 10px;
   overflow-y: scroll;
@@ -114,7 +114,7 @@
 
 .radio-chat .chat-box li .chat-message-container {
   display: inline-block;
-  width: calc(100% - 60px);
+  width: calc(100% - 80px);
   margin-top: 10px;
 }
 
@@ -144,15 +144,15 @@
 }
 
 .chat-refresh li {
-  transform: translateY(100%);
+  transform: translateY(40px);
 }
 
 @keyframes filling-chat-animation {
   from {
-    transform: translateY(100%);
+    transform: translateY(40px);
   }
   to {
-    transform: translateY(0%);
+    transform: translateY(0);
   }
 }
 

@@ -13,8 +13,14 @@ import subscriptionsApi from '../../apis/subscriptions-api';
 
 import { useAuthentication } from '../authentication';
 
-const ChatLine = ({ userId, message }) => {
+const ChatLine = ({ userId, message, isLastLine, onLastLineRendered }) => {
   const [user, setUser] = useState(null);
+
+  const lineRef = useCallback(node => {
+    if (node && isLastLine) {
+      onLastLineRendered(node);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -26,7 +32,7 @@ const ChatLine = ({ userId, message }) => {
   return (
     <Fragment>
       {user && (
-        <li>
+        <li ref={lineRef}>
           {user.images.length > 0 ? (
             <img alt="" src={user.images[0].url} />
           ) : (
@@ -43,56 +49,74 @@ const ChatLine = ({ userId, message }) => {
 };
 
 const Chat = ({ open }) => {
-  // const [chatMessages, setChatMessages] = useState([]);
-  // const [animation, setAnimation] = useState('filling-chat');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [animation, setAnimation] = useState('filling-chat');
+  const [scrollBottom, setScrollBottom] = useState(true);
 
-  const [chat, setChat] = useState({
-    messages: [],
-    animation: 'filling-chat'
-  });
-  const { messages, animation } = chat;
+  // const addStyles = useRef();
+  // useEffect(() => {
+  //   const myReuseableStylesheet = document.createElement('style');
+  //   document.head.appendChild(myReuseableStylesheet);
+  //   addStyles.current = height => {
+  //     debugger;
+  //     myReuseableStylesheet.sheet.insertRule(
+  //       `.chat-refresh li { transform: translateY(${height}px) }`
+  //     );
+  //     myReuseableStylesheet.sheet.insertRule(
+  //       '@keyframes filling-chat-animation { ' +
+  //         `from { transform: translateY(${height}px) }` +
+  //         'to { transform: translateY(0) } }'
+  //     );
+  //   };
+  // }, []);
 
   const chatboxRef = useRef();
 
+  const onLastLineRendered = useCallback(
+    node => {
+      if (scrollBottom) {
+        chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+      }
+    },
+    [scrollBottom]
+  );
+
   useEffect(() => {
-    if (open) {
-      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
-    }
+    setScrollBottom(true);
   }, [open]);
 
   useEffect(() => {
     subscriptionsApi.onChatMessage(message => {
-      // setAnimation('chat-refresh');
-      // setChatMessages([message, ...chatMessages]);
-
       if (chatboxRef.current.scrollHeight > chatboxRef.current.offsetHeight) {
-        setChat({
-          messages: [...messages, message],
-          animation: 'chat-refresh'
-        });
+        setAnimation('chat-refresh');
       }
-      // Scroll to the bottom
+      setChatMessages([...chatMessages, message]);
+      // Scroll to the bottom and prevent any further auto scrolling
       chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+      setScrollBottom(false);
       (async () => {
-        await delay(100);
-        setChat({
-          messages: [...messages, message],
-          animation: 'filling-chat'
-        });
+        await delay(50);
+        setChatMessages([...chatMessages, message]);
+        setAnimation('filling-chat');
       })();
     });
-  }, [messages]);
+  }, [chatMessages]);
 
   return (
     <Fragment>
       {open && (
         <div className="radio-chat">
           <ul ref={chatboxRef} className={`chat-box ${animation}`}>
-            {messages.map(({ id, user, message }) => (
-              <ChatLine key={id} userId={user} message={message} />
+            {chatMessages.map(({ id, user, message }, idex) => (
+              <ChatLine
+                key={id}
+                userId={user}
+                message={message}
+                isLastLine={idex === chatMessages.length - 1}
+                onLastLineRendered={onLastLineRendered}
+              />
             ))}
           </ul>
-
           <ChatInput />
         </div>
       )}
