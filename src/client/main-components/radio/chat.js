@@ -91,9 +91,14 @@ const Chat = ({ open }) => {
         setAnimation('chat-refresh');
       }
       setChatMessages([...chatMessages, message]);
-      // Scroll to the bottom and prevent any further auto scrolling
-      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
       setScrollBottom(false);
+      const isScrolledToBottom =
+        chatboxRef.current.scrollHeight - chatboxRef.current.clientHeight <=
+        chatboxRef.current.scrollTop + 100; // allow 100px inaccuracy
+      if (isScrolledToBottom) {
+        // Scroll to the bottom and prevent any further auto scrolling
+        chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+      }
       (async () => {
         await delay(50);
         setChatMessages([...chatMessages, message]);

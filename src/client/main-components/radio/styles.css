@@ -101,6 +101,11 @@
   border-radius: 10px;
   overflow-y: scroll;
   list-style: none;
+  scrollbar-width: none;
+}
+
+.radio-chat .chat-box::-webkit-scrollbar {
+  width: 0px;
 }
 
 .radio-chat .chat-box li {
