@@ -36,6 +36,7 @@ const AuthenticationProvider = ({ children }) => {
     try {
       const { redirected } = authService.getAuthentication();
       if (redirected) {
+        console.log(new Date().toUTCString() + ' - Authenticated with Spotify');
         setAuthenticated(true);
         const lastFullPath = storage.getLastLocation();
         const path = lastFullPath || '/';
@@ -44,6 +45,9 @@ const AuthenticationProvider = ({ children }) => {
         (async () => {
           try {
             await radioiApi.refreshSession();
+            console.log(
+              new Date().toUTCString() + ' - Session Refreshed Successfully'
+            );
             setAuthenticated(true);
           } catch (e) {
             logOut();
@@ -73,7 +77,7 @@ const AuthenticationProvider = ({ children }) => {
     [user, authenticated, logOut]
   );
 
-  // useRefreshAccessToken();
+  useRefreshAccessToken();
 
   return (
     <authentication.Provider value={authValue}>

@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import useInterval from '../../hooks/use-interval';
-import PhotoBy from '../../common-components/photo-by';
 
 import './styles.css';
 
@@ -27,7 +26,6 @@ const NotFound = () => {
           <h2>404 PAGE NOT FOUND</h2>
           <p>Redirecting to home in ... {count}</p>
         </div>
-        <PhotoBy ph="Bruno Cervera" link="https://unsplash.com/@brunocervera" />
       </div>
     </section>
   );

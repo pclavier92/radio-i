@@ -14,8 +14,6 @@ const UserDropdown = ({ lastClickInside }) => {
     setOpen(!open);
   }, [open]);
 
-  debugger;
-
   return (
     <div className="user-dropdown">
       <button type="button" onClick={toggleDropdown} className="btn-user">

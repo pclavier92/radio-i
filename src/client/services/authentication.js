@@ -26,13 +26,6 @@ class AuthService {
   }
 
   getAuthentication() {
-    if (!this.accessToken) {
-      return this._getAuthentication();
-    }
-    return { accessToken: this.accessToken, redirected: this.redirected };
-  }
-
-  _getAuthentication() {
     let access = null;
     let refresh = null;
     let expiration = null;

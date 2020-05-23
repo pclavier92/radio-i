@@ -8,7 +8,6 @@ import React, {
 import { useHistory } from 'react-router-dom';
 
 import radioiApi from '../../apis/radioi-api';
-import PhotoBy from '../../common-components/photo-by';
 import Spinner from '../../common-components/spinner';
 import CustomCheckbox from '../../common-components/custom-checkbox';
 import SpotifyButton from '../../common-components/spotify-button';
@@ -145,6 +144,19 @@ const RadioStarted = ({ id, setRadioExists }) => {
   );
 };
 
+const RadioDisplayItem = ({ radioName, isCollaborative, onClick }) => (
+  <li>
+    <SpotifyButton onClick={onClick}>Go to Radio</SpotifyButton>
+    <h3>{radioName}</h3>
+    {isCollaborative ? (
+      <span>
+        <h5>Collaborative</h5>
+        <i className="material-icons">check_circle</i>
+      </span>
+    ) : null}
+  </li>
+);
+
 const RadiosDisplay = () => {
   const history = useHistory();
   const [latestRadios, setLatestRadios] = useState([]);
@@ -166,18 +178,12 @@ const RadiosDisplay = () => {
         <ul className="radios-list">
           {latestRadios.length > 0 ? (
             latestRadios.map(({ hash, radioName, isCollaborative }) => (
-              <li>
-                <SpotifyButton onClick={() => goToRadio(hash)}>
-                  Go to Radio
-                </SpotifyButton>
-                <h3>{radioName}</h3>
-                {isCollaborative ? (
-                  <span>
-                    <h5>Collaborative</h5>
-                    <i className="material-icons">check_circle</i>
-                  </span>
-                ) : null}
-              </li>
+              <RadioDisplayItem
+                key={hash}
+                radioName={radioName}
+                isCollaborative={isCollaborative}
+                onClick={() => goToRadio(hash)}
+              />
             ))
           ) : (
             <h3>The are no active radios right now </h3>
@@ -199,9 +205,11 @@ const Lobby = () => {
       (async () => {
         try {
           await radioiApi.getRadio(id);
+          debugger;
           setRadioExists(true);
           setLoading(false);
         } catch (error) {
+          debugger;
           if (error.response.status === 404) {
             setRadioExists(false);
             setLoading(false);
@@ -229,10 +237,6 @@ const Lobby = () => {
             </div>
           </div>
           <div className="col span-1-of-2"></div>
-          <PhotoBy
-            ph="Matt Botsford"
-            link="https://unsplash.com/@mattbotsford"
-          />
         </div>
       </section>
       {!loading && !radioExists && <RadiosDisplay />}
@@ -248,7 +252,6 @@ const Home = () => (
         <h2>Share it with friends.</h2>
         <h2>Let everyone listen to what you play!</h2>
       </div>
-      <PhotoBy ph="Eric Nopanen" link="https://unsplash.com/@rexcuando" />
     </div>
   </section>
 );

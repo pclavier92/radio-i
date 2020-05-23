@@ -43,7 +43,6 @@ class SpotifyWebApi {
 
   getUserInfo() {
     const accessToken = authService.getAccessToken();
-    console.log('[AT]', accessToken);
     const requestConfig = {
       method: 'get',
       url: `${spotifyUrl}/me`,
@@ -55,7 +54,6 @@ class SpotifyWebApi {
 
   getUserInfoById(userId) {
     const accessToken = authService.getAccessToken();
-    console.log('[AT]', accessToken);
     const requestConfig = {
       method: 'get',
       url: `${spotifyUrl}/users/${userId}`,

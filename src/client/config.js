@@ -1,6 +1,5 @@
 let serverUrl;
 let wsUrl;
-console.log('[SCOPE]', process.env.SCOPE);
 switch (process.env.SCOPE) {
   case 'prod':
     serverUrl = '';
