@@ -128,7 +128,7 @@ class SpotifyWebApi {
 
     const requestConfig = {
       method: 'get',
-      url: `${spotifyUrl}/me/top/artists?time_range=medium_term&limit=10&offset=0`,
+      url: `${spotifyUrl}/me/top/artists?time_range=medium_term&limit=50&offset=0`,
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };

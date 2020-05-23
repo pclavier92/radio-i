@@ -61,6 +61,13 @@ class SpotifySDK {
   disconnect() {
     // Disconnect from the player
     this.player.disconnect();
+    // Remove listeners
+    this.player.removeListener('initialization_error');
+    this.player.removeListener('authentication_error');
+    this.player.removeListener('account_error');
+    this.player.removeListener('playback_error');
+    this.player.removeListener('ready');
+    this.player.removeListener('not_ready');
   }
 }
 

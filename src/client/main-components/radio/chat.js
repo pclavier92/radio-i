@@ -26,8 +26,10 @@ const ChatLine = ({ userId, message }) => {
           ) : (
             <i className="material-icons no-image-user">person</i>
           )}
-          <span>{user.display_name}:</span>&nbsp;
-          <Emojione text={message} />
+          <div className="chat-message-container">
+            <span>{user.display_name}:</span>&nbsp;
+            <Emojione text={message} />
+          </div>
         </li>
       )}
     </Fragment>
