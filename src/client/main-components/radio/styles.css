@@ -96,28 +96,28 @@
 .radio-chat .chat-box {
   width: 100%;
   height: calc(100vh - 260px);
-  padding: 5px 20px;
+  padding: 5px 10px;
   box-shadow: inset 0 0 5px 2px #d6d6d6;
   border-radius: 10px;
-  overflow: hidden;
-}
+  overflow-y: scroll;
 
-.radio-chat .chat-box ul {
+  display: flex;
+  flex-direction: column-reverse;
   list-style: none;
 }
 
-.radio-chat .chat-box ul li span:first-of-type {
+.radio-chat .chat-box li span:first-of-type {
   font-weight: 500;
   color: #6b6b6b;
 }
 
-.radio-chat .chat-box ul li .chat-message-container {
+.radio-chat .chat-box li .chat-message-container {
   display: inline-block;
-  width: calc(100% - 80px);
+  width: calc(100% - 60px);
   margin-top: 10px;
 }
 
-.radio-chat .chat-box ul li img {
+.radio-chat .chat-box li img {
   vertical-align: top;
   height: 30px;
   width: 30px;
@@ -125,7 +125,7 @@
   margin: 5px;
 }
 
-.radio-chat .chat-box ul li i {
+.radio-chat .chat-box li i {
   vertical-align: top;
   padding: 3px;
   height: 30px;
@@ -140,6 +140,19 @@
 .filling-chat li {
   animation-name: filling-chat-animation;
   animation-duration: 1s;
+}
+
+.chat-refresh li {
+  transform: translateY(100%);
+}
+
+@keyframes filling-chat-animation {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
 }
 
 .full-chat-refresh li {
@@ -158,14 +171,5 @@
   }
   to {
     transform: translateY(-100%);
-  }
-}
-
-@keyframes filling-chat-animation {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0%);
   }
 }

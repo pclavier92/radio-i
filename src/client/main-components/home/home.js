@@ -205,11 +205,9 @@ const Lobby = () => {
       (async () => {
         try {
           await radioiApi.getRadio(id);
-          debugger;
           setRadioExists(true);
           setLoading(false);
         } catch (error) {
-          debugger;
           if (error.response.status === 404) {
             setRadioExists(false);
             setLoading(false);

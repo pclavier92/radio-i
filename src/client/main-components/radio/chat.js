@@ -37,45 +37,45 @@ const ChatLine = ({ userId, message }) => {
 };
 
 const Chat = ({ open }) => {
-  const [chatMessages, setChatMessages] = useState([]);
-  const [animation, setAnimation] = useState('filling-chat');
-  const [lines, setLines] = useState(0);
+  // const [chatMessages, setChatMessages] = useState([]);
+  // const [animation, setAnimation] = useState('filling-chat');
 
-  const callbackRef = useCallback(node => {
-    if (node) {
-      const numberLines = Math.ceil((node.offsetHeight - 20) / 40);
-      setLines(numberLines);
-    }
+  const [chat, setChat] = useState({
+    messages: [],
+    animation: 'filling-chat'
   });
+  const { messages, animation } = chat;
 
   useEffect(() => {
     subscriptionsApi.onChatMessage(message => {
-      if (chatMessages.length > lines - 1) {
-        setAnimation('full-chat-refresh');
-        (async () => {
-          await delay(50);
-          setAnimation('full-chat');
-        })();
-      }
-      if (chatMessages.length < lines + 1) {
-        setChatMessages([...chatMessages, message]);
-      } else {
-        setChatMessages([...chatMessages.splice(1), message]);
-      }
+      // setAnimation('chat-refresh');
+      // setChatMessages([message, ...chatMessages]);
+      setChat({
+        messages: [message, ...messages],
+        animation: 'chat-refresh'
+      });
+      (async () => {
+        await delay(100);
+        setChat({
+          messages: [message, ...messages],
+          animation: 'filling-chat'
+        });
+      })();
     });
-  }, [lines, chatMessages]);
+  }, [messages]);
+
+  debugger;
 
   return (
     <Fragment>
       {open && (
         <div className="radio-chat">
-          <div ref={callbackRef} className="chat-box">
-            <ul className={animation}>
-              {chatMessages.map(({ id, user, message }) => (
-                <ChatLine key={id} userId={user} message={message} />
-              ))}
-            </ul>
-          </div>
+          <ul className={`chat-box ${animation}`}>
+            {messages.map(({ id, user, message }) => (
+              <ChatLine key={id} userId={user} message={message} />
+            ))}
+          </ul>
+
           <ChatInput />
         </div>
       )}
