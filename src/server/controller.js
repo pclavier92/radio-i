@@ -319,6 +319,22 @@ const getRadioQueue = async (req, res) => {
   }
 };
 
+const getChatMessages = async (req, res) => {
+  try {
+    const hash = req.query.id;
+    if (!hash) {
+      throw new ValidationError('Radio id not specified');
+    }
+    await getUserByAccessToken(req); // just verify logged in user
+    const chats = radioSubscriptions.getChatMessages(hash);
+    logger.info(req, 'Chat messages for radios fetched');
+    res.status(200).send({ chats });
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status);
+  }
+};
+
 module.exports = {
   logOut,
   refreshSession,
@@ -332,5 +348,6 @@ module.exports = {
   getRadio,
   addSongToRadio,
   getRadioQueue,
-  removeSongFromRadio
+  removeSongFromRadio,
+  getChatMessages
 };

@@ -107,6 +107,16 @@ const getLatestRadio = () => {
   });
 };
 
+const getRadioChats = id => {
+  const accessToken = authService.getAccessToken();
+  return axios.get(`${serverUrl}/api/radio/chats`, {
+    params: { id },
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
 export default {
   logOut,
   refreshSession,
@@ -117,5 +127,6 @@ export default {
   addSongToRadio,
   removeSongFromQueue,
   getRadioQueue,
-  getLatestRadio
+  getLatestRadio,
+  getRadioChats
 };

@@ -14,8 +14,10 @@ const sessionParser = session({
 const types = {
   SUBSCRIBE: 'subscribe',
   SUBSCRIPTION_FAILED: 'subscription_failed',
+  LISTENERS_UPDATE: 'listeners_update',
   PLAY_SONG: 'play_song',
   ADD_TO_QUEUE: 'add_to_queue',
+  REMOVE_FROM_QUEUE: 'remove_from_queue',
   CHAT_MESSAGE: 'chat_message'
 };
 
@@ -27,7 +29,6 @@ const onWebsocketUpgrade = (request, socket, head) => {
       return;
     }
 
-    console.log('Session is parsed!');
     wss.handleUpgrade(request, socket, head, ws => {
       wss.emit('connection', ws, request);
     });
@@ -37,7 +38,6 @@ const onWebsocketUpgrade = (request, socket, head) => {
 const noop = () => {};
 
 const heartbeat = () => {
-  console.log('Pong!!!');
   this.isAlive = true;
 };
 

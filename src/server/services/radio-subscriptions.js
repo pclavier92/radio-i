@@ -15,6 +15,7 @@ class RadioSubscriptions {
     this.connections = new Map(); // userId -> ws
     this.radios = new Map(); // radioHash -> [userId]
     this.subscriptions = new Map(); // userId -> radioHash
+    this.chats = new Map(); // radioHash -> [chatMessage]
   }
 
   addConnection(userId, ws) {
@@ -23,6 +24,7 @@ class RadioSubscriptions {
 
   startRadio(radioHash) {
     this.radios.set(radioHash, []);
+    this.chats.set(radioHash, []);
   }
 
   subscribeUser(radioHash, userId) {
@@ -63,6 +65,7 @@ class RadioSubscriptions {
       this.subscriptions.delete(id);
     });
     this.radios.delete(radioHash);
+    this.chats.delete(radioHash);
   }
 
   broadcastMessageForRadio(radioHash, msg) {
@@ -106,7 +109,21 @@ class RadioSubscriptions {
   sendChatMessage(userId, payload) {
     const radioHash = this.subscriptions.get(userId);
     const message = { type: types.CHAT_MESSAGE, payload };
+    this.addChatMessage(radioHash, payload);
     this.broadcastMessageForRadio(radioHash, message);
+  }
+
+  addChatMessage(radioHash, payload) {
+    const chatMessages = this.chats.get(radioHash);
+    chatMessages.push(payload);
+    if (chatMessages.length > 20) {
+      chatMessages.shift();
+    }
+    this.chats.set(chatMessages);
+  }
+
+  getChatMessages(radioHash) {
+    return this.chats.get(radioHash);
   }
 }
 

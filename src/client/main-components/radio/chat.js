@@ -10,8 +10,11 @@ import { Emojione } from 'react-emoji-render';
 import { delay } from '../../utils';
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
+import radioiApi from '../../apis/radioi-api';
 
 import { useAuthentication } from '../authentication';
+
+import { useRadio } from './radio-provider';
 
 const ChatLine = ({ userId, message, isLastLine, onLastLineRendered }) => {
   const [user, setUser] = useState(null);
@@ -49,6 +52,7 @@ const ChatLine = ({ userId, message, isLastLine, onLastLineRendered }) => {
 };
 
 const Chat = ({ open }) => {
+  const radio = useRadio();
   const [chatMessages, setChatMessages] = useState([]);
   const [animation, setAnimation] = useState('filling-chat');
   const [scrollBottom, setScrollBottom] = useState(true);
@@ -80,6 +84,15 @@ const Chat = ({ open }) => {
     },
     [scrollBottom]
   );
+
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { chats }
+      } = await radioiApi.getRadioChats(radio.hash);
+      setChatMessages(chats);
+    })();
+  }, []);
 
   useEffect(() => {
     setScrollBottom(true);
