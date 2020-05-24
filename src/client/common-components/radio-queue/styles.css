@@ -28,6 +28,7 @@
 }
 
 .radio-queue-item {
+  position: relative;
   width: 100%;
   padding: 1px;
   padding-right: 30px;
@@ -60,6 +61,22 @@
 .queue-item-info-container h6 {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.radio-queue-item i {
+  position: absolute;
+  left: 9px;
+  top: 31px;
+  visibility: hidden;
+}
+
+.radio-queue-item:hover i {
+  visibility: visible;
+}
+
+.radio-queue-item i:hover {
+  cursor: pointer;
+  color: #1db954;
 }
 
 .radio-queue-item .spinner {

@@ -30,6 +30,7 @@ app.get('/api/radio/queue', controller.getRadioQueue);
 app.post('/api/radio', controller.startRadio);
 app.post('/api/radio/song', controller.addSongToRadio);
 app.delete('/api/radio', controller.stopRadio);
+app.delete('/api/radio/song', controller.removeSongFromRadio);
 
 // Request to any other path returns the application
 app.get('*', controller.serveApp);

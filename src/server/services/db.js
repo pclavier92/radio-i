@@ -317,7 +317,7 @@ const getRadioLastPosition = radioId =>
               new DatabaseError('Could not get last position from radio queue')
             );
           } else if (!results[0]) {
-            resolve(1);
+            resolve(1); // This has been saving my ass without my knowledge
           } else {
             resolve(results[0].position + 1);
           }
@@ -333,6 +333,27 @@ const addSongToQueue = (radioID, songId, duration, position) => {
       dbConnection.query(
         'INSERT INTO RadioQueue (radio_id, song_id, duration, position) VALUES (?)',
         [[radioID, songId, duration, position]],
+        (err, results, fields) => {
+          dbConnection.release();
+          if (err) {
+            console.log(err);
+            reject(new DatabaseError('Could not insert song to radio in db'));
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  });
+};
+
+const deleteSongFromRadioQueue = (radioID, position) => {
+  return new Promise((resolve, reject) => {
+    const conn = db.getConnection();
+    conn.then(dbConnection => {
+      dbConnection.query(
+        'DELETE FROM RadioQueue WHERE radio_id = ? AND position = ?',
+        [radioID, position],
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
@@ -477,5 +498,6 @@ module.exports = {
   getNextSongFromQueue,
   deleteSongFromQueue,
   deleteRadio,
-  deleteRadioQueue
+  deleteRadioQueue,
+  deleteSongFromRadioQueue
 };

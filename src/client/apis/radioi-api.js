@@ -78,6 +78,16 @@ const addSongToRadio = (radioId, songId, duration) => {
   );
 };
 
+const removeSongFromQueue = (id, position) => {
+  const accessToken = authService.getAccessToken();
+  return axios.delete(`${serverUrl}/api/radio/song`, {
+    params: { id, position },
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+};
+
 const getRadioQueue = id => {
   const accessToken = authService.getAccessToken();
   return axios.get(`${serverUrl}/api/radio/queue`, {
@@ -105,6 +115,7 @@ export default {
   stopRadio,
   getRadio,
   addSongToRadio,
+  removeSongFromQueue,
   getRadioQueue,
   getLatestRadio
 };

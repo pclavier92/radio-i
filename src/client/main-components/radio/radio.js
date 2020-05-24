@@ -13,6 +13,7 @@ import { useAuthentication } from '../authentication';
 
 import RigthPanel from './right-panel';
 import RadioPlayer from './radio-player';
+import { RadioProvider } from './radio-provider';
 
 import './styles.css';
 import useScript from '../../hooks/use-script';
@@ -24,7 +25,7 @@ const Radio = ({ radio }) => {
   const [loading, setLoading] = useState(true);
   const [listeners, setListeners] = useState(0);
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
-  const canSearch = isOwner || radio.isCollaborative;
+  const isActiveUser = isOwner || radio.isCollaborative;
 
   useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
 
@@ -45,8 +46,13 @@ const Radio = ({ radio }) => {
     };
   }, []);
 
+  const value = useMemo(() => ({
+    ...radio,
+    isActiveUser
+  }));
+
   return (
-    <Fragment>
+    <RadioProvider value={value}>
       <section className="section-radio">
         <div className="row">
           <div className="radio-header">
@@ -65,11 +71,11 @@ const Radio = ({ radio }) => {
             {loading ? <Spinner /> : <RadioPlayer radio={radio} />}
           </div>
           <div className="col span-2-of-3">
-            <RigthPanel canSearch={canSearch} />
+            <RigthPanel />
           </div>
         </div>
       </section>
-    </Fragment>
+    </RadioProvider>
   );
 };
 

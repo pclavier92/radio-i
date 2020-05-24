@@ -2,13 +2,15 @@ import React, { useCallback, useState, Fragment } from 'react';
 
 import Search from './search';
 import Chat from './chat';
+import { useRadio } from './radio-provider';
 
 const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
 
-const RightPanel = ({ canSearch }) => {
+const RightPanel = () => {
+  const radio = useRadio();
   const [selector, setSelector] = useState(() =>
-    canSearch ? SEARCH_SELECTOR : CHAT_SELECTOR
+    radio.isActiveUser ? SEARCH_SELECTOR : CHAT_SELECTOR
   );
 
   const selectChat = useCallback(() => {
@@ -24,7 +26,7 @@ const RightPanel = ({ canSearch }) => {
   return (
     <div className="right-panel">
       <div className="component-selector">
-        {canSearch && (
+        {radio.isActiveUser && (
           <Fragment>
             <span className={searchSelected} onClick={selectSearch}>
               Search
@@ -36,7 +38,7 @@ const RightPanel = ({ canSearch }) => {
         )}
       </div>
       <Chat open={selector === CHAT_SELECTOR} />
-      {canSearch && <Search open={selector === SEARCH_SELECTOR} />}
+      {radio.isActiveUser && selector === SEARCH_SELECTOR && <Search />}
     </div>
   );
 };

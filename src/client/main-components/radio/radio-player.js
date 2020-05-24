@@ -6,8 +6,10 @@ import subscriptionsApi from '../../apis/subscriptions-api';
 import RadioQueue from '../../common-components/radio-queue';
 
 import NowPlaying from './now-playing';
+import { useRadio } from './radio-provider';
 
-const RadioPlayer = ({ radio }) => {
+const RadioPlayer = () => {
+  const radio = useRadio();
   const [started, setStarted] = useState(false);
   const [radioQueue, setRadioQueue] = useState([]);
 
@@ -31,6 +33,15 @@ const RadioPlayer = ({ radio }) => {
     subscriptionsApi.onAddToQueue(({ songId, position }) => {
       const queue = [...radioQueue, { songId, position }];
       queue.sort((a, b) => a.position - b.position);
+      setRadioQueue(queue);
+    });
+    // Set callback everytime the queue updates
+    subscriptionsApi.onRemoveFromQueue(({ position }) => {
+      debugger;
+      const queue = radioQueue.filter(
+        song => song.position !== parseInt(position)
+      );
+      debugger;
       setRadioQueue(queue);
     });
   }, [radioQueue]);

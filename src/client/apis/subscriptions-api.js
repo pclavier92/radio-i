@@ -8,6 +8,7 @@ const types = {
   LISTENERS_UPDATE: 'listeners_update',
   PLAY_SONG: 'play_song',
   ADD_TO_QUEUE: 'add_to_queue',
+  REMOVE_FROM_QUEUE: 'remove_from_queue',
   CHAT_MESSAGE: 'chat_message'
 };
 
@@ -24,6 +25,7 @@ class SubscriptionsApi {
     this.listenersUpdate = noop;
     this.playSong = noop;
     this.addToQueue = noop;
+    this.removeFromQueue = noop;
     this.chatMessage = noop;
   }
 
@@ -52,6 +54,9 @@ class SubscriptionsApi {
           break;
         case types.ADD_TO_QUEUE:
           this.addToQueue(payload);
+          break;
+        case types.REMOVE_FROM_QUEUE:
+          this.removeFromQueue(payload);
           break;
         case types.CHAT_MESSAGE:
           this.chatMessage(payload);
@@ -85,6 +90,10 @@ class SubscriptionsApi {
 
   onAddToQueue(callback) {
     this.addToQueue = callback;
+  }
+
+  onRemoveFromQueue(callback) {
+    this.removeFromQueue = callback;
   }
 
   onChatMessage(callback) {

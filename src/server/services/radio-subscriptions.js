@@ -4,6 +4,7 @@ const types = {
   LISTENERS_UPDATE: 'listeners_update',
   PLAY_SONG: 'play_song',
   ADD_TO_QUEUE: 'add_to_queue',
+  REMOVE_FROM_QUEUE: 'remove_from_queue',
   CHAT_MESSAGE: 'chat_message'
 };
 
@@ -94,6 +95,11 @@ class RadioSubscriptions {
 
   addSongToRadioQueue(radioHash, songId, position) {
     const message = { type: types.ADD_TO_QUEUE, payload: { songId, position } };
+    this.broadcastMessageForRadio(radioHash, message);
+  }
+
+  removeSongFromRadioQueue(radioHash, position) {
+    const message = { type: types.REMOVE_FROM_QUEUE, payload: { position } };
     this.broadcastMessageForRadio(radioHash, message);
   }
 

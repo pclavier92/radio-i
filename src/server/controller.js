@@ -274,6 +274,31 @@ const addSongToRadio = async (req, res) => {
   }
 };
 
+const removeSongFromRadio = async (req, res) => {
+  try {
+    const hash = req.query.id;
+    const position = req.query.position;
+    if (!hash && !position) {
+      throw new ValidationError('Song position in radio not specified');
+    }
+    const user = await getUserByAccessToken(req);
+    const radio = await dbService.getRadioByHash(hash);
+    if (!radio) {
+      throw new NotFoundError('Trying to remove song from non existent radio');
+    }
+    if (!radio.isCollaborative) {
+      await checkIfOwner(hash, user.id);
+    }
+    await dbService.deleteSongFromRadioQueue(radio.id, position);
+    radioSubscriptions.removeSongFromRadioQueue(hash, position);
+    logger.info(req, 'Song removed from radio');
+    res.sendStatus(200);
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status || 400);
+  }
+};
+
 const getRadioQueue = async (req, res) => {
   try {
     const hash = req.query.id;
@@ -306,5 +331,6 @@ module.exports = {
   getLatestRadios,
   getRadio,
   addSongToRadio,
-  getRadioQueue
+  getRadioQueue,
+  removeSongFromRadio
 };
