@@ -37,28 +37,32 @@ const onWebsocketUpgrade = (request, socket, head) => {
 
 const noop = () => {};
 
-const heartbeat = () => {
-  this.isAlive = true;
-};
-
 wss.on('connection', (ws, request) => {
   ws.isAlive = true;
+  ws.userId = request.session.userId;
+
+  const heartbeat = () => {
+    ws.isAlive = true;
+  };
+
   ws.on('pong', heartbeat);
 
-  const userId = request.session.userId;
-
-  radioSubscriptions.addConnection(userId, ws);
+  radioSubscriptions.addConnection(ws.userId, ws);
 
   ws.on('message', message => {
     const { type, payload } = JSON.parse(message);
     if (type === types.SUBSCRIBE) {
       const { radioHash } = payload;
       try {
-        radioSubscriptions.subscribeUser(radioHash, userId);
-        console.log(`Subscribe user ${userId} to radio ${radioHash}`);
-      } catch (e) {
+        radioSubscriptions.subscribeUser(radioHash, ws.userId);
         console.log(
-          `Subscription failed of user ${userId} to radio ${radioHash}`
+          new Date().toUTCString() +
+            ` - Subscribe user ${ws.userId} to radio ${radioHash}`
+        );
+      } catch (e) {
+        console.error(
+          new Date().toUTCString() +
+            `Subscription failed for user ${ws.userId} to radio ${radioHash}`
         );
         ws.send(
           JSON.stringify({
@@ -68,25 +72,26 @@ wss.on('connection', (ws, request) => {
         );
       }
     } else if (type === types.CHAT_MESSAGE) {
-      radioSubscriptions.sendChatMessage(userId, payload);
+      radioSubscriptions.sendChatMessage(ws.userId, payload);
     }
   });
 
   ws.on('error', error => {
-    console.log(error);
+    console.error(error);
   });
 
   ws.on('close', code => {
-    console.log(`Connection closed for user ${userId}`);
-    console.log('Closing code:', code);
-    radioSubscriptions.unsubscribeUser(userId);
+    console.log(
+      new Date().toUTCString() +
+        ` - Connection closed for user ${ws.userId} - Closing code:${code}`
+    );
+    radioSubscriptions.unsubscribeUser(ws.userId);
   });
 });
 
 const interval = setInterval(() => {
   wss.clients.forEach(ws => {
     if (ws.isAlive === false) return ws.terminate();
-
     ws.isAlive = false;
     ws.ping(noop);
   });

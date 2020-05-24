@@ -41,7 +41,6 @@ class RadioSubscriptions {
   }
 
   unsubscribeUser(userId) {
-    console.log(`Unsubscribe user ${userId}`);
     const radioHash = this.subscriptions.get(userId);
     const radioUsers = this.radios.get(radioHash);
     if (radioUsers) {
@@ -56,7 +55,6 @@ class RadioSubscriptions {
   }
 
   closeRadio(radioHash) {
-    console.log('Close radio and websockets');
     const radioUsers = this.radios.get(radioHash);
     radioUsers.forEach(id => {
       const ws = this.connections.get(id);

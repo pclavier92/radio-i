@@ -7,7 +7,7 @@ const info = (req, message) => {
 
 const error = (req, e) => {
   const { method, path } = req;
-  console.log(
+  console.error(
     `${new Date().toUTCString()} - [Method: ${method}] [Path: ${path}] [Error: [STATUS: ${
       e.status
     }] [MESSAGE: ${e.message}] [STACKTRACE: ${e.stack}]]`

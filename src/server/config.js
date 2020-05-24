@@ -8,7 +8,6 @@ let clientUrl;
 let client_id;
 let client_secret;
 let redirect_uri;
-console.log('SCOPE: ', process.env.SCOPE);
 switch (process.env.SCOPE) {
   case 'prod':
     user = 'b1cd10122f9a6b';

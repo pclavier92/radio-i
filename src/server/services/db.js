@@ -14,12 +14,12 @@ const getUserByAccessToken = accessToken =>
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(
               new DatabaseError('Could not get user by access token from db')
             );
           } else if (!results[0]) {
-            console.log(err);
+            console.error(err);
             reject(
               new NotFoundError('No user found with the provided access token')
             );
@@ -41,7 +41,7 @@ const userExists = userID =>
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get user from db'));
           } else {
             resolve(results[0].exists);
@@ -71,7 +71,7 @@ const insertUser = (user, accessToken) => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not insert user to db'));
           } else {
             resolve(results);
@@ -92,7 +92,7 @@ const updateUserToken = (userId, accessToken) =>
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(
               new DatabaseError('Could not update users access token in db')
             );
@@ -123,7 +123,7 @@ const radioExists = hash =>
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get radio from db'));
           } else {
             resolve(results[0].exists);
@@ -150,7 +150,7 @@ const createRadio = (
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not insert radio to db'));
           } else {
             resolve(results);
@@ -171,7 +171,7 @@ const getLatestRadios = () =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get last radios'));
           } else if (!results[0]) {
             resolve([]);
@@ -193,7 +193,7 @@ const getRadioByHash = hash =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
             resolve(null);
@@ -226,7 +226,7 @@ const getRadioById = id =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
             resolve(null);
@@ -258,7 +258,7 @@ const getRadioByUserId = userId =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
             resolve(null);
@@ -290,7 +290,7 @@ const setPlayingSong = (radioId, songId, timestamp) =>
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(
               new DatabaseError('Could not update song playing in radio in db')
             );
@@ -312,7 +312,7 @@ const getRadioLastPosition = radioId =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(
               new DatabaseError('Could not get last position from radio queue')
             );
@@ -336,7 +336,7 @@ const addSongToQueue = (radioID, songId, duration, position) => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not insert song to radio in db'));
           } else {
             resolve(results);
@@ -357,7 +357,7 @@ const deleteSongFromRadioQueue = (radioID, position) => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not insert song to radio in db'));
           } else {
             resolve(results);
@@ -380,7 +380,7 @@ const getRadioQueueFromHash = hash =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not get radio'));
           } else if (!results[0]) {
             resolve([]);
@@ -402,7 +402,7 @@ const getNextSongFromQueue = radioId =>
         (err, results, fields) => {
           db.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(
               new DatabaseError('Could not get last position from radio queue')
             );
@@ -426,7 +426,7 @@ const deleteSongFromQueue = id => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not delete song from radio in db'));
           } else {
             resolve(results);
@@ -447,7 +447,7 @@ const deleteRadio = id => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not delete radio in db'));
           } else {
             resolve(results);
@@ -468,7 +468,7 @@ const deleteRadioQueue = radioId => {
         (err, results, fields) => {
           dbConnection.release();
           if (err) {
-            console.log(err);
+            console.error(err);
             reject(new DatabaseError('Could not delete radio in db'));
           } else {
             resolve(results);
