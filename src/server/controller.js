@@ -258,14 +258,33 @@ const addSongToRadio = async (req, res) => {
     if (!radio.isCollaborative) {
       await checkIfOwner(hash, user.id);
     }
+    const position = await dbService.getRadioLastPosition(radio.id);
     if (radio.songId) {
-      const position = await dbService.getRadioLastPosition(radio.id);
-      await dbService.addSongToQueue(radio.id, songId, duration, position);
+      const played = false;
+      await dbService.addSongToQueue(
+        radio.id,
+        songId,
+        duration,
+        position,
+        played
+      );
       radioSubscriptions.addSongToRadioQueue(hash, songId, position);
       logger.info(req, 'Song added to radio queue');
     } else {
       logger.info(req, 'Starting new radio and play song');
-      new RadioPlayer(radio.id, radio.hash).playSong(songId, duration);
+      const played = true;
+      await dbService.addSongToQueue(
+        radio.id,
+        songId,
+        duration,
+        position,
+        played
+      );
+      new RadioPlayer(radio.id, radio.hash).playSong(
+        songId,
+        duration,
+        position
+      );
     }
     res.sendStatus(200);
   } catch (e) {
@@ -319,6 +338,26 @@ const getRadioQueue = async (req, res) => {
   }
 };
 
+const getRadioPlayedSongs = async (req, res) => {
+  try {
+    const hash = req.query.id;
+    if (!hash) {
+      throw new ValidationError('Radio id not specified');
+    }
+    await getUserByAccessToken(req); // just verify logged in user
+    const exists = await dbService.radioExists(hash);
+    if (!exists) {
+      throw new NotFoundError('The radio does not exists');
+    }
+    const playedSongs = await dbService.getRadioPlayedSongs(hash);
+    logger.info(req, 'Played songs fetched');
+    res.status(200).send({ playedSongs });
+  } catch (e) {
+    logger.error(req, e);
+    res.sendStatus(e.status);
+  }
+};
+
 const getChatMessages = async (req, res) => {
   try {
     const hash = req.query.id;
@@ -348,6 +387,7 @@ module.exports = {
   getRadio,
   addSongToRadio,
   getRadioQueue,
+  getRadioPlayedSongs,
   removeSongFromRadio,
   getChatMessages
 };

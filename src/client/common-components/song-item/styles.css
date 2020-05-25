@@ -1,0 +1,39 @@
+.song-item {
+  position: relative;
+  width: 30%;
+  padding-right: 30px;
+  box-shadow: 0 2px 5px #d4d3d3;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.song-item img {
+  margin: 10px 43px;
+  vertical-align: middle;
+}
+
+.song-item-info {
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 150px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.song-item-info h5,
+.song-item-info h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-item .spinner {
+  margin: 10% auto;
+}

@@ -179,3 +179,16 @@
     transform: translateY(-100%);
   }
 }
+
+.section-played-songs h2 {
+  margin-top: 50px;
+  margin-left: 50px;
+  color: #6b6b6b;
+}
+
+.section-played-songs .songs-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: space-around;
+}

@@ -11,19 +11,24 @@ class RadioPlayer {
     this.radioHash = radioHash;
   }
 
-  async playSong(songId, duration) {
+  async playSong(songId, duration, position) {
     // Start playing song on radio
     const timestamp = new Date().getTime();
     await dbService.setPlayingSong(this.radioId, songId, timestamp);
-    radioSubscriptions.playSongForRadio(this.radioHash, songId, timestamp);
+    radioSubscriptions.playSongForRadio(
+      this.radioHash,
+      songId,
+      timestamp,
+      position
+    );
     // Purge radio connections
     await delay(duration - ONE_SECOND); // change one second before ending
     // Get next song from radio queue
     const nextSong = await dbService.getNextSongFromQueue(this.radioId);
     if (nextSong) {
-      // Delete song from queue
-      await dbService.deleteSongFromQueue(nextSong.id);
-      this.playSong(nextSong.song_id, nextSong.duration);
+      // Update song status from queue to played
+      await dbService.updateQueueSongToPlayed(nextSong.id);
+      this.playSong(nextSong.song_id, nextSong.duration, nextSong.position);
     } else {
       // Remove Song from radio
       await dbService.setPlayingSong(this.radioId, null, null);

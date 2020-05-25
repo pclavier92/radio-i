@@ -33,6 +33,14 @@ CREATE TABLE `RadioQueue` (
   `song_id` varchar(256) DEFAULT NULL,
   `duration` int(11) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
+  `played` TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   FOREIGN KEY `FK_RadioQueue_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+/*
+
+ALTER TABLE RadioQueue ADD played TINYINT(1) DEFAULT 0;
+
+*/

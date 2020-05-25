@@ -89,8 +89,11 @@ class RadioSubscriptions {
     }
   }
 
-  playSongForRadio(radioHash, songId, timestamp) {
-    const message = { type: types.PLAY_SONG, payload: { songId, timestamp } };
+  playSongForRadio(radioHash, songId, timestamp, position) {
+    const message = {
+      type: types.PLAY_SONG,
+      payload: { songId, timestamp, position }
+    };
     this.broadcastMessageForRadio(radioHash, message);
   }
 

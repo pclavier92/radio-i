@@ -13,6 +13,7 @@ import { useAuthentication } from '../authentication';
 
 import RigthPanel from './right-panel';
 import RadioPlayer from './radio-player';
+import PlayedSongs from './played-songs';
 import { RadioProvider } from './radio-provider';
 
 import './styles.css';
@@ -75,6 +76,7 @@ const Radio = ({ radio }) => {
           </div>
         </div>
       </section>
+      <PlayedSongs />
     </RadioProvider>
   );
 };
