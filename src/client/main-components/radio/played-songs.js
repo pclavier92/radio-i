@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import radioiApi from '../../apis/radioi-api';
 import { useRadio } from './radio-provider';
 import SongItem from '../../common-components/song-item/song-item';
+import subscriptionsApi from '../../apis/subscriptions-api';
 
 const PlayedSongs = () => {
   const radio = useRadio();
@@ -12,9 +13,18 @@ const PlayedSongs = () => {
       const {
         data: { playedSongs }
       } = await radioiApi.getRadioPlayedSongs(radio.hash);
+      playedSongs.sort((a, b) => a.position - b.position);
       setSongs(playedSongs);
     })();
   }, []);
+
+  useEffect(() => {
+    const onPlaySong = song => {
+      setSongs([...songs, song]);
+    };
+    subscriptionsApi.addPlaySongListener(onPlaySong);
+    return () => subscriptionsApi.removePlaySongListener(onPlaySong);
+  }, [songs]);
 
   return (
     <section className="section-played-songs">

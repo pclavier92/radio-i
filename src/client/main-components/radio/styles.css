@@ -1,3 +1,7 @@
+.section-radio {
+  height: calc(100vh - 60px);
+}
+
 .radio-header {
   padding: 15px 0;
 }
@@ -180,9 +184,12 @@
   }
 }
 
+.section-played-songs {
+  background-color: #f1f1f1;
+}
+
 .section-played-songs h2 {
-  margin-top: 50px;
-  margin-left: 50px;
+  margin: 30px 50px;
   color: #6b6b6b;
 }
 

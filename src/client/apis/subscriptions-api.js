@@ -23,7 +23,7 @@ class SubscriptionsApi {
   constructor() {
     this.ws = null;
     this.listenersUpdate = noop;
-    this.playSong = noop;
+    this.playSong = [];
     this.addToQueue = noop;
     this.removeFromQueue = noop;
     this.chatMessage = noop;
@@ -50,7 +50,7 @@ class SubscriptionsApi {
           this.listenersUpdate(payload);
           break;
         case types.PLAY_SONG:
-          this.playSong(payload);
+          this.playSong.forEach(cb => cb(payload));
           break;
         case types.ADD_TO_QUEUE:
           this.addToQueue(payload);
@@ -84,8 +84,12 @@ class SubscriptionsApi {
     this.listenersUpdate = callback;
   }
 
-  onPlaySong(callback) {
-    this.playSong = callback;
+  addPlaySongListener(callback) {
+    this.playSong.push(callback);
+  }
+
+  removePlaySongListener(callback) {
+    this.playSong = this.playSong.filter(cb => cb !== callback);
   }
 
   onAddToQueue(callback) {

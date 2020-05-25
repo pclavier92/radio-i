@@ -44,10 +44,12 @@ const NowPlaying = ({ radio, started, setStarted, shiftQueue }) => {
   }, [radio]);
 
   useEffect(() => {
-    subscriptionsApi.onPlaySong(({ songId, timestamp }) => {
+    const onPlaySong = ({ songId, timestamp }) => {
       shiftQueue();
       getSongDataAndPlay(songId, timestamp);
-    });
+    };
+    subscriptionsApi.addPlaySongListener(onPlaySong);
+    return () => subscriptionsApi.removePlaySongListener(onPlaySong);
   }, [shiftQueue]);
 
   const getCurrentProgress = useCallback(() => {
