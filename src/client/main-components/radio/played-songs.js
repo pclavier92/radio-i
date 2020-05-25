@@ -31,9 +31,13 @@ const PlayedSongs = () => {
       <div className="row">
         <h2>Played Songs</h2>
         <div className="songs-container">
-          {songs.map(({ songId, position }) => (
-            <SongItem key={position} songId={songId} />
-          ))}
+          {songs.length > 0 ? (
+            songs.map(({ songId, position }) => (
+              <SongItem key={position} songId={songId} />
+            ))
+          ) : (
+            <h3>No songs played yet...</h3>
+          )}
         </div>
       </div>
     </section>

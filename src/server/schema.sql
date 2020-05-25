@@ -37,10 +37,3 @@ CREATE TABLE `RadioQueue` (
   PRIMARY KEY (`id`),
   FOREIGN KEY `FK_RadioQueue_Steam` (`radio_id`) REFERENCES `Radio` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-/*
-
-ALTER TABLE RadioQueue ADD played TINYINT(1) DEFAULT 0;
-
-*/
