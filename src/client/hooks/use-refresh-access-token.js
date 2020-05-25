@@ -6,7 +6,7 @@ import radioiApi from '../apis/radioi-api';
 import useInterval from './use-interval';
 
 const FIVE_MINUTES = 5 * 60 * 1000; // ms
-const HOUR = 3600 * 1000;
+const HALF_HOUR = 30 * 60 * 1000; // 30 minutes
 
 const useRefreshAccessToken = () => {
   const [refreshInterval, setRefreshInterval] = useState(FIVE_MINUTES);
@@ -24,7 +24,7 @@ const useRefreshAccessToken = () => {
           new Date().toUTCString() + ' - Access Refreshed Successfully'
         );
         authService.setAccessToken(access_token);
-        const expirationTimestamp = timeInMs + HOUR;
+        const expirationTimestamp = timeInMs + HALF_HOUR;
         authService.setExpiration(expirationTimestamp);
         if (refresh_token) {
           authService.setAccessToken(refresh_token);
