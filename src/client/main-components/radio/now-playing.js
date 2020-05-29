@@ -1,21 +1,18 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  Fragment
-} from 'react';
+import React, { useCallback, useEffect, useState, Fragment } from 'react';
 
 import useInterval from '../../hooks/use-interval';
-import SongCard, { Card } from '../../common-components/song-card';
+import SongCard from '../../common-components/song-card';
 import MuteButton from '../../common-components/mute-button';
 import spotifyWebApi from '../../apis/spotify-web-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
+import { useRadio } from './radio-provider';
+
 const MAX_VOLUME = 100;
 const PROGRESS_INTERVAL = 1000; // 1 seg
 
-const NowPlaying = ({ radio, started, setStarted, shiftQueue }) => {
+const NowPlaying = ({ loading, started, setStarted }) => {
+  const radio = useRadio();
   const [song, setSong] = useState({});
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -31,26 +28,20 @@ const NowPlaying = ({ radio, started, setStarted, shiftQueue }) => {
     setProgressInterval(PROGRESS_INTERVAL);
   }, []);
 
-  const setVolume = useCallback(async muted => {
-    const volume = muted ? 0 : 100;
-    await spotifyWebApi.setVolume(volume);
-  }, []);
-
   useEffect(() => {
     const { songId, timestamp } = radio;
-    if (songId) {
+    if (!loading && songId) {
       getSongDataAndPlay(songId, timestamp);
     }
-  }, [radio]);
+  }, [loading]);
 
   useEffect(() => {
     const onPlaySong = ({ songId, timestamp }) => {
-      shiftQueue();
       getSongDataAndPlay(songId, timestamp);
     };
     subscriptionsApi.addPlaySongListener(onPlaySong);
     return () => subscriptionsApi.removePlaySongListener(onPlaySong);
-  }, [shiftQueue]);
+  }, []);
 
   const getCurrentProgress = useCallback(() => {
     if (duration > 0) {
@@ -68,30 +59,34 @@ const NowPlaying = ({ radio, started, setStarted, shiftQueue }) => {
 
   useInterval(getCurrentProgress, progressInterval);
 
+  const setVolume = useCallback(async muted => {
+    const volume = muted ? 0 : 100;
+    await spotifyWebApi.setVolume(volume);
+  }, []);
+
   const startPlaying = useCallback(async () => {
     await spotifyWebApi.setVolume(MAX_VOLUME);
     setStarted(true);
   }, []);
 
   return (
-    <div className="now-playing">
-      {started ? (
-        <Fragment>
+    <Fragment>
+      {!loading && (
+        <div className="now-playing">
           <SongCard song={song} duration={duration} progress={progress} />
-          <MuteButton setVolume={setVolume} />
-        </Fragment>
-      ) : (
-        <Fragment>
-          <SongCard song={song} duration={duration} progress={progress} />
-          <div className="play-to-start">
-            <div className="container" onClick={startPlaying}>
-              <i className="material-icons">play_circle_outline</i>
-              <h3>Start Listening</h3>
+          {started ? (
+            <MuteButton setVolume={setVolume} />
+          ) : (
+            <div className="play-to-start">
+              <div className="container" onClick={startPlaying}>
+                <i className="material-icons">play_circle_outline</i>
+                <h3>Start Listening</h3>
+              </div>
             </div>
-          </div>
-        </Fragment>
+          )}
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

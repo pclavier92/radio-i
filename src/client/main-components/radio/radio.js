@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState, Fragment } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import spotifySdk from '../../spotify-sdk';
 import radioiApi from '../../apis/radioi-api';
 import subscriptionsApi from '../../apis/subscriptions-api';
 import useQuery from '../../hooks/use-query';
@@ -17,32 +16,25 @@ import PlayedSongs from './played-songs';
 import { RadioProvider } from './radio-provider';
 
 import './styles.css';
-import useScript from '../../hooks/use-script';
-
-const SPOTIFY_PLAYER_SCRIPT = 'https://sdk.scdn.co/spotify-player.js';
 
 const Radio = ({ radio }) => {
   const { user } = useAuthentication();
-  const [loading, setLoading] = useState(true);
+  const [playedSongs, setPlayedSongs] = useState([]);
+  const [radioQueue, setRadioQueue] = useState([]);
   const [listeners, setListeners] = useState(0);
   const isOwner = useMemo(() => user && user.hash === radio.hash, [user]);
   const isActiveUser = isOwner || radio.isCollaborative;
 
-  useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
-
   useEffect(() => {
     try {
-      const onReady = () => setLoading(false);
-      spotifySdk.start(onReady);
       subscriptionsApi.subscribe(radio.hash);
       subscriptionsApi.onListenersUpdate(({ listeners }) => {
         setListeners(listeners);
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     return () => {
-      spotifySdk.disconnect();
       subscriptionsApi.unsubscribe('Radio player component unmounting');
     };
   }, []);
@@ -69,14 +61,17 @@ const Radio = ({ radio }) => {
             </div>
           </div>
           <div className="col span-1-of-3">
-            {loading ? <Spinner /> : <RadioPlayer radio={radio} />}
+            <RadioPlayer
+              radioQueue={radioQueue}
+              setRadioQueue={setRadioQueue}
+            />
           </div>
           <div className="col span-2-of-3">
-            <RigthPanel />
+            <RigthPanel playedSongs={playedSongs} radioQueue={radioQueue} />
           </div>
         </div>
       </section>
-      <PlayedSongs />
+      <PlayedSongs playedSongs={playedSongs} setPlayedSongs={setPlayedSongs} />
     </RadioProvider>
   );
 };

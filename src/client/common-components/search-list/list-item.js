@@ -5,7 +5,9 @@ import useQuery from '../../hooks/use-query';
 import { msToMinutesSeconds } from '../../utils';
 
 const ListItem = ({
-  item: { id, name: songName, duration_ms: duration, album, artists }
+  item: { id, name: songName, duration_ms: duration, album, artists },
+  playedSongs,
+  radioQueue
 }) => {
   const [mainArtist] = artists;
   const [songAdded, setSongAdded] = useState(false);
@@ -14,15 +16,19 @@ const ListItem = ({
   const radioId = q.get('id');
 
   useEffect(() => {
-    setSongAdded(false);
-  }, [id]);
+    const playedOrQueued = [...playedSongs, ...radioQueue].some(
+      song => song.songId === id
+    );
+    if (playedOrQueued) {
+      setSongAdded(true);
+    } else {
+      setSongAdded(false);
+    }
+  }, [id, playedSongs, radioQueue]);
 
   const addSong = useCallback(() => {
-    if (!songAdded) {
-      setSongAdded(true);
-      radioiApi.addSongToRadio(radioId, id, duration);
-    }
-  }, [radioId, songAdded, id, duration]);
+    radioiApi.addSongToRadio(radioId, id, duration);
+  }, [radioId, id, duration]);
 
   return (
     <li className="row" onClick={addSong}>

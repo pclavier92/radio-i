@@ -1,60 +1,42 @@
-import React, { Fragment, useEffect, useState, useCallback } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
-import radioiApi from '../../apis/radioi-api';
-import subscriptionsApi from '../../apis/subscriptions-api';
-
+import useScript from '../../hooks/use-script';
+import spotifySdk from '../../spotify-sdk';
 import RadioQueue from '../../common-components/radio-queue';
 
 import NowPlaying from './now-playing';
-import { useRadio } from './radio-provider';
+import Spinner from '../../common-components/spinner';
 
-const RadioPlayer = () => {
-  const radio = useRadio();
+const SPOTIFY_PLAYER_SCRIPT = 'https://sdk.scdn.co/spotify-player.js';
+
+const RadioPlayer = ({ radioQueue, setRadioQueue }) => {
   const [started, setStarted] = useState(false);
-  const [radioQueue, setRadioQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const shiftQueue = useCallback(() => {
-    const queue = radioQueue.slice(1);
-    setRadioQueue(queue);
-  }, [radioQueue]);
+  useScript(SPOTIFY_PLAYER_SCRIPT); // load spotify player
 
   useEffect(() => {
-    (async () => {
-      const {
-        data: { queue }
-      } = await radioiApi.getRadioQueue(radio.hash);
-      queue.sort((a, b) => a.position - b.position);
-      setRadioQueue(queue);
-    })();
+    try {
+      const onReady = () => setLoading(false);
+      spotifySdk.start(onReady);
+    } catch (error) {
+      console.error(error);
+    }
+    return () => {
+      spotifySdk.disconnect();
+    };
   }, []);
-
-  useEffect(() => {
-    // Set callback everytime the queue updates
-    subscriptionsApi.onAddToQueue(({ songId, position }) => {
-      const queue = [...radioQueue, { songId, position }];
-      queue.sort((a, b) => a.position - b.position);
-      setRadioQueue(queue);
-    });
-    // Set callback everytime the queue updates
-    subscriptionsApi.onRemoveFromQueue(({ position }) => {
-      debugger;
-      const queue = radioQueue.filter(
-        song => song.position !== parseInt(position)
-      );
-      debugger;
-      setRadioQueue(queue);
-    });
-  }, [radioQueue]);
 
   return (
     <Fragment>
-      <NowPlaying
-        radio={radio}
+      {loading && <Spinner />}
+      <NowPlaying loading={loading} started={started} setStarted={setStarted} />
+      <RadioQueue
+        loading={loading}
         started={started}
-        setStarted={setStarted}
-        shiftQueue={shiftQueue}
+        radioQueue={radioQueue}
+        setRadioQueue={setRadioQueue}
       />
-      <RadioQueue queue={radioQueue} started={started} />
     </Fragment>
   );
 };

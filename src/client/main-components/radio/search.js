@@ -8,7 +8,7 @@ import { debounce } from '../../utils';
 
 const ONE_SECOND = 1000; // ms
 
-const Search = () => {
+const Search = ({ playedSongs, radioQueue }) => {
   const [searchInput, setSearchsearchInput] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [topArtist, setTopArtist] = useState('');
@@ -47,7 +47,11 @@ const Search = () => {
         setSearchsearchInput={debounce(setSearchsearchInput, ONE_SECOND)}
         triggerSearch={triggerSearch}
       />
-      <SearchList searchResults={searchResults} />
+      <SearchList
+        searchResults={searchResults}
+        playedSongs={playedSongs}
+        radioQueue={radioQueue}
+      />
     </div>
   );
 };

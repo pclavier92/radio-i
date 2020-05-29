@@ -1,10 +1,12 @@
 .radio-queue {
+  position: relative;
   width: 90%;
   margin-left: 10%;
 
   height: calc(100vh - 320px);
   overflow: auto;
   overscroll-behavior-y: contain;
+  box-shadow: 0 1px 2px #d4d3d3;
 
   scrollbar-width: thin;
   scrollbar-color: #dadada #eeeeee;
@@ -12,6 +14,7 @@
 
 .radio-queue.transparent {
   opacity: 0.3;
+  box-shadow: 0 1px 2px #666666;
 }
 
 .radio-queue::-webkit-scrollbar {
@@ -81,4 +84,16 @@
 
 .radio-queue-item .spinner {
   margin: 10% auto;
+}
+
+.empty-queue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.empty-queue i {
+  margin: 0 28px;
+  font-size: 500%;
 }

@@ -7,7 +7,7 @@ import { useRadio } from './radio-provider';
 const CHAT_SELECTOR = 'chat';
 const SEARCH_SELECTOR = 'search';
 
-const RightPanel = () => {
+const RightPanel = ({ playedSongs, radioQueue }) => {
   const radio = useRadio();
   const [selector, setSelector] = useState(() =>
     radio.isActiveUser ? SEARCH_SELECTOR : CHAT_SELECTOR
@@ -38,7 +38,9 @@ const RightPanel = () => {
         )}
       </div>
       <Chat open={selector === CHAT_SELECTOR} />
-      {radio.isActiveUser && selector === SEARCH_SELECTOR && <Search />}
+      {radio.isActiveUser && selector === SEARCH_SELECTOR && (
+        <Search playedSongs={playedSongs} radioQueue={radioQueue} />
+      )}
     </div>
   );
 };

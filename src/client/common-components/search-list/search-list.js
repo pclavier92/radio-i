@@ -6,7 +6,7 @@ import ListItem from './list-item';
 
 import './styles.css';
 
-const SearchList = ({ searchResults }) => (
+const SearchList = ({ searchResults, playedSongs, radioQueue }) => (
   <Fragment>
     {searchResults.length === 0 ? (
       <Spinner />
@@ -24,7 +24,12 @@ const SearchList = ({ searchResults }) => (
         <ul className="scroll-results-list">
           {searchResults &&
             searchResults.map((item, index) => (
-              <ListItem key={index} item={item} />
+              <ListItem
+                key={index}
+                item={item}
+                playedSongs={playedSongs}
+                radioQueue={radioQueue}
+              />
             ))}
         </ul>
       </div>

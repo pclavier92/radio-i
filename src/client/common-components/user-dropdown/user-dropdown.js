@@ -37,9 +37,6 @@ const UserDropdown = ({ lastClickInside }) => {
         <div className="user-button-dropdown">
           <ul>
             <li>
-              <button type="button">Switch Device</button>
-            </li>
-            <li>
               <button type="button" onClick={logOut}>
                 Log out
               </button>

@@ -4,35 +4,34 @@ import { useRadio } from './radio-provider';
 import SongItem from '../../common-components/song-item/song-item';
 import subscriptionsApi from '../../apis/subscriptions-api';
 
-const PlayedSongs = () => {
+const PlayedSongs = ({ playedSongs, setPlayedSongs }) => {
   const radio = useRadio();
-  const [songs, setSongs] = useState([]);
 
   useEffect(() => {
     (async () => {
       const {
-        data: { playedSongs }
+        data: { playedSongs: songs }
       } = await radioiApi.getRadioPlayedSongs(radio.hash);
-      playedSongs.sort((a, b) => a.position - b.position);
-      setSongs(playedSongs);
+      songs.sort((a, b) => a.position - b.position);
+      setPlayedSongs(songs);
     })();
   }, []);
 
   useEffect(() => {
     const onPlaySong = song => {
-      setSongs([...songs, song]);
+      setPlayedSongs([...playedSongs, song]);
     };
     subscriptionsApi.addPlaySongListener(onPlaySong);
     return () => subscriptionsApi.removePlaySongListener(onPlaySong);
-  }, [songs]);
+  }, [playedSongs]);
 
   return (
     <section className="section-played-songs">
       <div className="row">
         <h2>Played Songs</h2>
         <div className="songs-container">
-          {songs.length > 0 ? (
-            songs.map(({ songId, position }) => (
+          {playedSongs.length > 0 ? (
+            playedSongs.map(({ songId, position }) => (
               <SongItem key={position} songId={songId} />
             ))
           ) : (
