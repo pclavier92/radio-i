@@ -42,6 +42,7 @@ class RadioPlayer {
     // If radio exists but there is no song playing delete radio
     if (radio && !radio.songId) {
       radioSubscriptions.closeRadio(radio.hash);
+      await dbService.deleteRadioQueue(this.radioId);
       await dbService.deleteRadio(this.radioId);
     }
   }
