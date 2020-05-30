@@ -1,7 +1,6 @@
 .song-item {
   position: relative;
   width: 30%;
-  padding-right: 30px;
   box-shadow: 0 2px 5px #d4d3d3;
   border-radius: 5px;
   margin-bottom: 20px;
@@ -16,7 +15,7 @@
 .song-item-info {
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% - 150px);
+  width: calc(100% - 190px);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -33,6 +32,16 @@
 .song-item-info h6 {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.song-item i {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.song-item i:hover {
+  color: #1ed760;
 }
 
 .song-item .spinner {

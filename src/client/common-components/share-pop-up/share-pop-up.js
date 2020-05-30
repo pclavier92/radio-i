@@ -34,6 +34,7 @@ const SharePopUp = ({ lastClickInside }) => {
             id="radio-link-share"
             ref={inputRef}
             value={window.location.href}
+            readOnly
           />
         </div>
       )}
