@@ -13,4 +13,4 @@ A radio can be *public*, *colaborative* and/or *anonymous*:
 - In colaborative radios anyone will be able to add songs to the queue, if not selected the radio owner will be the only one capable of doing so.
 - Anonymous radios don not show the owner's username in the radio page.
 
-There radio page also provides a chat to speak with other people connected to the same radio.
+The radio page also provides a chat to speak with other people connected to the same radio.
