@@ -1,0 +1,21 @@
+.btn-spotify,
+.btn-spotify:link,
+.btn-spotify:visited {
+  padding: 5px 20px;
+  font-weight: 500;
+  border-radius: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  color: #ffffff;
+  background-color: #1db954;
+  border: 1px solid #1db954;
+  transition: background-color 300ms, border-color 300ms;
+  margin: 10px 0 10px 0;
+  text-transform: uppercase;
+}
+
+.btn-spotify:hover,
+.btn-spotify:active {
+  background-color: #1ed760;
+  border-color: #1ed760;
+}

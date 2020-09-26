@@ -1,0 +1,63 @@
+.card {
+  background-color: #fff;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 1px 2px #d4d3d3;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  max-height: 150px;
+}
+
+.cover {
+  float: left;
+}
+
+.cover img {
+  height: 150px;
+  width: 150px;
+  border-top-left-radius: 10px;
+  background-color: #dfdfdd;
+}
+
+.content {
+  float: left;
+  padding-top: 10px;
+  width: calc(100% - 150px);
+  height: 100%;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.song-details {
+  position: relative;
+  height: 100%;
+  padding: 5px 20px 0 20px;
+}
+
+.song-details h4,
+.song-details h5,
+.song-details h6 {
+  text-align: center;
+  padding: 5px 0;
+}
+
+.progress span {
+  float: right;
+}
+
+.no-song {
+  height: 150px;
+  text-align: center;
+  padding: 60px;
+}
+
+.progress {
+  position: absolute;
+  bottom: 15px;
+  width: calc(100% - 40px);
+}

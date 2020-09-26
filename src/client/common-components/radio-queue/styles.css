@@ -1,0 +1,99 @@
+.radio-queue {
+  position: relative;
+  width: 90%;
+  margin-left: 10%;
+
+  height: calc(100vh - 320px);
+  overflow: auto;
+  overscroll-behavior-y: contain;
+  box-shadow: 0 1px 2px #d4d3d3;
+
+  scrollbar-width: thin;
+  scrollbar-color: #dadada #eeeeee;
+}
+
+.radio-queue.transparent {
+  opacity: 0.3;
+  box-shadow: 0 1px 2px #666666;
+}
+
+.radio-queue::-webkit-scrollbar {
+  width: 6px;
+}
+
+.radio-queue::-webkit-scrollbar-track {
+  background-color: #eeeeee;
+}
+
+.radio-queue::-webkit-scrollbar-thumb {
+  background-color: #dadada;
+  border-radius: 5px;
+}
+
+.radio-queue-item {
+  position: relative;
+  width: 100%;
+  padding: 1px;
+  padding-right: 30px;
+  box-shadow: 0 1px 2px #d4d3d3;
+}
+
+.radio-queue-item img {
+  vertical-align: middle;
+  margin: 10px 43px;
+}
+
+.queue-item-info-container {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  width: calc(100% - 150px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.queue-item-info-container h5,
+.queue-item-info-container h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radio-queue-item i {
+  position: absolute;
+  left: 9px;
+  top: 31px;
+  visibility: hidden;
+}
+
+.radio-queue-item:hover i {
+  visibility: visible;
+}
+
+.radio-queue-item i:hover {
+  cursor: pointer;
+  color: #1db954;
+}
+
+.radio-queue-item .spinner {
+  margin: 10% auto;
+}
+
+.empty-queue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.empty-queue i {
+  margin: 0 28px;
+  font-size: 500%;
+}

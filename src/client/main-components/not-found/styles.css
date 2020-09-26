@@ -1,0 +1,12 @@
+.section-not-found {
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../images/bruno-cervera-dtqlaz4HyHw-unsplash.jpg);
+}
+
+.not-found-text-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

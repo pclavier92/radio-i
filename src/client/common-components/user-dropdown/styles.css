@@ -1,0 +1,78 @@
+.btn-user {
+  font-weight: 500;
+  border-radius: 20px;
+  text-decoration: none;
+  margin: 10px 0 10px 0;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background-color: #f6f5f4;
+}
+
+.btn-user:hover i:last-child {
+  color: #1ed760;
+}
+
+.user-dropdown img {
+  margin-right: 0;
+}
+
+.user-dropdown i:first-child {
+  float: left;
+  margin: 3px 0 3px 6px;
+}
+
+.user-dropdown img {
+  float: left;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+}
+
+.user-dropdown p {
+  float: left;
+  margin: 7px 0 7px 8px;
+  font-weight: 400;
+  color: #6e6e6e;
+}
+
+.user-dropdown i {
+  float: right;
+  margin: 3px;
+}
+
+.user-button-dropdown {
+  z-index: 1;
+  position: absolute;
+  width: 180px;
+  top: 55px;
+  right: 25px;
+  border-radius: 5px;
+}
+
+.user-button-dropdown ul {
+  list-style: none;
+}
+
+.user-button-dropdown li:first-child button {
+  border-radius: 5px 5px 0 0;
+}
+
+.user-button-dropdown li:last-child button {
+  border-radius: 0 0 5px 5px;
+}
+
+.user-button-dropdown button {
+  width: 100%;
+  border: 1px solid #dfdfdf;
+  height: 30px;
+  background-color: #f6f5f4;
+  margin: 0;
+  color: #6e6e6e;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.user-button-dropdown button:hover {
+  color: #1ed760;
+}

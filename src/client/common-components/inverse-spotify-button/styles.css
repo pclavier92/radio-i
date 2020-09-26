@@ -1,0 +1,22 @@
+.btn-inverse-spotify,
+.btn-inverse-spotify:link,
+.btn-inverse-spotify:visited {
+  padding: 5px 20px;
+  font-weight: 500;
+  border-radius: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  color: #1db954;
+  background-color: #ffffff00;
+  border: 1px solid #1db954;
+  transition: background-color 300ms, border-color 300ms;
+  margin: 10px 0 10px 0;
+  text-transform: uppercase;
+}
+
+.btn-inverse-spotify:hover,
+.btn-inverse-spotify:active {
+  color: #fff;
+  background-color: #1ed760;
+  border-color: #1ed760;
+}

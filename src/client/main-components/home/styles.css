@@ -1,0 +1,101 @@
+/* ------------------------------------------------------ */
+/* HOME SECTION */
+/* ------------------------------------------------------ */
+
+.section-home {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../images/eric-nopanen-8e0EHPUx3Mo-unsplash.jpg);
+  position: relative;
+}
+
+.home-text-box {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+}
+
+/* ------------------------------------------------------ */
+/* LOBBY SECTION */
+/* ------------------------------------------------------ */
+
+.section-lobby {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../images/matt-botsford-OKLqGsCT8qs-unsplash.jpg);
+  position: relative;
+}
+
+.lobby-left-box {
+  padding: 20% 14% 20% 15%;
+}
+
+.lobby-left-box input[type='text'] {
+  color: #5c5c5c;
+  border: none;
+  margin-bottom: 40px;
+}
+
+.lobby-left-box input[type='text']:invalid:not(:focus):not(:placeholder-shown) {
+  box-shadow: none;
+}
+
+.lobby-left-box input[type='text']:invalid:focus {
+  box-shadow: 0 0 5px #1ed760;
+}
+
+.lobby-left-box button {
+  width: 90%;
+  margin: 0 10% 0 0;
+}
+
+.radio-option-checkbox {
+  display: inline;
+  vertical-align: middle;
+  margin-left: 5%;
+}
+
+.lobby-left-box .tooltip {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 30px;
+}
+
+.lobby-left-box h3 {
+  display: inline-block;
+}
+
+.lobby-left-box button {
+  margin-right: 10px;
+}
+
+.lobby-right-box {
+  padding: 5%;
+}
+
+.section-radios-display {
+  text-align: center;
+}
+
+.section-radios-display h2 {
+  color: #5c5c5c;
+  margin-top: 40px;
+}
+
+.section-radios-display .radios-list {
+  list-style: none;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.section-radios-display .radios-list li button,
+.section-radios-display .radios-list li h3,
+.section-radios-display .radios-list li h5,
+.section-radios-display .radios-list li i {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.section-radios-display .radios-list li button,
+.section-radios-display .radios-list li h3,
+.section-radios-display .radios-list li span {
+  margin: 10px;
+}

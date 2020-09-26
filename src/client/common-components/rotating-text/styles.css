@@ -1,0 +1,29 @@
+.container {
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.container .separation {
+  width: 20%;
+}
+
+.animation {
+  display: inline-block;
+  animation-name: scrolling;
+  animation-duration: 20s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes scrolling {
+  0% {
+    transform: translateX(0%);
+  }
+  20% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-113%);
+  }
+}
