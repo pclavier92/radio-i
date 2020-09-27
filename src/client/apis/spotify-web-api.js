@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import authService from '../services/authentication';
+import authService from 'Services/authentication';
 
 const baseURL = 'https://api.spotify.com';
 const version = '/v1';

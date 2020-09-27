@@ -1,6 +1,5 @@
-import radioiApi from '../apis/radioi-api';
-
-import { getHashParams } from '../utils';
+import radioiApi from 'Apis/radioi-api';
+import { getHashParams } from 'Utils';
 
 import storage from './storage';
 

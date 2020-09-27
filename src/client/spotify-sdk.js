@@ -1,5 +1,5 @@
-import spotifyWebApi from './apis/spotify-web-api';
-import authService from './services/authentication';
+import spotifyWebApi from 'Apis/spotify-web-api';
+import authService from 'Services/authentication';
 
 class SpotifySDK {
   constructor() {

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { serverUrl } from '../config';
 
-import authService from '../services/authentication';
+import authService from 'Services/authentication';
 
 const logOut = () => {
   const accessToken = authService.getAccessToken();

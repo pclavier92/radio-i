@@ -1,6 +1,6 @@
 import config from '../config';
 
-import { generateRandomString, delay } from '../utils';
+import { generateRandomString, delay } from 'Utils';
 
 const types = {
   SUBSCRIBE: 'subscribe',

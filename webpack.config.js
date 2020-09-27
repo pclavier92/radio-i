@@ -36,7 +36,16 @@ module.exports = env => ({
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx'],
+    alias: {
+      Apis: path.resolve(__dirname, 'src/client/apis/'),
+      Components: path.resolve(__dirname, 'src/client/components/'),
+      Context: path.resolve(__dirname, 'src/client/context/'),
+      Hooks: path.resolve(__dirname, 'src/client/hooks/'),
+      Pages: path.resolve(__dirname, 'src/client/pages/'),
+      Services: path.resolve(__dirname, 'src/client/services/'),
+      Utils: path.resolve(__dirname, 'src/client/utils')
+    }
   },
   devServer: {
     contentBase: path.resolve(__dirname, outputDirectory),
