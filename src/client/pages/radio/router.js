@@ -18,6 +18,10 @@ const RadioRouter = () => {
   const q = useQuery();
   const radioId = q.get('id');
 
+  const isNotAuthenticated = !authenticated;
+  const isLoading = loadingAuth || (authenticated && loadingRadio);
+  const isNotFound = !radioId || (!loading && !radio);
+
   useEffect(() => {
     if (radioId && authenticated) {
       (async () => {
@@ -37,27 +41,19 @@ const RadioRouter = () => {
     }
   }, [radioId, authenticated]);
 
-  if (radioId) {
-    if (!loadingAuth) {
-      if (authenticated) {
-        if (!loadingRadio) {
-          if (radio) {
-            return <Radio radio={radio} />;
-          } else {
-            return <NotFound />;
-          }
-        } else {
-          return <Spinner />;
-        }
-      } else {
-        return <AuthenticationRequired />;
-      }
-    } else {
-      return <Spinner />;
-    }
-  } else {
+  if (isNotFound) {
     return <NotFound />;
   }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isNotAuthenticated) {
+    <AuthenticationRequired />;
+  }
+
+  return <Radio radio={radio} />;
 };
 
 export default RadioRouter;
