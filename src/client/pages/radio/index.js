@@ -19,7 +19,7 @@ const RadioSwitch = () => {
 
   const isNotAuthenticated = !authenticated;
   const isLoading = loadingAuth || (authenticated && loadingRadio);
-  const isNotFound = !radioId || (!loading && !radio);
+  const isNotFound = !radioId || (!isLoading && !radio);
 
   useEffect(() => {
     if (radioId && authenticated) {

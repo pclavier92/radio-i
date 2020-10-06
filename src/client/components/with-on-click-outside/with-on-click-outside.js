@@ -14,8 +14,11 @@ const useOnClickOutside = (ref, onClickOutside) => {
   }, [ref, onClickOutside]);
 };
 
-const withOnClickOutside = WrappedComponent => ({ children, ...props }) => {
-  const { onClickOutside } = props;
+const withOnClickOutside = WrappedComponent => ({
+  children,
+  onClickOutside,
+  ...props
+}) => {
   const wrapperRef = useRef(null);
   useOnClickOutside(wrapperRef, onClickOutside);
 
