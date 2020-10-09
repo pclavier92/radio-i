@@ -6,7 +6,7 @@ import { debounce } from 'Utils';
 import SearchBar from './search-bar';
 import SearchList from './search-list';
 
-const ONE_SECOND = 1000; // ms
+const HALF_SECOND = 500; // ms
 
 const Search = ({ playedSongs, radioQueue }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -21,7 +21,7 @@ const Search = ({ playedSongs, radioQueue }) => {
       }
     } = await spotifyWebApi.getSearchResults(searchInput);
     setSearchResults(items);
-  });
+  }, [searchInput]);
 
   useEffect(() => {
     (async () => {
@@ -38,11 +38,14 @@ const Search = ({ playedSongs, radioQueue }) => {
     if (searchInput !== '') {
       triggerSearch();
     }
-  }, [searchInput]);
+  }, [searchInput, triggerSearch]);
 
-  const onSearchInputChange = useCallback(() => {
-    debounce(setSearchInput, ONE_SECOND);
-  });
+  const onSearchInputChange = useCallback(
+    debounce(value => {
+      setSearchInput(value);
+    }, HALF_SECOND),
+    []
+  );
 
   return (
     <div className="radio-search">
