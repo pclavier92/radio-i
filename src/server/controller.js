@@ -3,7 +3,7 @@ const request = require('request');
 const querystring = require('querystring');
 const sha256 = require('crypto-js/sha256');
 
-const config = require('./config').server;
+const { clientUrl } = require('./config').server;
 const dbService = require('./services/db');
 const spotifyService = require('./services/spotify');
 const RadioPlayer = require('./services/radio-player');
@@ -18,7 +18,8 @@ const {
 } = require('./errors');
 const { generateRandomString } = require('./utils');
 
-const stateKey = 'spotify_auth_state';
+const REFRESH_TOKEN = 'refresh_token';
+const STATE_KEY = 'spotify_auth_state';
 const nonce = 'user-hash-key';
 
 const serveApp = (req, res) => {
@@ -29,28 +30,16 @@ const serveApp = (req, res) => {
 const spotifyLogin = (req, res) => {
   logger.info(req, 'Login to Spotify');
   const state = generateRandomString(16);
-  res.cookie(stateKey, state);
+  res.cookie(STATE_KEY, state);
   const url = spotifyService.loginRedirectUrl(state);
-
   res.redirect(url);
-};
-
-const refreshSession = async (req, res) => {
-  logger.info(req, 'Refresh Session');
-  try {
-    const user = await getUserByAccessToken(req);
-    req.session.userId = user.id;
-    res.send({ result: 'OK', message: 'Session refreshed' });
-  } catch (e) {
-    logger.error(req, e);
-    res.sendStatus(e.status || 400);
-  }
 };
 
 const logOut = async (req, res) => {
   logger.info(req, 'Log Out');
-  const userId = req.session.userId;
+  const userId = req.session.user_id;
   await dbService.updateUserToken(userId, null);
+  res.clearCookie(REFRESH_TOKEN);
   req.session.destroy(() => {
     res.send({ result: 'OK', message: 'Session destroyed' });
   });
@@ -62,36 +51,26 @@ const spotifyCallback = (req, res) => {
   // requests refresh and access tokens after checking the state parameter
   const code = req.query.code || null;
   const state = req.query.state || null;
-  const storedState = req.cookies ? req.cookies[stateKey] : null;
+  const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
 
   if (state === null || state !== storedState) {
     res.redirect(`/#${querystring.stringify({ error: 'state_mismatch' })}`);
   } else {
-    res.clearCookie(stateKey);
+    res.clearCookie(STATE_KEY);
 
     const authOptions = spotifyService.postAuthOptions(code);
     request.post(authOptions, (error, response, body) => {
       if (!error && response.statusCode === 200) {
-        const { access_token, refresh_token, expires_in } = body;
-
+        const { access_token, refresh_token } = body;
         const meOptions = spotifyService.getMeOptions(access_token);
         request.get(meOptions, async (error, response, user) => {
           if (!error && response.statusCode === 200) {
             try {
               await dbService.userLogin(user, access_token);
               logger.info(req, 'User logged successfully');
-
-              // updating session for user
-              req.session.userId = user.id;
-
-              // pass the token to the browser
-              res.redirect(
-                `${config.clientUrl}/#${querystring.stringify({
-                  access_token,
-                  refresh_token,
-                  expires_in
-                })}`
-              );
+              req.session.user_id = user.id; // creating session for user
+              res.cookie(REFRESH_TOKEN, refresh_token, { httpOnly: true });
+              res.redirect(clientUrl);
             } catch (e) {
               logger.error(req, e);
             }
@@ -105,28 +84,30 @@ const spotifyCallback = (req, res) => {
 };
 
 const spotifyTokenRefresh = (req, res) => {
-  // requesting access token from refresh token
-  const {
-    access_token: oldAccessToken,
-    refresh_token: refreshToken
-  } = req.query;
+  const refreshToken = req.cookies.refresh_token;
+  const userId = req.session.user_id;
+  if (!refreshToken || !userId) {
+    res.sendStatus(401);
+    return;
+  }
   const authOptions = spotifyService.postRefreshOptions(refreshToken);
   request.post(authOptions, async (error, response, body) => {
     if (!error && response.statusCode === 200) {
       const { access_token, refresh_token, expires_in } = body;
       try {
-        const { id } = await dbService.getUserByAccessToken(oldAccessToken);
-        await dbService.updateUserToken(id, access_token);
+        await dbService.updateUserToken(userId, access_token);
         logger.info(req, 'User access token refreshed');
-        req.session.userId = id;
-        res.send({
-          access_token,
-          expires_in,
-          refresh_token
-        });
+        if (refresh_token) {
+          // only renew refresh token if new one is returned
+          res.cookie(REFRESH_TOKEN, refresh_token, { httpOnly: true });
+        }
+        res.send({ access_token, expires_in });
       } catch (e) {
         logger.error(req, e);
+        res.sendStatus(400);
       }
+    } else {
+      res.sendStatus(401);
     }
   });
 };
@@ -376,7 +357,6 @@ const getChatMessages = async (req, res) => {
 
 module.exports = {
   logOut,
-  refreshSession,
   serveApp,
   spotifyLogin,
   spotifyCallback,

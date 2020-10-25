@@ -1,15 +1,9 @@
 const WebSocket = require('ws');
-const session = require('express-session');
 
 const radioSubscriptions = require('./services/radio-subscriptions');
+const { sessionParser } = require('./session');
 
 const wss = new WebSocket.Server({ noServer: true });
-
-const sessionParser = session({
-  saveUninitialized: false,
-  secret: 'session-parser-secret',
-  resave: false
-});
 
 const types = {
   SUBSCRIBE: 'subscribe',
@@ -23,7 +17,7 @@ const types = {
 
 const onWebsocketUpgrade = (request, socket, head) => {
   sessionParser(request, {}, () => {
-    if (!request.session.userId) {
+    if (!request.session.user_id) {
       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
       return;
@@ -39,7 +33,7 @@ const noop = () => {};
 
 wss.on('connection', (ws, request) => {
   ws.isAlive = true;
-  ws.userId = request.session.userId;
+  ws.userId = request.session.user_id;
 
   const heartbeat = () => {
     ws.isAlive = true;
@@ -101,4 +95,4 @@ wss.on('close', () => {
   clearInterval(interval);
 });
 
-module.exports = { onWebsocketUpgrade, sessionParser };
+module.exports = { onWebsocketUpgrade };

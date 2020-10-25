@@ -13,7 +13,7 @@ switch (process.env.SCOPE) {
 
   case 'dev':
   default:
-    serverUrl = 'http://localhost:8888';
+    serverUrl = 'http://localhost:3000';
     wsUrl = 'ws://localhost:8888';
     break;
 }

@@ -13,23 +13,8 @@ const logOut = () => {
   });
 };
 
-const refreshSession = () => {
-  const accessToken = authService.getAccessToken();
-  return axios.get(`${serverUrl}/refresh_session`, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-};
-
-const refreshAccessToken = () => {
-  const accessToken = authService.getAccessToken();
-  const refreshToken = authService.getRefreshToken();
-  return axios.get(`${serverUrl}/refresh_token`, {
-    params: { access_token: accessToken, refresh_token: refreshToken }
-  });
-};
+const refreshAccessToken = () =>
+  axios.get(`${serverUrl}/refresh_token`, { withCredentials: true });
 
 const startRadio = (id, name, isPublic, isCollaborative, isAnonymous) => {
   const accessToken = authService.getAccessToken();
@@ -129,7 +114,6 @@ const getRadioChats = id => {
 
 export default {
   logOut,
-  refreshSession,
   refreshAccessToken,
   startRadio,
   stopRadio,

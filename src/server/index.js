@@ -3,10 +3,10 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const http = require('http');
 
-const { onWebsocketUpgrade, sessionParser } = require('./ws-server');
-
 const config = require('./config').server;
+const { sessionParser } = require('./session');
 const controller = require('./controller');
+const { onWebsocketUpgrade } = require('./ws-server');
 
 const app = express();
 
@@ -20,8 +20,6 @@ app
 app.get('/login', controller.spotifyLogin);
 app.get('/callback', controller.spotifyCallback);
 app.get('/refresh_token', controller.spotifyTokenRefresh);
-
-app.get('/refresh_session', controller.refreshSession);
 app.delete('/logout', controller.logOut);
 
 app.get('/api/radio', controller.getRadio);

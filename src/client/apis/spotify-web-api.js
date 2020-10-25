@@ -4,7 +4,7 @@ import authService from 'Services/authentication';
 
 const baseURL = 'https://api.spotify.com';
 const version = '/v1';
-const spotifyUrl = `${baseURL + version}`;
+const spotifyUrl = baseURL + version;
 
 const UNAUTHORIZED = 401;
 
@@ -17,22 +17,15 @@ class SpotifyWebApi {
     this.deviceId = deviceId;
   }
 
-  // If user is not authenticated (or access token expired) it will
-  // try to refresh the access token and make the request again
-  async makeRequestWithRetry(requestConfig) {
+  // If user is not authenticated log out
+  async requestHandler(requestConfig) {
     let response = null;
     try {
       response = await axios.request(requestConfig);
     } catch (error) {
       if (error.response.status === UNAUTHORIZED) {
-        try {
-          await authService.refreshAuthentication();
-          response = await axios.request(requestConfig);
-        } catch (e) {
-          console.log(e);
-          console.log(error);
-          console.log(requestConfig);
-        }
+        // TODO - log out
+        authService.logOut();
       } else {
         console.log(error);
         console.log(requestConfig);
@@ -49,7 +42,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 
   getUserInfoById(userId) {
@@ -60,7 +53,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 
   playSongFrom(uri, position) {
@@ -73,7 +66,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    this.makeRequestWithRetry(requestConfig);
+    this.requestHandler(requestConfig);
   }
 
   setVolume(volume) {
@@ -85,7 +78,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    this.makeRequestWithRetry(requestConfig);
+    this.requestHandler(requestConfig);
   }
 
   pausePlayer() {
@@ -97,7 +90,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    this.makeRequestWithRetry(requestConfig);
+    this.requestHandler(requestConfig);
   }
 
   getCurrentlyPlaying() {
@@ -108,7 +101,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 
   getSearchResults(searchInput) {
@@ -120,7 +113,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 
   getTopArtists() {
@@ -132,7 +125,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 
   getSongData(songId) {
@@ -143,7 +136,7 @@ class SpotifyWebApi {
       headers: { Authorization: `Bearer ${accessToken}` },
       responseType: 'json'
     };
-    return this.makeRequestWithRetry(requestConfig);
+    return this.requestHandler(requestConfig);
   }
 }
 

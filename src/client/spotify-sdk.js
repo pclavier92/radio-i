@@ -23,7 +23,8 @@ class SpotifySDK {
       });
       this.player.addListener('authentication_error', async ({ message }) => {
         try {
-          await authService.refreshAuthentication();
+          // TODO - log out
+          authService.logOut();
         } catch (e) {
           console.log(message);
           console.log(e);
