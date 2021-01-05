@@ -19,7 +19,7 @@
   "author": "Philippe Clavier",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "webpack": "^4.5.0",
     "babel-polyfill": "^6.26.0",
     "express": "^4.17.1",
